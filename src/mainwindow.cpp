@@ -48,6 +48,7 @@ MainWindow::MainWindow(const QString &work_dir, const QString &command, bool dro
     migrate_settings();
 
     m_bookmarksDock = new QDockWidget(tr("Bookmarks"), this);
+    m_bookmarksDock->setObjectName("bookmarksDock");
     BookmarksWidget *bookmarksWidget = new BookmarksWidget(m_bookmarksDock);
     m_bookmarksDock->setWidget(bookmarksWidget);
     addDockWidget(Qt::LeftDockWidgetArea, m_bookmarksDock);
