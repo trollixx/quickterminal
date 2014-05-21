@@ -1,15 +1,15 @@
-TARGET = qterminal
 TEMPLATE = app
 
+CONFIG += c++11 link_pkgconfig
 QT += widgets
-
-CONFIG += link_pkgconfig
 PKGCONFIG += qtermwidget5
+
+TARGET = qterminal
 
 DEFINES += STR_VERSION=\\\"1.0\\\"
 
-SOURCES += $$files(src/*.cpp)
 HEADERS += $$files(src/*.h)
+SOURCES += $$files(src/*.cpp)
 
 INCLUDEPATH += src
 
