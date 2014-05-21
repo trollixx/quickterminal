@@ -1,12 +1,12 @@
 #include "propertiesdialog.h"
 
-#include "fontdialog.h"
 #include "properties.h"
 
 #include <qtermwidget.h>
 
 #include <QDebug>
 #include <QFileDialog>
+#include <QFontDialog>
 #include <QStyleFactory>
 
 PropertiesDialog::PropertiesDialog(QWidget *parent) :
@@ -165,12 +165,12 @@ void PropertiesDialog::setFontSample(const QFont &f)
 
 void PropertiesDialog::changeFontButton_clicked()
 {
-    FontDialog dia(fontSampleLabel->font());
-    if (!dia.exec())
+    bool ok;
+    QFont font = QFontDialog::getFont(&ok, fontSampleLabel->font(), this,
+                                      tr("Select Terminal Font"), QFontDialog::MonospacedFonts);
+    if (!ok)
         return;
-    QFont f = dia.getFont();
-    if (QFontInfo(f).fixedPitch())
-        setFontSample(f);
+    setFontSample(font);
 }
 
 void PropertiesDialog::saveShortcuts()
