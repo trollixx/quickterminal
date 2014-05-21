@@ -26,6 +26,9 @@
 #include "config.h"
 #include "properties.h"
 
+#include <QInputDialog>
+#include <QMenu>
+#include <QTabBar>
 
 #define TAB_INDEX_PROPERTY "tab_index"
 

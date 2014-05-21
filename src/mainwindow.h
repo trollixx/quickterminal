@@ -24,7 +24,10 @@
 #include "ui_qterminal.h"
 
 #include <QMainWindow>
+
+#ifdef LIB_QXT
 #include "qxtglobalshortcut.h"
+#endif
 
 class QToolButton;
 
@@ -84,8 +87,13 @@ private:
     void enableDropMode();
     QToolButton *m_dropLockButton;
     bool m_dropMode;
-    QxtGlobalShortcut m_dropShortcut;
+
     void realign();
+
+#ifdef LIB_QXT
+    QxtGlobalShortcut m_dropShortcut;
     void setDropShortcut(QKeySequence dropShortCut);
+#endif
+
 };
 #endif //MAINWINDOW_H

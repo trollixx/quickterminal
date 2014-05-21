@@ -1,11 +1,10 @@
 #include <QtGui>
 
-#include <QDebug>
-
 #include "bookmarkswidget.h"
 #include "properties.h"
 #include "config.h"
 
+#include <QStandardPaths>
 
 class AbstractBookmarkItem
 {
@@ -92,13 +91,13 @@ public:
     BookmarkLocalGroupItem(AbstractBookmarkItem *parent)
         : BookmarkGroupItem(QObject::tr("Local Bookmarks"), parent)
     {
-        QList<QDesktopServices::StandardLocation> locations;
-        locations << QDesktopServices::DesktopLocation
-                  << QDesktopServices::DocumentsLocation
-                  << QDesktopServices::TempLocation
-                  << QDesktopServices::HomeLocation
-                  << QDesktopServices::MusicLocation
-                  << QDesktopServices::PicturesLocation;
+        QList<QStandardPaths::StandardLocation> locations;
+        locations << QStandardPaths::DesktopLocation
+                  << QStandardPaths::DocumentsLocation
+                  << QStandardPaths::TempLocation
+                  << QStandardPaths::HomeLocation
+                  << QStandardPaths::MusicLocation
+                  << QStandardPaths::PicturesLocation;
 
         QString path;
         QString name;
@@ -106,17 +105,15 @@ public:
         QDir d;
 
         // standard $HOME subdirs
-        foreach (QDesktopServices::StandardLocation i, locations)
+        foreach (QStandardPaths::StandardLocation i, locations)
         {
-            path = QDesktopServices::storageLocation(i);
+            path = QStandardPaths::writableLocation(i);
             if (!d.exists(path))
             {
                 //qDebug() << "Dir:" << path << "does not exist. Skipping.";
                 continue;
             }
-            // it works in Qt5, not in Qt4
-            // name = QDesktopServices::displayName(i);
-            name = path;
+            name = QStandardPaths::displayName(i);
 
             path.replace(" ", "\\ ");
             cmd = "cd " + path;
@@ -238,7 +235,7 @@ void BookmarksModel::setup()
     m_root = new BookmarkRootItem();
     m_root->addChild(new BookmarkLocalGroupItem(m_root));
     m_root->addChild(new BookmarkFileGroupItem(m_root, Properties::Instance()->bookmarksFile));
-    reset();
+    //reset();
 }
 
 BookmarksModel::~BookmarksModel()

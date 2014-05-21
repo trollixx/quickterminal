@@ -18,8 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <QtGui>
-
 #include "mainwindow.h"
 #include "tabwidget.h"
 #include "termwidgetholder.h"
@@ -28,6 +26,12 @@
 #include "propertiesdialog.h"
 #include "bookmarkswidget.h"
 
+#include <QDesktopWidget>
+#include <QDockWidget>
+#include <QMessageBox>
+#include <QToolButton>
+
+#include <QtGui>
 
 // TODO/FXIME: probably remove. QSS makes it unusable on mac...
 #define QSS_DROP    "MainWindow {border: 1px solid rgba(0, 0, 0, 50%);}\n"
@@ -59,7 +63,9 @@ MainWindow::MainWindow(const QString& work_dir,
 
     connect(actAbout, SIGNAL(triggered()), SLOT(actAbout_triggered()));
     connect(actAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+#ifdef LIB_QXT
     connect(&m_dropShortcut, SIGNAL(activated()), SLOT(showHide()));
+#endif
 
     setContentsMargins(0, 0, 0, 0);
     if (m_dropMode) {
@@ -116,7 +122,6 @@ void MainWindow::migrate_settings()
     }
 }
 
-
 void MainWindow::enableDropMode()
 {
     setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint | Qt::CustomizeWindowHint);
@@ -128,11 +133,13 @@ void MainWindow::enableDropMode()
     setKeepOpen(Properties::Instance()->dropKeepOpen);
     m_dropLockButton->setAutoRaise(true);
 
-
+#ifdef LIB_QXT
     setDropShortcut(Properties::Instance()->dropShortCut);
+#endif
     realign();
 }
 
+#ifdef LIB_QXT
 void MainWindow::setDropShortcut(QKeySequence dropShortCut)
 {
     if (!m_dropMode)
@@ -144,6 +151,7 @@ void MainWindow::setDropShortcut(QKeySequence dropShortCut)
         qWarning() << tr("Press \"%1\" to see the terminal.").arg(dropShortCut.toString());
     }
 }
+#endif
 
 void MainWindow::setup_ActionsMenu_Actions()
 {
@@ -517,7 +525,9 @@ void MainWindow::propertiesChanged()
     setWindowOpacity(Properties::Instance()->appOpacity/100.0);
     consoleTabulator->setTabPosition((QTabWidget::TabPosition)Properties::Instance()->tabsPos);
     consoleTabulator->propertiesChanged();
+#ifdef LIB_QXT
     setDropShortcut(Properties::Instance()->dropShortCut);
+#endif
 
     m_menuBar->setVisible(Properties::Instance()->menuVisible);
 
