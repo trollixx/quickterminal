@@ -35,4 +35,4 @@ protected:
     void validateAction(int row, int column);
 };
 
-#endif
+#endif // PROPERTIESDIALOG_H

@@ -60,4 +60,4 @@ private slots:
     void handle_finished();
 };
 
-#endif
+#endif // TERMWIDGETHOLDER_H

@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef TAB_WIDGET
-#define TAB_WIDGET
+#ifndef TABWIDGET_H
+#define TABWIDGET_H
 
 #include <QTabWidget>
 #include <QMap>
@@ -101,4 +101,4 @@ private:
     void showHideTabBar();
 };
 
-#endif
+#endif // TABWIDGET_H

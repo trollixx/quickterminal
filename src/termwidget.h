@@ -82,4 +82,4 @@ private slots:
     void term_termLostFocus();
 };
 
-#endif
+#endif // TERMWIDGET_H

@@ -79,4 +79,4 @@ private:
     ~Properties();
 };
 
-#endif
+#endif // PROPERTIES_H

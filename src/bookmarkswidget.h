@@ -49,4 +49,4 @@ private:
     AbstractBookmarkItem *m_root;
 };
 
-#endif
+#endif // BOOKMARKSWIDGET_H

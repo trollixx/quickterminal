@@ -1,7 +1,8 @@
-#ifndef FONT_DIALOG
-#define FONT_DIALOG
+#ifndef FONTDIALOG_H
+#define FONTDIALOG_H
 
 #include "ui_fontdialog.h"
+
 #include "properties.h"
 
 class FontDialog : public QDialog, public Ui::FontDialog
@@ -15,4 +16,4 @@ private slots:
     void setFontSample();
 };
 
-#endif
+#endif // FONTDIALOG_H
