@@ -29,15 +29,27 @@
 
 #define out
 
-const char* const short_options = "vhw:e:d";
+const char *const short_options = "vhw:e:d";
 
 const struct option long_options[] = {
-    {"version", 0, NULL, 'v'},
-    {"help",    0, NULL, 'h'},
-    {"workdir", 1, NULL, 'w'},
-    {"execute", 1, NULL, 'e'},
-    {"drop",    0, NULL, 'd'},
-    {NULL,      0, NULL,  0}
+    {
+        "version", 0, NULL, 'v'
+    },
+    {
+        "help", 0, NULL, 'h'
+    },
+    {
+        "workdir", 1, NULL, 'w'
+    },
+    {
+        "execute", 1, NULL, 'e'
+    },
+    {
+        "drop", 0, NULL, 'd'
+    },
+    {
+        NULL, 0, NULL, 0
+    }
 };
 
 void print_usage_and_exit(int code)
@@ -54,45 +66,44 @@ void print_usage_and_exit(int code)
     exit(code);
 }
 
-void print_version_and_exit(int code=0)
+void print_version_and_exit(int code = 0)
 {
     printf("%s\n", STR_VERSION);
     exit(code);
 }
 
-void parse_args(int argc, char* argv[], QString& workdir, QString & shell_command, out bool& dropMode)
+void parse_args(int argc, char *argv[], QString &workdir, QString &shell_command,
+                out bool &dropMode)
 {
     int next_option;
     dropMode = false;
-    do{
+    do {
         next_option = getopt_long(argc, argv, short_options, long_options, NULL);
-        switch(next_option)
-        {
-            case 'h':
-                print_usage_and_exit(0);
-            case 'w':
-                workdir = QString(optarg);
-                break;
-            case 'e':
-                shell_command = QString(optarg);
-                // #15 "Raw" -e params
-                // Passing "raw" params (like konsole -e mcedit /tmp/tmp.txt") is more preferable - then I can call QString("qterminal -e ") + cmd_line in other programs
-                while (optind < argc)
-                {
-                    //printf("arg: %d - %s\n", optind, argv[optind]);
-                    shell_command += ' ' + QString(argv[optind++]);
-                }
-                break;
-            case 'd':
-                dropMode = true;
-                break;
-            case '?':
-                print_usage_and_exit(1);
-            case 'v':
-                print_version_and_exit();
+        switch (next_option) {
+        case 'h':
+            print_usage_and_exit(0);
+        case 'w':
+            workdir = QString(optarg);
+            break;
+        case 'e':
+            shell_command = QString(optarg);
+            // #15 "Raw" -e params
+            // Passing "raw" params (like konsole -e mcedit /tmp/tmp.txt") is more preferable - then I can call QString("qterminal -e ") + cmd_line in other programs
+            while (optind < argc)
+            {
+                // printf("arg: %d - %s\n", optind, argv[optind]);
+                shell_command += ' ' + QString(argv[optind++]);
+            }
+            break;
+        case 'd':
+            dropMode = true;
+            break;
+        case '?':
+            print_usage_and_exit(1);
+        case 'v':
+            print_version_and_exit();
         }
-    }
-    while(next_option != -1);
+    } while (next_option != -1);
 }
 
 int main(int argc, char *argv[])
@@ -117,25 +128,26 @@ int main(int argc, char *argv[])
     QString fname = QString("qterminal_%1.qm").arg(QLocale::system().name().left(2));
     QTranslator translator;
 #ifdef TRANSLATIONS_DIR
-    qDebug() << "TRANSLATIONS_DIR: Loading translation file" << fname << "from dir" << TRANSLATIONS_DIR;
+    qDebug() << "TRANSLATIONS_DIR: Loading translation file" << fname << "from dir"
+             << TRANSLATIONS_DIR;
     qDebug() << "load success:" << translator.load(fname, TRANSLATIONS_DIR, "_");
 #endif
 #ifdef APPLE_BUNDLE
-    qDebug() << "APPLE_BUNDLE: Loading translator file" << fname << "from dir" << QApplication::applicationDirPath()+"../translations";
-    qDebug() << "load success:" << translator.load(fname, QApplication::applicationDirPath()+"../translations", "_");
+    qDebug() << "APPLE_BUNDLE: Loading translator file" << fname << "from dir"
+             << QApplication::applicationDirPath()+"../translations";
+    qDebug() << "load success:" << translator.load(fname,
+                                                   QApplication::applicationDirPath()+"../translations",
+                                                   "_");
 #endif
     app.installTranslator(&translator);
 
     MainWindow *window;
-    if (dropMode)
-    {
+    if (dropMode) {
         QWidget *hiddenPreviewParent = new QWidget(0, Qt::Tool);
         window = new MainWindow(workdir, shell_command, dropMode, hiddenPreviewParent);
         if (Properties::Instance()->dropShowOnStart)
             window->show();
-    }
-    else
-    {
+    } else {
         window = new MainWindow(workdir, shell_command, dropMode);
         window->show();
     }

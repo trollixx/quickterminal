@@ -9,32 +9,30 @@ class PropertiesDialog : public QDialog, Ui::PropertiesDialog
 
     QString oldAccelText; // Placeholder when editing shortcut
 
-    public:
-        PropertiesDialog(QWidget *parent=NULL);
-        ~PropertiesDialog();
+public:
+    PropertiesDialog(QWidget *parent = NULL);
+    ~PropertiesDialog();
 
-    signals:
-        void propertiesChanged();
+signals:
+    void propertiesChanged();
 
-    private:
-        void setFontSample(const QFont & f);
-        void openBookmarksFile(const QString &fname);
-        void saveBookmarksFile(const QString &fname);
+private:
+    void setFontSample(const QFont &f);
+    void openBookmarksFile(const QString &fname);
+    void saveBookmarksFile(const QString &fname);
 
-    private slots:
-        void apply();
-        void accept();
-        
-        void changeFontButton_clicked();
-        void bookmarksButton_clicked();
+private slots:
+    void apply();
+    void accept();
 
-    protected:
-        void setupShortcuts();
-        void saveShortcuts();
-        void recordAction(int row, int column);
-        void validateAction(int row, int column);
+    void changeFontButton_clicked();
+    void bookmarksButton_clicked();
+
+protected:
+    void setupShortcuts();
+    void saveShortcuts();
+    void recordAction(int row, int column);
+    void validateAction(int row, int column);
 };
 
-
 #endif
-

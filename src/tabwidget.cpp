@@ -32,8 +32,8 @@
 
 #define TAB_INDEX_PROPERTY "tab_index"
 
-
-TabWidget::TabWidget(QWidget* parent) : QTabWidget(parent), tabNumerator(0)
+TabWidget::TabWidget(QWidget *parent) : QTabWidget(parent),
+    tabNumerator(0)
 {
     setFocusPolicy(Qt::NoFocus);
 
@@ -54,25 +54,24 @@ TabWidget::TabWidget(QWidget* parent) : QTabWidget(parent), tabNumerator(0)
     connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(removeTab(int)));
 }
 
-TermWidgetHolder * TabWidget::terminalHolder()
+TermWidgetHolder *TabWidget::terminalHolder()
 {
-    return reinterpret_cast<TermWidgetHolder*>(widget(currentIndex()));
+    return reinterpret_cast<TermWidgetHolder *>(widget(currentIndex()));
 }
 
-void TabWidget::setWorkDirectory(const QString& dir)
+void TabWidget::setWorkDirectory(const QString &dir)
 {
     this->work_dir = dir;
 }
 
-int TabWidget::addNewTab(const QString & shell_program)
+int TabWidget::addNewTab(const QString &shell_program)
 {
     tabNumerator++;
     QString label = QString(tr("Shell No. %1")).arg(tabNumerator);
 
     TermWidgetHolder *ch = terminalHolder();
     QString cwd(work_dir);
-    if (Properties::Instance()->useCWD && ch)
-    {
+    if (Properties::Instance()->useCWD && ch) {
         cwd = ch->currentTerminal()->impl()->workingDirectory();
         if (cwd.isEmpty())
             cwd = work_dir;
@@ -80,7 +79,7 @@ int TabWidget::addNewTab(const QString & shell_program)
 
     TermWidgetHolder *console = new TermWidgetHolder(cwd, shell_program, this);
     connect(console, SIGNAL(finished()), SLOT(removeFinished()));
-    //connect(console, SIGNAL(lastTerminalClosed()), this, SLOT(removeCurrentTab()));
+    // connect(console, SIGNAL(lastTerminalClosed()), this, SLOT(removeCurrentTab()));
     connect(console, SIGNAL(lastTerminalClosed()), this, SLOT(removeFinished()));
     connect(console, SIGNAL(renameSession()), this, SLOT(renameSession()));
 
@@ -121,7 +120,7 @@ void TabWidget::splitCollapse()
 
 void TabWidget::recountIndexes()
 {
-    for(int i = 0; i < count(); i++)
+    for (int i = 0; i < count(); i++)
         widget(i)->setProperty(TAB_INDEX_PROPERTY, i);
 }
 
@@ -129,25 +128,23 @@ void TabWidget::renameSession()
 {
     bool ok = false;
     QString text = QInputDialog::getText(this, tr("Tab name"),
-                                        tr("New tab name:"), QLineEdit::Normal,
-                                        QString(), &ok);
-    if(ok && !text.isEmpty())
-    {
+                                         tr("New tab name:"), QLineEdit::Normal,
+                                         QString(), &ok);
+    if (ok && !text.isEmpty())
         setTabText(currentIndex(), text);
-    }
 }
 
 void TabWidget::renameTabsAfterRemove()
 {
 // it breaks custom names - it replaces original/custom title with shell no #
 #if 0
-    for(int i = 0; i < count(); i++) {
+    for (int i = 0; i < count(); i++)
         setTabText(i, QString(tr("Shell No. %1")).arg(i+1));
-    }
+
 #endif
 }
 
-void TabWidget::contextMenuEvent ( QContextMenuEvent * event )
+void TabWidget::contextMenuEvent(QContextMenuEvent *event)
 {
     QMenu menu(this);
 
@@ -160,9 +157,8 @@ void TabWidget::contextMenuEvent ( QContextMenuEvent * event )
 
 bool TabWidget::eventFilter(QObject *obj, QEvent *event)
 {
-    if (event->type() == QEvent::MouseButtonDblClick)
-    {
-        QMouseEvent *e = reinterpret_cast<QMouseEvent*>(event);
+    if (event->type() == QEvent::MouseButtonDblClick) {
+        QMouseEvent *e = reinterpret_cast<QMouseEvent *>(event);
         // if user doubleclicks on tab button - rename it. If user
         // clicks on free space - open new tab
         if (tabBar()->tabAt(e->pos()) == -1)
@@ -176,14 +172,13 @@ bool TabWidget::eventFilter(QObject *obj, QEvent *event)
 
 void TabWidget::removeFinished()
 {
-    QObject* term = sender();
+    QObject *term = sender();
     QVariant prop = term->property(TAB_INDEX_PROPERTY);
-    if(prop.isValid() && prop.canConvert(QVariant::Int))
-    {
+    if (prop.isValid() && prop.canConvert(QVariant::Int)) {
         int index = prop.toInt();
-	    removeTab(index);
-//        if (count() == 0)
-//            emit closeTabNotification();
+        removeTab(index);
+// if (count() == 0)
+// emit closeTabNotification();
     }
 }
 
@@ -191,18 +186,16 @@ void TabWidget::removeTab(int index)
 {
     setUpdatesEnabled(false);
 
-    QWidget * w = widget(index);
+    QWidget *w = widget(index);
     QTabWidget::removeTab(index);
     w->deleteLater();
 
     recountIndexes();
     int current = currentIndex();
-    if (current >= 0 )
-    {
-        qobject_cast<TermWidgetHolder*>(widget(current))->setInitialFocus();
-    }
+    if (current >= 0)
+        qobject_cast<TermWidgetHolder *>(widget(current))->setInitialFocus();
 // do not decrease it as renaming is disabled in renameTabsAfterRemove
-//    tabNumerator--;
+// tabNumerator--;
     setUpdatesEnabled(true);
 
     if (count() == 0)
@@ -215,16 +208,15 @@ void TabWidget::removeTab(int index)
 void TabWidget::removeCurrentTab()
 {
     // question disabled due user requests. Yes I agree it was anoying.
-//    if (QMessageBox::question(this,
-//                    tr("Close current session"),
-//                    tr("Are you sure you want to close current sesstion?"),
-//                    QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes)
-//    {
-    if (count() > 1) {
+// if (QMessageBox::question(this,
+// tr("Close current session"),
+// tr("Are you sure you want to close current sesstion?"),
+// QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes)
+// {
+    if (count() > 1)
         removeTab(currentIndex());
-    } else {
+    else
         emit closeTabNotification();
-    }
 }
 
 int TabWidget::switchToRight()
@@ -247,28 +239,26 @@ int TabWidget::switchToLeft()
     return currentIndex();
 }
 
-
 void TabWidget::move(Direction dir)
 {
-    if(count() > 1)
-    {
+    if (count() > 1) {
         int index = currentIndex();
-        QWidget* child  = widget(index);
-        QString label   = tabText(index);
+        QWidget *child = widget(index);
+        QString label = tabText(index);
         QString toolTip = tabToolTip(index);
-        QIcon   icon    = tabIcon(index);
+        QIcon icon = tabIcon(index);
 
         int newIndex = 0;
-        if(dir == Left)
-            if(index == 0)
+        if (dir == Left) {
+            if (index == 0)
                 newIndex = count() -1;
             else
                 newIndex = index - 1;
-        else
-            if(index == count() - 1)
-                newIndex = 0;
-            else
-                newIndex = index + 1;
+        } else if (index == count() - 1) {
+            newIndex = 0;
+        } else {
+            newIndex = index + 1;
+        }
 
         setUpdatesEnabled(false);
         QTabWidget::removeTab(index);
@@ -295,38 +285,35 @@ void TabWidget::moveRight()
 void TabWidget::changeScrollPosition(QAction *triggered)
 {
     QActionGroup *scrollPosition = static_cast<QActionGroup *>(sender());
-    if(!scrollPosition)
+    if (!scrollPosition)
         qFatal("scrollPosition is NULL");
 
-
-    Properties::Instance()->scrollBarPos =
-            scrollPosition->actions().indexOf(triggered);
+    Properties::Instance()->scrollBarPos
+        = scrollPosition->actions().indexOf(triggered);
 
     Properties::Instance()->saveSettings();
     propertiesChanged();
-
 }
 
 void TabWidget::changeTabPosition(QAction *triggered)
 {
     QActionGroup *tabPosition = static_cast<QActionGroup *>(sender());
-    if(!tabPosition)
+    if (!tabPosition)
         qFatal("tabPosition is NULL");
 
     Properties *prop = Properties::Instance();
     /* order is dictated from mainwindow.cpp */
-    QTabWidget::TabPosition position = (QTabWidget::TabPosition)tabPosition->actions().indexOf(triggered);
+    QTabWidget::TabPosition position = (QTabWidget::TabPosition)tabPosition->actions().indexOf(
+        triggered);
     setTabPosition(position);
     prop->tabsPos = position;
     prop->saveSettings();
-    return;
 }
 
 void TabWidget::propertiesChanged()
 {
-    for (int i = 0; i < count(); ++i)
-    {
-        TermWidgetHolder *console = static_cast<TermWidgetHolder*>(widget(i));
+    for (int i = 0; i < count(); ++i) {
+        TermWidgetHolder *console = static_cast<TermWidgetHolder *>(widget(i));
         console->propertiesChanged();
     }
     showHideTabBar();
@@ -334,18 +321,18 @@ void TabWidget::propertiesChanged()
 
 void TabWidget::clearActiveTerminal()
 {
-    reinterpret_cast<TermWidgetHolder*>(widget(currentIndex()))->clearActiveTerminal();
+    reinterpret_cast<TermWidgetHolder *>(widget(currentIndex()))->clearActiveTerminal();
 }
 
 void TabWidget::saveSession()
 {
     int ix = currentIndex();
-    reinterpret_cast<TermWidgetHolder*>(widget(ix))->saveSession(tabText(ix));
+    reinterpret_cast<TermWidgetHolder *>(widget(ix))->saveSession(tabText(ix));
 }
 
 void TabWidget::loadSession()
 {
-    reinterpret_cast<TermWidgetHolder*>(widget(currentIndex()))->loadSession();
+    reinterpret_cast<TermWidgetHolder *>(widget(currentIndex()))->loadSession();
 }
 
 void TabWidget::showHideTabBar()

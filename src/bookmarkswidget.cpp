@@ -15,29 +15,60 @@ public:
         Command = 2
     };
 
-    AbstractBookmarkItem(AbstractBookmarkItem* parent = 0)
+    AbstractBookmarkItem(AbstractBookmarkItem *parent = 0)
     {
         m_parent = parent;
     }
+
     ~AbstractBookmarkItem()
     {
         qDeleteAll(m_children);
     }
 
-    ItemType type() { return m_type; }
-    QString value() { return m_value; }
-    QString display() { return m_display; }
+    ItemType type()
+    {
+        return m_type;
+    }
 
-    void addChild(AbstractBookmarkItem* item) { m_children << item; }
-    int childCount() { return m_children.count(); }
-    QList<AbstractBookmarkItem*> children() { return m_children; }
-    AbstractBookmarkItem *child(int number) { return m_children.value(number); }
-    AbstractBookmarkItem *parent() { return m_parent; }
+    QString value()
+    {
+        return m_value;
+    }
+
+    QString display()
+    {
+        return m_display;
+    }
+
+    void addChild(AbstractBookmarkItem *item)
+    {
+        m_children << item;
+    }
+
+    int childCount()
+    {
+        return m_children.count();
+    }
+
+    QList<AbstractBookmarkItem *> children()
+    {
+        return m_children;
+    }
+
+    AbstractBookmarkItem *child(int number)
+    {
+        return m_children.value(number);
+    }
+
+    AbstractBookmarkItem *parent()
+    {
+        return m_parent;
+    }
 
     int childNumber() const
     {
         if (m_parent)
-            return m_parent->children().indexOf(const_cast<AbstractBookmarkItem*>(this));
+            return m_parent->children().indexOf(const_cast<AbstractBookmarkItem *>(this));
 
         return 0;
     }
@@ -45,7 +76,7 @@ public:
 protected:
     ItemType m_type;
     AbstractBookmarkItem *m_parent;
-    QList<AbstractBookmarkItem*> m_children;
+    QList<AbstractBookmarkItem *> m_children;
     QString m_value;
     QString m_display;
 };
@@ -53,8 +84,8 @@ protected:
 class BookmarkRootItem : public AbstractBookmarkItem
 {
 public:
-    BookmarkRootItem()
-        : AbstractBookmarkItem()
+    BookmarkRootItem() :
+        AbstractBookmarkItem()
     {
         m_type = AbstractBookmarkItem::Root;
         m_value = m_display = "root";
@@ -64,8 +95,8 @@ public:
 class BookmarkCommandItem : public AbstractBookmarkItem
 {
 public:
-    BookmarkCommandItem(const QString &name, const QString &command, AbstractBookmarkItem *parent)
-        : AbstractBookmarkItem(parent)
+    BookmarkCommandItem(const QString &name, const QString &command, AbstractBookmarkItem *parent) :
+        AbstractBookmarkItem(parent)
     {
         m_type = AbstractBookmarkItem::Command;
         m_value = command;
@@ -73,12 +104,11 @@ public:
     }
 };
 
-
 class BookmarkGroupItem : public AbstractBookmarkItem
 {
 public:
-    BookmarkGroupItem(const QString &name, AbstractBookmarkItem *parent)
-        : AbstractBookmarkItem(parent)
+    BookmarkGroupItem(const QString &name, AbstractBookmarkItem *parent) :
+        AbstractBookmarkItem(parent)
     {
         m_type = AbstractBookmarkItem::Group;
         m_display = name;
@@ -88,8 +118,8 @@ public:
 class BookmarkLocalGroupItem : public BookmarkGroupItem
 {
 public:
-    BookmarkLocalGroupItem(AbstractBookmarkItem *parent)
-        : BookmarkGroupItem(QObject::tr("Local Bookmarks"), parent)
+    BookmarkLocalGroupItem(AbstractBookmarkItem *parent) :
+        BookmarkGroupItem(QObject::tr("Local Bookmarks"), parent)
     {
         QList<QStandardPaths::StandardLocation> locations;
         locations << QStandardPaths::DesktopLocation
@@ -108,9 +138,8 @@ public:
         foreach (QStandardPaths::StandardLocation i, locations)
         {
             path = QStandardPaths::writableLocation(i);
-            if (!d.exists(path))
-            {
-                //qDebug() << "Dir:" << path << "does not exist. Skipping.";
+            if (!d.exists(path)) {
+                // qDebug() << "Dir:" << path << "does not exist. Skipping.";
                 continue;
             }
             name = QStandardPaths::displayName(i);
@@ -126,9 +155,8 @@ public:
         foreach (QString i, env.keys())
         {
             path = env.value(i);
-            if (!d.exists(path) || !QFileInfo(path).isDir())
-            {
-                //qDebug() << "Env Dir:" << path << "does not exist. Skipping.";
+            if (!d.exists(path) || !QFileInfo(path).isDir()) {
+                // qDebug() << "Env Dir:" << path << "does not exist. Skipping.";
                 continue;
             }
             path.replace(" ", "\\ ");
@@ -142,17 +170,16 @@ class BookmarkFileGroupItem : public BookmarkGroupItem
 {
     // hierarchy handling
     // m_pos to group map. Example: group1.group2=item
-    QHash<QString,AbstractBookmarkItem*> m_map;
+    QHash<QString, AbstractBookmarkItem *> m_map;
     // current position level. Example "group1", "group2"
     QStringList m_pos;
 
 public:
-    BookmarkFileGroupItem(AbstractBookmarkItem *parent, const QString &fname)
-        : BookmarkGroupItem(QObject::tr("Synchronized Bookmarks"), parent)
+    BookmarkFileGroupItem(AbstractBookmarkItem *parent, const QString &fname) :
+        BookmarkGroupItem(QObject::tr("Synchronized Bookmarks"), parent)
     {
         QFile f(fname);
-        if (!f.open(QIODevice::ReadOnly))
-        {
+        if (!f.open(QIODevice::ReadOnly)) {
             qDebug() << "Canot open file" << fname;
             // TODO/FIXME: message box
             return;
@@ -165,14 +192,12 @@ public:
         {
             xml.readNext();
 
-            switch (xml.tokenType())
-            {
+            switch (xml.tokenType()) {
             case QXmlStreamReader::StartElement:
             {
                 AbstractBookmarkItem *parent = m_map.contains(xmlPos()) ? m_map[xmlPos()] : this;
                 QString tag = xml.name().toString();
-                if (tag == "group")
-                {
+                if (tag == "group") {
                     QString name = xml.attributes().value("name").toString();
                     m_pos.append(name);
 
@@ -180,9 +205,7 @@ public:
                     parent->addChild(i);
 
                     m_map[xmlPos()] = i;
-                }
-                else if (tag == "command")
-                {
+                } else if (tag == "command") {
                     QString name = xml.attributes().value("name").toString();
                     QString cmd = xml.attributes().value("value").toString();
 
@@ -195,9 +218,7 @@ public:
             {
                 QString tag = xml.name().toString();
                 if (tag == "group")
-                {
                     m_pos.removeLast();
-                }
                 break;
             }
             case QXmlStreamReader::Invalid:
@@ -222,10 +243,9 @@ public:
     }
 };
 
-
-BookmarksModel::BookmarksModel(QObject *parent)
-    : QAbstractItemModel(parent),
-      m_root(0)
+BookmarksModel::BookmarksModel(QObject *parent) :
+    QAbstractItemModel(parent),
+    m_root(0)
 {
     setup();
 }
@@ -237,7 +257,7 @@ void BookmarksModel::setup()
     m_root = new BookmarkRootItem();
     m_root->addChild(new BookmarkLocalGroupItem(m_root));
     m_root->addChild(new BookmarkFileGroupItem(m_root, Properties::Instance()->bookmarksFile));
-    //reset();
+    // reset();
 }
 
 BookmarksModel::~BookmarksModel()
@@ -256,18 +276,16 @@ QVariant BookmarksModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    switch (role)
-    {
+    switch (role) {
     case Qt::DisplayRole:
     case Qt::EditRole:
         return index.column() == 0 ? getItem(index)->display() : getItem(index)->value();
     case Qt::FontRole:
     {
         QFont f;
-        if (static_cast<AbstractBookmarkItem*>(index.internalPointer())->type() == AbstractBookmarkItem::Group)
-        {
+        if (static_cast<AbstractBookmarkItem *>(index.internalPointer())->type()
+            == AbstractBookmarkItem::Group)
             f.setBold(true);
-        }
         return f;
     }
     default:
@@ -277,14 +295,13 @@ QVariant BookmarksModel::data(const QModelIndex &index, int role) const
 
 AbstractBookmarkItem *BookmarksModel::getItem(const QModelIndex &index) const
 {
-    if (index.isValid())
-    {
-        AbstractBookmarkItem *item = static_cast<AbstractBookmarkItem*>(index.internalPointer());
+    if (index.isValid()) {
+        AbstractBookmarkItem *item = static_cast<AbstractBookmarkItem *>(index.internalPointer());
         if (item)
             return item;
     }
     return m_root;
- }
+}
 
 QModelIndex BookmarksModel::index(int row, int column, const QModelIndex &parent) const
 {
@@ -299,7 +316,6 @@ QModelIndex BookmarksModel::index(int row, int column, const QModelIndex &parent
     else
         return QModelIndex();
 }
-
 
 QModelIndex BookmarksModel::parent(const QModelIndex &index) const
 {
@@ -322,8 +338,7 @@ int BookmarksModel::rowCount(const QModelIndex &parent) const
 }
 
 #if 0
-bool BookmarksModel::setData(const QModelIndex &index, const QVariant &value,
-                             int role)
+bool BookmarksModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (role != Qt::EditRole)
         return false;
@@ -336,11 +351,11 @@ bool BookmarksModel::setData(const QModelIndex &index, const QVariant &value,
 
     return result;
 }
+
 #endif
 
-
-BookmarksWidget::BookmarksWidget(QWidget *parent)
-    : QWidget(parent)
+BookmarksWidget::BookmarksWidget(QWidget *parent) :
+    QWidget(parent)
 {
     setupUi(this);
 
@@ -365,10 +380,10 @@ void BookmarksWidget::setup()
     treeView->resizeColumnToContents(1);
 }
 
-void BookmarksWidget::handleCommand(const QModelIndex& index)
+void BookmarksWidget::handleCommand(const QModelIndex &index)
 {
     qDebug() << "HCMD";
-    AbstractBookmarkItem *item = static_cast<AbstractBookmarkItem*>(index.internalPointer());
+    AbstractBookmarkItem *item = static_cast<AbstractBookmarkItem *>(index.internalPointer());
     if (!item && item->type() != AbstractBookmarkItem::Command)
         return;
 

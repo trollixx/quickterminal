@@ -4,8 +4,6 @@
 #include "ui_fontdialog.h"
 #include "properties.h"
 
-
-
 class FontDialog : public QDialog, public Ui::FontDialog
 {
     Q_OBJECT
@@ -15,7 +13,6 @@ public:
 
 private slots:
     void setFontSample();
-
 };
 
 #endif

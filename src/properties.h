@@ -8,76 +8,75 @@
 
 typedef QString Session;
 
-typedef QMap<QString,Session> Sessions;
+typedef QMap<QString, Session> Sessions;
 
-typedef QMap<QString,QString> ShortcutMap;
-
+typedef QMap<QString, QString> ShortcutMap;
 
 class Properties
 {
-    public:
-        static Properties *Instance();
+public:
+    static Properties *Instance();
 
-        QFont defaultFont();
-        void saveSettings();
+    QFont defaultFont();
+    void saveSettings();
 
-        QByteArray mainWindowGeometry;
-        QByteArray mainWindowState;
-        //ShortcutMap shortcuts;
-        QString shell;
-        QFont font;
-        QString colorScheme;
-        QString guiStyle;
-        bool highlightCurrentTerminal;
+    QByteArray mainWindowGeometry;
+    QByteArray mainWindowState;
+    // ShortcutMap shortcuts;
+    QString shell;
+    QFont font;
+    QString colorScheme;
+    QString guiStyle;
+    bool highlightCurrentTerminal;
 
-        bool historyLimited;
-        unsigned historyLimitedTo;
+    bool historyLimited;
+    unsigned historyLimitedTo;
 
-        QString emulation;
+    QString emulation;
 
-        Sessions sessions;
+    Sessions sessions;
 
-        int appOpacity;
-        int termOpacity;
+    int appOpacity;
+    int termOpacity;
 
-        int scrollBarPos;
-        int tabsPos;
-        bool alwaysShowTabs;
-        int m_motionAfterPaste;
+    int scrollBarPos;
+    int tabsPos;
+    bool alwaysShowTabs;
+    int m_motionAfterPaste;
 
-        bool borderless;
-        bool tabBarless;
-        bool menuVisible;
+    bool borderless;
+    bool tabBarless;
+    bool menuVisible;
 
-        bool askOnExit;
+    bool askOnExit;
 
-        bool useCWD;
+    bool useCWD;
 
-        bool useBookmarks;
-        bool bookmarksVisible;
-        QString bookmarksFile;
+    bool useBookmarks;
+    bool bookmarksVisible;
+    QString bookmarksFile;
 
-        QKeySequence dropShortCut;
-        bool dropKeepOpen;
-        bool dropShowOnStart;
-        int dropWidht;
-        int dropHeight;
+    QKeySequence dropShortCut;
+    bool dropKeepOpen;
+    bool dropShowOnStart;
+    int dropWidht;
+    int dropHeight;
 
-        QMap< QString, QAction * > actions;
+    QMap< QString, QAction * > actions;
 
-        void loadSettings();
+    void loadSettings();
 
+private:
 
-    private:
+    // Singleton handling
+    static Properties *m_instance;
 
-        // Singleton handling
-        static Properties *m_instance;
+    Properties();
+    Properties(const Properties &)
+    {
+    }
 
-        Properties();
-        Properties(const Properties &) {};
-        ~Properties();
-
+    ~Properties();
 };
 
 #endif
-

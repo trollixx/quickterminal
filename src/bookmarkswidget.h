@@ -6,13 +6,12 @@
 class AbstractBookmarkItem;
 class BookmarksModel;
 
-
 class BookmarksWidget : public QWidget, Ui::BookmarksWidget
 {
     Q_OBJECT
 
 public:
-    BookmarksWidget(QWidget *parent=NULL);
+    BookmarksWidget(QWidget *parent = NULL);
     ~BookmarksWidget();
 
     void setup();
@@ -24,9 +23,8 @@ private:
     BookmarksModel *m_model;
 
 private slots:
-    void handleCommand(const QModelIndex& index);
+    void handleCommand(const QModelIndex &index);
 };
-
 
 class BookmarksModel : public QAbstractItemModel
 {
@@ -40,8 +38,7 @@ public:
 
     QVariant data(const QModelIndex &index, int role) const;
 
-    QModelIndex index(int row, int column,
-                      const QModelIndex &parent = QModelIndex()) const;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &index) const;
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
@@ -53,4 +50,3 @@ private:
 };
 
 #endif
-

@@ -9,9 +9,8 @@
 #include "fontdialog.h"
 #include "config.h"
 
-
-PropertiesDialog::PropertiesDialog(QWidget *parent)
-    : QDialog(parent)
+PropertiesDialog::PropertiesDialog(QWidget *parent) :
+    QDialog(parent)
 {
     setupUi(this);
 
@@ -32,8 +31,8 @@ PropertiesDialog::PropertiesDialog(QWidget *parent)
 
     emulationComboBox->addItems(emulations);
     int eix = emulationComboBox->findText(Properties::Instance()->emulation);
-    emulationComboBox->setCurrentIndex(eix != -1 ? eix : 0 );
-   
+    emulationComboBox->setCurrentIndex(eix != -1 ? eix : 0);
+
     /* shortcuts */
     setupShortcuts();
 
@@ -55,12 +54,12 @@ PropertiesDialog::PropertiesDialog(QWidget *parent)
     showMenuCheckBox->setChecked(Properties::Instance()->menuVisible);
 
     /* actions by motion after paste */
-    
+
     QStringList motionAfter;
     motionAfter << "No move" << "Move start" << "Move end";
     motionAfterPasting_comboBox->addItems(motionAfter);
     motionAfterPasting_comboBox->setCurrentIndex(Properties::Instance()->m_motionAfterPaste);
-    
+
     // Setting windows style actions
     styleComboBox->addItem(tr("System Default"));
     styleComboBox->addItems(QStyleFactory::keys());
@@ -68,14 +67,14 @@ PropertiesDialog::PropertiesDialog(QWidget *parent)
     int ix = styleComboBox->findText(Properties::Instance()->guiStyle);
     if (ix != -1)
         styleComboBox->setCurrentIndex(ix);
-    
+
     setFontSample(Properties::Instance()->font);
 
     appOpacityBox->setValue(Properties::Instance()->appOpacity);
-    //connect(appOpacityBox, SIGNAL(valueChanged(int)), this, SLOT(apply()));
+    // connect(appOpacityBox, SIGNAL(valueChanged(int)), this, SLOT(apply()));
 
     termOpacityBox->setValue(Properties::Instance()->termOpacity);
-    //connect(termOpacityBox, SIGNAL(valueChanged(int)), this, SLOT(apply()));
+    // connect(termOpacityBox, SIGNAL(valueChanged(int)), this, SLOT(apply()));
 
     highlightCurrentCheckBox->setChecked(Properties::Instance()->highlightCurrentTerminal);
 
@@ -99,7 +98,6 @@ PropertiesDialog::PropertiesDialog(QWidget *parent)
             this, SLOT(bookmarksButton_clicked()));
 }
 
-
 PropertiesDialog::~PropertiesDialog()
 {
 }
@@ -113,17 +111,18 @@ void PropertiesDialog::accept()
 void PropertiesDialog::apply()
 {
     Properties::Instance()->colorScheme = colorSchemaCombo->currentText();
-    Properties::Instance()->font = fontSampleLabel->font();//fontComboBox->currentFont();
-    Properties::Instance()->guiStyle = (styleComboBox->currentText() == tr("System Default")) ?
-                                       QString() : styleComboBox->currentText();
+    Properties::Instance()->font = fontSampleLabel->font(); // fontComboBox->currentFont();
+    Properties::Instance()->guiStyle = (styleComboBox->currentText() == tr("System Default"))
+                                       ? QString() : styleComboBox->currentText();
 
     Properties::Instance()->emulation = emulationComboBox->currentText();
 
     /* do not allow to go above 99 or we lose transparency option */
-    (appOpacityBox->value() >= 100) ?
-            Properties::Instance()->appOpacity = 99
-                :
-            Properties::Instance()->appOpacity = appOpacityBox->value();
+    (appOpacityBox->value() >= 100)
+    ? Properties::Instance()->appOpacity = 99
+                                           :
+                                           Properties::Instance()->appOpacity
+                                               = appOpacityBox->value();
 
     Properties::Instance()->termOpacity = termOpacityBox->value();
     Properties::Instance()->highlightCurrentTerminal = highlightCurrentCheckBox->isChecked();
@@ -157,7 +156,7 @@ void PropertiesDialog::apply()
     emit propertiesChanged();
 }
 
-void PropertiesDialog::setFontSample(const QFont & f)
+void PropertiesDialog::setFontSample(const QFont &f)
 {
     fontSampleLabel->setFont(f);
     QString sample("%1 %2 pt");
@@ -179,10 +178,9 @@ void PropertiesDialog::saveShortcuts()
     QList< QString > shortcutKeys = Properties::Instance()->actions.keys();
     int shortcutCount = shortcutKeys.count();
 
-    shortcutsWidget->setRowCount( shortcutCount );
+    shortcutsWidget->setRowCount(shortcutCount);
 
-    for( int x=0; x < shortcutCount; x++ )
-    {
+    for (int x = 0; x < shortcutCount; x++) {
         QString keyValue = shortcutKeys.at(x);
         QAction *keyAction = Properties::Instance()->actions[keyValue];
 
@@ -199,17 +197,16 @@ void PropertiesDialog::setupShortcuts()
     QList< QString > shortcutKeys = Properties::Instance()->actions.keys();
     int shortcutCount = shortcutKeys.count();
 
-    shortcutsWidget->setRowCount( shortcutCount );
+    shortcutsWidget->setRowCount(shortcutCount);
 
-    for( int x=0; x < shortcutCount; x++ )
-    {
+    for (int x = 0; x < shortcutCount; x++) {
         QString keyValue = shortcutKeys.at(x);
         QAction *keyAction = Properties::Instance()->actions[keyValue];
 
-        QTableWidgetItem *itemName = new QTableWidgetItem( tr(keyValue.toStdString().c_str()) );
-        QTableWidgetItem *itemShortcut = new QTableWidgetItem( keyAction->shortcut().toString() );
+        QTableWidgetItem *itemName = new QTableWidgetItem(tr(keyValue.toStdString().c_str()));
+        QTableWidgetItem *itemShortcut = new QTableWidgetItem(keyAction->shortcut().toString());
 
-        itemName->setFlags( Qt::ItemIsSelectable | Qt::ItemIsEnabled );
+        itemName->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
         shortcutsWidget->setItem(x, 0, itemName);
         shortcutsWidget->setItem(x, 1, itemShortcut);
@@ -261,7 +258,10 @@ void PropertiesDialog::openBookmarksFile(const QString &fname)
     QFile f(fname);
     QString content;
     if (!f.open(QFile::ReadOnly))
-        content = "<qterminal>\n  <group name\"group1\">\n    <command name=\"cmd1\" value=\"cd $HOME\"/>\n  </group>\n</qterminal>";
+        content
+            =
+                "<qterminal>\n  <group name\"group1\">\n    <command name=\"cmd1\" value=\"cd $HOME\"/>\n  </group>\n</qterminal>";
+
     else
         content = f.readAll();
 

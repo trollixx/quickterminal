@@ -36,16 +36,13 @@
 // TODO/FXIME: probably remove. QSS makes it unusable on mac...
 #define QSS_DROP    "MainWindow {border: 1px solid rgba(0, 0, 0, 50%);}\n"
 
-MainWindow::MainWindow(const QString& work_dir,
-                       const QString& command,
-                       bool dropMode,
-                       QWidget * parent,
-                       Qt::WindowFlags f)
-    : QMainWindow(parent,f),
-      m_initShell(command),
-      m_initWorkDir(work_dir),
-      m_dropLockButton(0),
-      m_dropMode(dropMode)
+MainWindow::MainWindow(const QString &work_dir, const QString &command, bool dropMode,
+                       QWidget *parent, Qt::WindowFlags f) :
+    QMainWindow(parent, f),
+    m_initShell(command),
+    m_initWorkDir(work_dir),
+    m_dropLockButton(0),
+    m_dropMode(dropMode)
 {
     setupUi(this);
     Properties::Instance()->loadSettings();
@@ -71,8 +68,7 @@ MainWindow::MainWindow(const QString& work_dir,
     if (m_dropMode) {
         this->enableDropMode();
         setStyleSheet(QSS_DROP);
-    }
-    else {
+    } else {
         restoreGeometry(Properties::Instance()->mainWindowGeometry);
         restoreState(Properties::Instance()->mainWindowState);
     }
@@ -80,12 +76,12 @@ MainWindow::MainWindow(const QString& work_dir,
     connect(consoleTabulator, SIGNAL(closeTabNotification()), SLOT(close()));
     consoleTabulator->setWorkDirectory(work_dir);
     consoleTabulator->setTabPosition((QTabWidget::TabPosition)Properties::Instance()->tabsPos);
-    //consoleTabulator->setShellProgram(command);
+    // consoleTabulator->setShellProgram(command);
     consoleTabulator->addNewTab(command);
 
     setWindowTitle("QTerminal");
     setWindowIcon(QIcon(":/icons/qterminal.png"));
-    
+
     setup_FileMenu_Actions();
     setup_ActionsMenu_Actions();
     setup_ViewMenu_Actions();
@@ -103,14 +99,13 @@ MainWindow::~MainWindow()
 
 void MainWindow::migrate_settings()
 {
-    // Deal with rearrangements of settings. 
+    // Deal with rearrangements of settings.
     // If this method becomes unbearably huge we should look at the config-update
     // system used by kde and razor.
     QSettings settings;
     QString last_version = settings.value("version", "0.0.0").toString();
-    // Handle configchanges in 0.4.0 (renaming 'Paste Selection' -> 'Paste Clipboard') 
-    if (last_version < "0.4.0") 
-    {
+    // Handle configchanges in 0.4.0 (renaming 'Paste Selection' -> 'Paste Clipboard')
+    if (last_version < "0.4.0") {
         qDebug() << "Migrating settings from" << last_version << "to 0.4.0";
         settings.beginGroup("Shortcuts");
         QString tmp = settings.value("Paste Selection", PASTE_CLIPBOARD_SHORTCUT).toString();
@@ -129,7 +124,8 @@ void MainWindow::enableDropMode()
     m_dropLockButton = new QToolButton(this);
     consoleTabulator->setCornerWidget(m_dropLockButton, Qt::BottomRightCorner);
     m_dropLockButton->setCheckable(true);
-    m_dropLockButton->connect(m_dropLockButton, SIGNAL(clicked(bool)), this, SLOT(setKeepOpen(bool)));
+    m_dropLockButton->connect(m_dropLockButton, SIGNAL(clicked(bool)), this,
+                              SLOT(setKeepOpen(bool)));
     setKeepOpen(Properties::Instance()->dropKeepOpen);
     m_dropLockButton->setAutoRaise(true);
 
@@ -145,12 +141,12 @@ void MainWindow::setDropShortcut(QKeySequence dropShortCut)
     if (!m_dropMode)
         return;
 
-    if (m_dropShortcut.shortcut() != dropShortCut)
-    {
+    if (m_dropShortcut.shortcut() != dropShortCut) {
         m_dropShortcut.setShortcut(dropShortCut);
         qWarning() << tr("Press \"%1\" to see the terminal.").arg(dropShortCut.toString());
     }
 }
+
 #endif
 
 void MainWindow::setup_ActionsMenu_Actions()
@@ -161,76 +157,91 @@ void MainWindow::setup_ActionsMenu_Actions()
     QKeySequence seq;
 
     Properties::Instance()->actions[CLEAR_TERMINAL] = new QAction(tr("Clear Current Tab"), this);
-    seq = QKeySequence::fromString(settings.value(CLEAR_TERMINAL, CLEAR_TERMINAL_SHORTCUT).toString());
+    seq = QKeySequence::fromString(settings.value(CLEAR_TERMINAL,
+                                                  CLEAR_TERMINAL_SHORTCUT).toString());
     Properties::Instance()->actions[CLEAR_TERMINAL]->setShortcut(seq);
-    connect(Properties::Instance()->actions[CLEAR_TERMINAL], SIGNAL(triggered()), consoleTabulator, SLOT(clearActiveTerminal()));
+    connect(Properties::Instance()->actions[CLEAR_TERMINAL], SIGNAL(
+                triggered()), consoleTabulator, SLOT(clearActiveTerminal()));
     menu_Actions->addAction(Properties::Instance()->actions[CLEAR_TERMINAL]);
     addAction(Properties::Instance()->actions[CLEAR_TERMINAL]);
 
     menu_Actions->addSeparator();
 
     Properties::Instance()->actions[TAB_NEXT] = new QAction(tr("Next Tab"), this);
-    seq = QKeySequence::fromString( settings.value(TAB_NEXT, TAB_NEXT_SHORTCUT).toString() );
+    seq = QKeySequence::fromString(settings.value(TAB_NEXT, TAB_NEXT_SHORTCUT).toString());
     Properties::Instance()->actions[TAB_NEXT]->setShortcut(seq);
-    connect(Properties::Instance()->actions[TAB_NEXT], SIGNAL(triggered()), consoleTabulator, SLOT(switchToRight()));
+    connect(Properties::Instance()->actions[TAB_NEXT], SIGNAL(triggered()), consoleTabulator,
+            SLOT(switchToRight()));
     menu_Actions->addAction(Properties::Instance()->actions[TAB_NEXT]);
     addAction(Properties::Instance()->actions[TAB_NEXT]);
 
     Properties::Instance()->actions[TAB_PREV] = new QAction(tr("Previous Tab"), this);
-    seq = QKeySequence::fromString( settings.value(TAB_PREV, TAB_PREV_SHORTCUT).toString() );
+    seq = QKeySequence::fromString(settings.value(TAB_PREV, TAB_PREV_SHORTCUT).toString());
     Properties::Instance()->actions[TAB_PREV]->setShortcut(seq);
-    connect(Properties::Instance()->actions[TAB_PREV], SIGNAL(triggered()), consoleTabulator, SLOT(switchToLeft()));
+    connect(Properties::Instance()->actions[TAB_PREV], SIGNAL(triggered()), consoleTabulator,
+            SLOT(switchToLeft()));
     menu_Actions->addAction(Properties::Instance()->actions[TAB_PREV]);
     addAction(Properties::Instance()->actions[TAB_PREV]);
 
     Properties::Instance()->actions[MOVE_LEFT] = new QAction(tr("Move Tab Left"), this);
-    seq = QKeySequence::fromString( settings.value(MOVE_LEFT, MOVE_LEFT_SHORTCUT).toString() );
+    seq = QKeySequence::fromString(settings.value(MOVE_LEFT, MOVE_LEFT_SHORTCUT).toString());
     Properties::Instance()->actions[MOVE_LEFT]->setShortcut(seq);
-    connect(Properties::Instance()->actions[MOVE_LEFT], SIGNAL(triggered()), consoleTabulator, SLOT(moveLeft()));
+    connect(Properties::Instance()->actions[MOVE_LEFT], SIGNAL(triggered()), consoleTabulator,
+            SLOT(moveLeft()));
     menu_Actions->addAction(Properties::Instance()->actions[MOVE_LEFT]);
     addAction(Properties::Instance()->actions[MOVE_LEFT]);
 
     Properties::Instance()->actions[MOVE_RIGHT] = new QAction(tr("Move Tab Right"), this);
-    seq = QKeySequence::fromString( settings.value(MOVE_RIGHT, MOVE_RIGHT_SHORTCUT).toString() );
+    seq = QKeySequence::fromString(settings.value(MOVE_RIGHT, MOVE_RIGHT_SHORTCUT).toString());
     Properties::Instance()->actions[MOVE_RIGHT]->setShortcut(seq);
-    connect(Properties::Instance()->actions[MOVE_RIGHT], SIGNAL(triggered()), consoleTabulator, SLOT(moveRight()));
+    connect(Properties::Instance()->actions[MOVE_RIGHT], SIGNAL(
+                triggered()), consoleTabulator, SLOT(moveRight()));
     menu_Actions->addAction(Properties::Instance()->actions[MOVE_RIGHT]);
     addAction(Properties::Instance()->actions[MOVE_RIGHT]);
 
     menu_Actions->addSeparator();
 
-    Properties::Instance()->actions[SPLIT_HORIZONTAL] = new QAction(tr("Split Terminal Horizontally"), this);
-    seq = QKeySequence::fromString( settings.value(SPLIT_HORIZONTAL).toString() );
+    Properties::Instance()->actions[SPLIT_HORIZONTAL] = new QAction(tr(
+                                                                        "Split Terminal Horizontally"),
+                                                                    this);
+    seq = QKeySequence::fromString(settings.value(SPLIT_HORIZONTAL).toString());
     Properties::Instance()->actions[SPLIT_HORIZONTAL]->setShortcut(seq);
-    connect(Properties::Instance()->actions[SPLIT_HORIZONTAL], SIGNAL(triggered()), consoleTabulator, SLOT(splitHorizontally()));
+    connect(Properties::Instance()->actions[SPLIT_HORIZONTAL], SIGNAL(
+                triggered()), consoleTabulator, SLOT(splitHorizontally()));
     menu_Actions->addAction(Properties::Instance()->actions[SPLIT_HORIZONTAL]);
     addAction(Properties::Instance()->actions[SPLIT_HORIZONTAL]);
 
-    Properties::Instance()->actions[SPLIT_VERTICAL] = new QAction(tr("Split Terminal Vertically"), this);
-    seq = QKeySequence::fromString( settings.value(SPLIT_VERTICAL).toString() );
+    Properties::Instance()->actions[SPLIT_VERTICAL] = new QAction(tr(
+                                                                      "Split Terminal Vertically"),
+                                                                  this);
+    seq = QKeySequence::fromString(settings.value(SPLIT_VERTICAL).toString());
     Properties::Instance()->actions[SPLIT_VERTICAL]->setShortcut(seq);
-    connect(Properties::Instance()->actions[SPLIT_VERTICAL], SIGNAL(triggered()), consoleTabulator, SLOT(splitVertically()));
+    connect(Properties::Instance()->actions[SPLIT_VERTICAL], SIGNAL(
+                triggered()), consoleTabulator, SLOT(splitVertically()));
     menu_Actions->addAction(Properties::Instance()->actions[SPLIT_VERTICAL]);
     addAction(Properties::Instance()->actions[SPLIT_VERTICAL]);
 
     Properties::Instance()->actions[SUB_COLLAPSE] = new QAction(tr("Collapse Subterminal"), this);
-    seq = QKeySequence::fromString( settings.value(SUB_COLLAPSE).toString() );
+    seq = QKeySequence::fromString(settings.value(SUB_COLLAPSE).toString());
     Properties::Instance()->actions[SUB_COLLAPSE]->setShortcut(seq);
-    connect(Properties::Instance()->actions[SUB_COLLAPSE], SIGNAL(triggered()), consoleTabulator, SLOT(splitCollapse()));
+    connect(Properties::Instance()->actions[SUB_COLLAPSE], SIGNAL(
+                triggered()), consoleTabulator, SLOT(splitCollapse()));
     menu_Actions->addAction(Properties::Instance()->actions[SUB_COLLAPSE]);
     addAction(Properties::Instance()->actions[SUB_COLLAPSE]);
 
     Properties::Instance()->actions[SUB_NEXT] = new QAction(tr("Next Subterminal"), this);
-    seq = QKeySequence::fromString( settings.value(SUB_NEXT, SUB_NEXT_SHORTCUT).toString() );
+    seq = QKeySequence::fromString(settings.value(SUB_NEXT, SUB_NEXT_SHORTCUT).toString());
     Properties::Instance()->actions[SUB_NEXT]->setShortcut(seq);
-    connect(Properties::Instance()->actions[SUB_NEXT], SIGNAL(triggered()), consoleTabulator, SLOT(switchNextSubterminal()));
+    connect(Properties::Instance()->actions[SUB_NEXT], SIGNAL(triggered()), consoleTabulator,
+            SLOT(switchNextSubterminal()));
     menu_Actions->addAction(Properties::Instance()->actions[SUB_NEXT]);
     addAction(Properties::Instance()->actions[SUB_NEXT]);
 
     Properties::Instance()->actions[SUB_PREV] = new QAction(tr("Previous Subterminal"), this);
-    seq = QKeySequence::fromString( settings.value(SUB_PREV, SUB_PREV_SHORTCUT).toString() );
+    seq = QKeySequence::fromString(settings.value(SUB_PREV, SUB_PREV_SHORTCUT).toString());
     Properties::Instance()->actions[SUB_PREV]->setShortcut(seq);
-    connect(Properties::Instance()->actions[SUB_PREV], SIGNAL(triggered()), consoleTabulator, SLOT(switchPrevSubterminal()));
+    connect(Properties::Instance()->actions[SUB_PREV], SIGNAL(triggered()), consoleTabulator,
+            SLOT(switchPrevSubterminal()));
     menu_Actions->addAction(Properties::Instance()->actions[SUB_PREV]);
     addAction(Properties::Instance()->actions[SUB_PREV]);
 
@@ -238,33 +249,36 @@ void MainWindow::setup_ActionsMenu_Actions()
 
     // Copy and Paste are only added to the table for the sake of bindings at the moment; there is no Edit menu, only a context menu.
     Properties::Instance()->actions[COPY_SELECTION] = new QAction(tr("Copy Selection"), this);
-    seq = QKeySequence::fromString( settings.value(COPY_SELECTION, COPY_SELECTION_SHORTCUT).toString() );
+    seq = QKeySequence::fromString(settings.value(COPY_SELECTION,
+                                                  COPY_SELECTION_SHORTCUT).toString());
     Properties::Instance()->actions[COPY_SELECTION]->setShortcut(seq);
 
     Properties::Instance()->actions[PASTE_CLIPBOARD] = new QAction(tr("Paste Clipboard"), this);
-    seq = QKeySequence::fromString( settings.value(PASTE_CLIPBOARD, PASTE_CLIPBOARD_SHORTCUT).toString() );
+    seq = QKeySequence::fromString(settings.value(PASTE_CLIPBOARD,
+                                                  PASTE_CLIPBOARD_SHORTCUT).toString());
     Properties::Instance()->actions[PASTE_CLIPBOARD]->setShortcut(seq);
 
     Properties::Instance()->actions[PASTE_SELECTION] = new QAction(tr("Paste Selection"), this);
-    seq = QKeySequence::fromString( settings.value(PASTE_SELECTION, PASTE_SELECTION_SHORTCUT).toString() );
+    seq = QKeySequence::fromString(settings.value(PASTE_SELECTION,
+                                                  PASTE_SELECTION_SHORTCUT).toString());
     Properties::Instance()->actions[PASTE_SELECTION]->setShortcut(seq);
 
     Properties::Instance()->actions[ZOOM_IN] = new QAction(tr("Zoom in"), this);
-    seq = QKeySequence::fromString( settings.value(ZOOM_IN, ZOOM_IN_SHORTCUT).toString() );
+    seq = QKeySequence::fromString(settings.value(ZOOM_IN, ZOOM_IN_SHORTCUT).toString());
     Properties::Instance()->actions[ZOOM_IN]->setShortcut(seq);
 
     Properties::Instance()->actions[ZOOM_OUT] = new QAction(tr("Zoom out"), this);
-    seq = QKeySequence::fromString( settings.value(ZOOM_OUT, ZOOM_OUT_SHORTCUT).toString() );
+    seq = QKeySequence::fromString(settings.value(ZOOM_OUT, ZOOM_OUT_SHORTCUT).toString());
     Properties::Instance()->actions[ZOOM_OUT]->setShortcut(seq);
-    
+
     Properties::Instance()->actions[ZOOM_RESET] = new QAction(tr("Zoom reset"), this);
-    seq = QKeySequence::fromString( settings.value(ZOOM_RESET, ZOOM_RESET_SHORTCUT).toString() );
+    seq = QKeySequence::fromString(settings.value(ZOOM_RESET, ZOOM_RESET_SHORTCUT).toString());
     Properties::Instance()->actions[ZOOM_RESET]->setShortcut(seq);
 
     menu_Actions->addSeparator();
 
     Properties::Instance()->actions[FIND] = new QAction(tr("Find..."), this);
-    seq = QKeySequence::fromString( settings.value(FIND, FIND_SHORTCUT).toString() );
+    seq = QKeySequence::fromString(settings.value(FIND, FIND_SHORTCUT).toString());
     Properties::Instance()->actions[FIND]->setShortcut(seq);
     connect(Properties::Instance()->actions[FIND], SIGNAL(triggered()), this, SLOT(find()));
     menu_Actions->addAction(Properties::Instance()->actions[FIND]);
@@ -279,22 +293,23 @@ void MainWindow::setup_ActionsMenu_Actions()
     act = new QAction(tr("Save Session"), this);
     // do not use sequences for this task - it collides with eg. mc shorcuts
     // and mainly - it's not used too often
-    //act->setShortcut(QKeySequence::Save);
+    // act->setShortcut(QKeySequence::Save);
     connect(act, SIGNAL(triggered()), consoleTabulator, SLOT(saveSession()));
     addAction(act);
 
     act = new QAction(tr("Load Session"), this);
     // do not use sequences for this task - it collides with eg. mc shorcuts
     // and mainly - it's not used too often
-    //act->setShortcut(QKeySequence::Open);
+    // act->setShortcut(QKeySequence::Open);
     connect(act, SIGNAL(triggered()), consoleTabulator, SLOT(loadSession()));
     addAction(act);
 #endif
 
     Properties::Instance()->actions[TOGGLE_MENU] = new QAction(tr("Toggle Menu"), this);
-    seq = QKeySequence::fromString( settings.value(TOGGLE_MENU, TOGGLE_MENU_SHORTCUT).toString() );
+    seq = QKeySequence::fromString(settings.value(TOGGLE_MENU, TOGGLE_MENU_SHORTCUT).toString());
     Properties::Instance()->actions[TOGGLE_MENU]->setShortcut(seq);
-    connect(Properties::Instance()->actions[TOGGLE_MENU], SIGNAL(triggered()), this, SLOT(toggleMenu()));
+    connect(Properties::Instance()->actions[TOGGLE_MENU], SIGNAL(triggered()), this,
+            SLOT(toggleMenu()));
     // tis is correct - add action to main window - not to menu to keep toggle working
     addAction(Properties::Instance()->actions[TOGGLE_MENU]);
 
@@ -303,6 +318,7 @@ void MainWindow::setup_ActionsMenu_Actions()
     // apply props
     propertiesChanged();
 }
+
 void MainWindow::setup_FileMenu_Actions()
 {
     QSettings settings;
@@ -310,29 +326,34 @@ void MainWindow::setup_FileMenu_Actions()
 
     QKeySequence seq;
 
-    Properties::Instance()->actions[ADD_TAB] = new QAction(QIcon(":/icons/list-add.png"), tr("New Tab"), this);
-    seq = QKeySequence::fromString( settings.value(ADD_TAB, ADD_TAB_SHORTCUT).toString() );
+    Properties::Instance()->actions[ADD_TAB]
+        = new QAction(QIcon(":/icons/list-add.png"), tr("New Tab"), this);
+    seq = QKeySequence::fromString(settings.value(ADD_TAB, ADD_TAB_SHORTCUT).toString());
     Properties::Instance()->actions[ADD_TAB]->setShortcut(seq);
-    connect(Properties::Instance()->actions[ADD_TAB], SIGNAL(triggered()), consoleTabulator, SLOT(addNewTab()));
+    connect(Properties::Instance()->actions[ADD_TAB], SIGNAL(triggered()), consoleTabulator,
+            SLOT(addNewTab()));
     menu_File->addAction(Properties::Instance()->actions[ADD_TAB]);
     addAction(Properties::Instance()->actions[ADD_TAB]);
 
-    Properties::Instance()->actions[CLOSE_TAB] = new QAction(QIcon(":/icons/list-remove.png"), tr("Close Tab"), this);
-    seq = QKeySequence::fromString( settings.value(CLOSE_TAB, CLOSE_TAB_SHORTCUT).toString() );
+    Properties::Instance()->actions[CLOSE_TAB]
+        = new QAction(QIcon(":/icons/list-remove.png"), tr("Close Tab"), this);
+    seq = QKeySequence::fromString(settings.value(CLOSE_TAB, CLOSE_TAB_SHORTCUT).toString());
     Properties::Instance()->actions[CLOSE_TAB]->setShortcut(seq);
-    connect(Properties::Instance()->actions[CLOSE_TAB], SIGNAL(triggered()), consoleTabulator, SLOT(removeCurrentTab()));
+    connect(Properties::Instance()->actions[CLOSE_TAB], SIGNAL(triggered()), consoleTabulator,
+            SLOT(removeCurrentTab()));
     menu_File->addAction(Properties::Instance()->actions[CLOSE_TAB]);
     addAction(Properties::Instance()->actions[CLOSE_TAB]);
 
     Properties::Instance()->actions[NEW_WINDOW] = new QAction(tr("New Window"), this);
-    seq = QKeySequence::fromString( settings.value(NEW_WINDOW, NEW_WINDOW_SHORTCUT).toString() );
+    seq = QKeySequence::fromString(settings.value(NEW_WINDOW, NEW_WINDOW_SHORTCUT).toString());
     Properties::Instance()->actions[NEW_WINDOW]->setShortcut(seq);
-    connect(Properties::Instance()->actions[NEW_WINDOW], SIGNAL(triggered()), this, SLOT(newTerminalWindow()));
+    connect(Properties::Instance()->actions[NEW_WINDOW], SIGNAL(triggered()), this,
+            SLOT(newTerminalWindow()));
     menu_File->addAction(Properties::Instance()->actions[NEW_WINDOW]);
     addAction(Properties::Instance()->actions[NEW_WINDOW]);
-    
+
     menu_File->addSeparator();
- 
+
     Properties::Instance()->actions[PREFERENCES] = actProperties;
     connect(actProperties, SIGNAL(triggered()), SLOT(actProperties_triggered()));
     menu_File->addAction(Properties::Instance()->actions[PREFERENCES]);
@@ -344,23 +365,23 @@ void MainWindow::setup_FileMenu_Actions()
     menu_File->addAction(Properties::Instance()->actions[QUIT]);
 
     settings.endGroup();
-} 
+}
 
 void MainWindow::setup_ViewMenu_Actions()
 {
     toggleBorder = new QAction(tr("Hide Window Borders"), this);
-    //toggleBorder->setObjectName("toggle_Borderless");
+    // toggleBorder->setObjectName("toggle_Borderless");
     toggleBorder->setCheckable(true);
 // TODO/FIXME: it's broken somehow. When I call toggleBorderless() here the non-responsive window appear
-//    toggleBorder->setChecked(Properties::Instance()->borderless);
-//    if (Properties::Instance()->borderless)
-//        toggleBorderless();
+// toggleBorder->setChecked(Properties::Instance()->borderless);
+// if (Properties::Instance()->borderless)
+// toggleBorderless();
     connect(toggleBorder, SIGNAL(triggered()), this, SLOT(toggleBorderless()));
     menu_Window->addAction(toggleBorder);
     toggleBorder->setVisible(!m_dropMode);
 
     toggleTabbar = new QAction(tr("Show Tab Bar"), this);
-    //toggleTabbar->setObjectName("toggle_TabBar");
+    // toggleTabbar->setObjectName("toggle_TabBar");
     toggleTabbar->setCheckable(true);
     toggleTabbar->setChecked(!Properties::Instance()->tabBarless);
     toggleTabBar();
@@ -370,7 +391,9 @@ void MainWindow::setup_ViewMenu_Actions()
     QSettings settings;
     settings.beginGroup("Shortcuts");
     Properties::Instance()->actions[TOGGLE_BOOKMARKS] = m_bookmarksDock->toggleViewAction();
-    QKeySequence seq = QKeySequence::fromString( settings.value(TOGGLE_BOOKMARKS, TOGGLE_BOOKMARKS_SHORTCUT).toString() );
+    QKeySequence seq
+        = QKeySequence::fromString(settings.value(TOGGLE_BOOKMARKS,
+                                                  TOGGLE_BOOKMARKS_SHORTCUT).toString());
     Properties::Instance()->actions[TOGGLE_BOOKMARKS]->setShortcut(seq);
     menu_Window->addAction(Properties::Instance()->actions[TOGGLE_BOOKMARKS]);
     addAction(Properties::Instance()->actions[TOGGLE_BOOKMARKS]);
@@ -389,21 +412,20 @@ void MainWindow::setup_ViewMenu_Actions()
     tabPosition->addAction(tabLeft);
     tabPosition->addAction(tabRight);
 
-    for(int i = 0; i < tabPosition->actions().size(); ++i)
+    for (int i = 0; i < tabPosition->actions().size(); ++i)
         tabPosition->actions().at(i)->setCheckable(true);
 
-    if( tabPosition->actions().count() > Properties::Instance()->tabsPos )
+    if (tabPosition->actions().count() > Properties::Instance()->tabsPos)
         tabPosition->actions().at(Properties::Instance()->tabsPos)->setChecked(true);
 
     connect(tabPosition, SIGNAL(triggered(QAction *)),
-             consoleTabulator, SLOT(changeTabPosition(QAction *)) );
+            consoleTabulator, SLOT(changeTabPosition(QAction *)));
 
     tabPosMenu = new QMenu(tr("Tabs Layout"), menu_Window);
     tabPosMenu->setObjectName("tabPosMenu");
 
-    for(int i=0; i < tabPosition->actions().size(); ++i) {
+    for (int i = 0; i < tabPosition->actions().size(); ++i)
         tabPosMenu->addAction(tabPosition->actions().at(i));
-    }
 
     connect(menu_Window, SIGNAL(hovered(QAction *)),
             this, SLOT(updateActionGroup(QAction *)));
@@ -421,21 +443,20 @@ void MainWindow::setup_ViewMenu_Actions()
     scrollBarPosition->addAction(scrollLeft);
     scrollBarPosition->addAction(scrollRight);
 
-    for(int i = 0; i < scrollBarPosition->actions().size(); ++i)
+    for (int i = 0; i < scrollBarPosition->actions().size(); ++i)
         scrollBarPosition->actions().at(i)->setCheckable(true);
 
-    if( Properties::Instance()->scrollBarPos < scrollBarPosition->actions().size() )
+    if (Properties::Instance()->scrollBarPos < scrollBarPosition->actions().size())
         scrollBarPosition->actions().at(Properties::Instance()->scrollBarPos)->setChecked(true);
 
     connect(scrollBarPosition, SIGNAL(triggered(QAction *)),
-             consoleTabulator, SLOT(changeScrollPosition(QAction *)) );
+            consoleTabulator, SLOT(changeScrollPosition(QAction *)));
 
     scrollPosMenu = new QMenu(tr("Scrollbar Layout"), menu_Window);
     scrollPosMenu->setObjectName("scrollPosMenu");
 
-    for(int i=0; i < scrollBarPosition->actions().size(); ++i) {
+    for (int i = 0; i < scrollBarPosition->actions().size(); ++i)
         scrollPosMenu->addAction(scrollBarPosition->actions().at(i));
-    }
 
     menu_Window->addMenu(scrollPosMenu);
 }
@@ -468,8 +489,7 @@ void MainWindow::toggleMenu()
 void MainWindow::closeEvent(QCloseEvent *ev)
 {
     if (!Properties::Instance()->askOnExit
-            || !consoleTabulator->count())
-    {
+        || !consoleTabulator->count()) {
         Properties::Instance()->mainWindowGeometry = saveGeometry();
         Properties::Instance()->mainWindowState = saveState();
         Properties::Instance()->saveSettings();
@@ -478,17 +498,18 @@ void MainWindow::closeEvent(QCloseEvent *ev)
     }
 
     // ask user for cancel only when there is at least one terminal active in this window
-    QDialog * dia = new QDialog(this);
+    QDialog *dia = new QDialog(this);
     dia->setObjectName("exitDialog");
     dia->setWindowTitle(tr("Exit QTerminal"));
 
-    QCheckBox * dontAskCheck = new QCheckBox(tr("Do not ask again"), dia);
-    QDialogButtonBox * buttonBox = new QDialogButtonBox(QDialogButtonBox::Yes | QDialogButtonBox::No, Qt::Horizontal, dia);
+    QCheckBox *dontAskCheck = new QCheckBox(tr("Do not ask again"), dia);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Yes | QDialogButtonBox::No,
+                                                       Qt::Horizontal, dia);
 
     connect(buttonBox, SIGNAL(accepted()), dia, SLOT(accept()));
     connect(buttonBox, SIGNAL(rejected()), dia, SLOT(reject()));
-    
-    QVBoxLayout * lay = new QVBoxLayout();
+
+    QVBoxLayout *lay = new QVBoxLayout();
     lay->addWidget(new QLabel(tr("Are you sure you want to exit?")));
     lay->addWidget(dontAskCheck);
     lay->addWidget(buttonBox);
@@ -509,7 +530,8 @@ void MainWindow::closeEvent(QCloseEvent *ev)
 
 void MainWindow::actAbout_triggered()
 {
-    QMessageBox::about(this, QString("QTerminal ") + STR_VERSION, tr("A lightweight multiplatform terminal emulator"));
+    QMessageBox::about(this, QString("QTerminal ") + STR_VERSION,
+                       tr("A lightweight multiplatform terminal emulator"));
 }
 
 void MainWindow::actProperties_triggered()
@@ -536,9 +558,7 @@ void MainWindow::propertiesChanged()
     m_bookmarksDock->toggleViewAction()->setVisible(Properties::Instance()->useBookmarks);
 
     if (Properties::Instance()->useBookmarks)
-    {
-        qobject_cast<BookmarksWidget*>(m_bookmarksDock->widget())->setup();
-    }
+        qobject_cast<BookmarksWidget *>(m_bookmarksDock->widget())->setup();
 
     Properties::Instance()->saveSettings();
     realign();
@@ -546,13 +566,12 @@ void MainWindow::propertiesChanged()
 
 void MainWindow::realign()
 {
-    if (m_dropMode)
-    {
+    if (m_dropMode) {
         QRect desktop = QApplication::desktop()->availableGeometry(this);
         QRect geometry = QRect(0, 0,
                                desktop.width()  * Properties::Instance()->dropWidht  / 100,
                                desktop.height() * Properties::Instance()->dropHeight / 100
-                              );
+                               );
         geometry.moveCenter(desktop.center());
         // do not use 0 here - we need to calculate with potential panel on top
         geometry.setTop(desktop.top());
@@ -563,20 +582,18 @@ void MainWindow::realign()
 
 void MainWindow::updateActionGroup(QAction *a)
 {
-    if (a->parent()->objectName() == tabPosMenu->objectName()) {
+    if (a->parent()->objectName() == tabPosMenu->objectName())
         tabPosition->actions().at(Properties::Instance()->tabsPos)->setChecked(true);
-    }
 }
 
 void MainWindow::showHide()
 {
-    if (isVisible())
+    if (isVisible()) {
         hide();
-    else
-    {
-       realign();
-       show();
-       activateWindow();
+    } else {
+        realign();
+        show();
+        activateWindow();
     }
 }
 
@@ -596,20 +613,18 @@ void MainWindow::setKeepOpen(bool value)
 
 void MainWindow::find()
 {
-    // A bit ugly perhaps with 4 levels of indirection... 
+    // A bit ugly perhaps with 4 levels of indirection...
     consoleTabulator->terminalHolder()->currentTerminal()->impl()->toggleShowSearchBar();
 }
 
-
 bool MainWindow::event(QEvent *event)
 {
-    if (event->type() == QEvent::WindowDeactivate)
-    {
-        if (m_dropMode &&
-            !Properties::Instance()->dropKeepOpen &&
-            qApp->activeWindow() == 0
-           )
-           hide();
+    if (event->type() == QEvent::WindowDeactivate) {
+        if (m_dropMode
+            && !Properties::Instance()->dropKeepOpen
+            && qApp->activeWindow() == 0
+            )
+            hide();
     }
     return QMainWindow::event(event);
 }
@@ -620,7 +635,7 @@ void MainWindow::newTerminalWindow()
     w->show();
 }
 
-void MainWindow::bookmarksWidget_callCommand(const QString& cmd)
+void MainWindow::bookmarksWidget_callCommand(const QString &cmd)
 {
     consoleTabulator->terminalHolder()->currentTerminal()->impl()->sendText(cmd);
     consoleTabulator->terminalHolder()->currentTerminal()->setFocus();

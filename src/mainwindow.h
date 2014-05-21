@@ -31,17 +31,19 @@
 
 class QToolButton;
 
-class MainWindow : public QMainWindow , private Ui::mainWindow
+class MainWindow : public QMainWindow, private Ui::mainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(const QString& work_dir, const QString& command,
-               bool dropMode,
-               QWidget * parent = 0, Qt::WindowFlags f = 0);
+    MainWindow(const QString &work_dir, const QString &command, bool dropMode, QWidget *parent = 0,
+               Qt::WindowFlags f = 0);
     ~MainWindow();
 
-    bool dropMode() { return m_dropMode; }
+    bool dropMode()
+    {
+        return m_dropMode;
+    }
 
 protected slots:
     void on_consoleTabulator_currentChanged(int);
@@ -59,11 +61,11 @@ protected slots:
     void find();
 
     void newTerminalWindow();
-    void bookmarksWidget_callCommand(const QString&);
+    void bookmarksWidget_callCommand(const QString &);
     void bookmarksDock_visibilityChanged(bool visible);
 
 protected:
-     bool event(QEvent* event);
+    bool event(QEvent *event);
 
 private:
     QActionGroup *tabPosition, *scrollBarPosition;
@@ -82,7 +84,7 @@ private:
     void setup_ActionsMenu_Actions();
     void setup_ViewMenu_Actions();
 
-    void closeEvent(QCloseEvent*);
+    void closeEvent(QCloseEvent *);
 
     void enableDropMode();
     QToolButton *m_dropLockButton;
@@ -94,6 +96,5 @@ private:
     QxtGlobalShortcut m_dropShortcut;
     void setDropShortcut(QKeySequence dropShortCut);
 #endif
-
 };
-#endif //MAINWINDOW_H
+#endif // MAINWINDOW_H

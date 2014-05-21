@@ -5,8 +5,6 @@
 #include "termwidget.h"
 class QSplitter;
 
-
-
 /*! \brief TermWidget group/session manager.
 
 This widget (one per TabWidget tab) is a "proxy" widget beetween TabWidget and
@@ -19,48 +17,47 @@ class TermWidgetHolder : public QWidget
 {
     Q_OBJECT
 
-    public:
-        TermWidgetHolder(const QString & wdir, const QString & shell=QString(), QWidget * parent=0);
-        ~TermWidgetHolder();
+public:
+    TermWidgetHolder(const QString &wdir, const QString &shell = QString(), QWidget *parent = 0);
+    ~TermWidgetHolder();
 
-        void propertiesChanged();
-        void setInitialFocus();
+    void propertiesChanged();
+    void setInitialFocus();
 
-        void loadSession();
-        void saveSession(const QString & name);
-        void zoomIn(uint step);
-        void zoomOut(uint step);
+    void loadSession();
+    void saveSession(const QString &name);
+    void zoomIn(uint step);
+    void zoomOut(uint step);
 
-        TermWidget* currentTerminal();
+    TermWidget *currentTerminal();
 
-    public slots:
-        void splitHorizontal(TermWidget * term);
-        void splitVertical(TermWidget * term);
-        void splitCollapse(TermWidget * term);
-        void setWDir(const QString & wdir);
-        void switchNextSubterminal();
-        void switchPrevSubterminal();
-        void clearActiveTerminal();
+public slots:
+    void splitHorizontal(TermWidget *term);
+    void splitVertical(TermWidget *term);
+    void splitCollapse(TermWidget *term);
+    void setWDir(const QString &wdir);
+    void switchNextSubterminal();
+    void switchPrevSubterminal();
+    void clearActiveTerminal();
 
-    signals:
-        void finished();
-        void lastTerminalClosed();
-        void renameSession();
+signals:
+    void finished();
+    void lastTerminalClosed();
+    void renameSession();
 
-        void enableCollapse(bool);
+    void enableCollapse(bool);
 
-    private:
-        QString m_wdir;
-        QString m_shell;
-        TermWidget * m_currentTerm;
+private:
+    QString m_wdir;
+    QString m_shell;
+    TermWidget *m_currentTerm;
 
-        void split(TermWidget * term, Qt::Orientation orientation);
-        TermWidget * newTerm(const QString & wdir=QString(), const QString & shell=QString());
+    void split(TermWidget *term, Qt::Orientation orientation);
+    TermWidget *newTerm(const QString &wdir = QString(), const QString &shell = QString());
 
-    private slots:
-        void setCurrentTerminal(TermWidget* term);
-        void handle_finished();
+private slots:
+    void setCurrentTerminal(TermWidget *term);
+    void handle_finished();
 };
 
 #endif
-

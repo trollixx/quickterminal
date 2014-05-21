@@ -8,9 +8,8 @@
 
 static int TermWidgetCount = 0;
 
-
-TermWidgetImpl::TermWidgetImpl(const QString & wdir, const QString & shell, QWidget * parent)
-    : QTermWidget(0, parent)
+TermWidgetImpl::TermWidgetImpl(const QString &wdir, const QString &shell, QWidget *parent) :
+    QTermWidget(0, parent)
 {
     TermWidgetCount++;
     QString name("TermWidget_%1");
@@ -26,13 +25,10 @@ TermWidgetImpl::TermWidgetImpl(const QString & wdir, const QString & shell, QWid
     if (!wdir.isNull())
         setWorkingDirectory(wdir);
 
-    if (shell.isNull())
-    {
+    if (shell.isNull()) {
         if (!Properties::Instance()->shell.isNull())
             setShellProgram(Properties::Instance()->shell);
-    }
-    else
-    {
+    } else {
         qDebug() << "Settings custom shell program:" << shell;
         QStringList parts = shell.split(QRegExp("\\s+"), QString::SkipEmptyParts);
         qDebug() << parts;
@@ -43,16 +39,19 @@ TermWidgetImpl::TermWidgetImpl(const QString & wdir, const QString & shell, QWid
     }
 
     setMotionAfterPasting(Properties::Instance()->m_motionAfterPaste);
-    
-    actionMap[COPY_SELECTION] = new QAction(QIcon(":/icons/edit-copy.png"), tr(COPY_SELECTION), this);
+
+    actionMap[COPY_SELECTION]
+        = new QAction(QIcon(":/icons/edit-copy.png"), tr(COPY_SELECTION), this);
     connect(actionMap[COPY_SELECTION], SIGNAL(triggered()), this, SLOT(copyClipboard()));
     addAction(actionMap[COPY_SELECTION]);
 
-    actionMap[PASTE_CLIPBOARD] = new QAction(QIcon(":/icons/edit-paste.png"), tr(PASTE_CLIPBOARD), this);
+    actionMap[PASTE_CLIPBOARD] = new QAction(QIcon(":/icons/edit-paste.png"), tr(
+                                                 PASTE_CLIPBOARD), this);
     connect(actionMap[PASTE_CLIPBOARD], SIGNAL(triggered()), this, SLOT(pasteClipboard()));
     addAction(actionMap[PASTE_CLIPBOARD]);
 
-    actionMap[PASTE_SELECTION] = new QAction(QIcon(":/icons/edit-paste.png"), tr(PASTE_SELECTION), this);
+    actionMap[PASTE_SELECTION] = new QAction(QIcon(":/icons/edit-paste.png"), tr(
+                                                 PASTE_SELECTION), this);
     connect(actionMap[PASTE_SELECTION], SIGNAL(triggered()), this, SLOT(pasteSelection()));
     addAction(actionMap[PASTE_SELECTION]);
 
@@ -88,14 +87,14 @@ TermWidgetImpl::TermWidgetImpl(const QString & wdir, const QString & shell, QWid
     connect(actionMap[SUB_COLLAPSE], SIGNAL(triggered()), this, SLOT(act_splitCollapse()));
     addAction(actionMap[SUB_COLLAPSE]);
 
-    //act = new QAction(this);
-    //act->setSeparator(true);
-    //addAction(act);
+    // act = new QAction(this);
+    // act->setSeparator(true);
+    // addAction(act);
     //
-    //act = new QAction(tr("&Rename session..."), this);
-    //act->setShortcut(Properties::Instance()->shortcuts[RENAME_SESSION]);
-    //connect(act, SIGNAL(triggered()), this, SIGNAL(renameSession()));
-    //addAction(act);
+    // act = new QAction(tr("&Rename session..."), this);
+    // act->setShortcut(Properties::Instance()->shortcuts[RENAME_SESSION]);
+    // connect(act, SIGNAL(triggered()), this, SIGNAL(renameSession()));
+    // addAction(act);
 
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
@@ -103,7 +102,7 @@ TermWidgetImpl::TermWidgetImpl(const QString & wdir, const QString & shell, QWid
 
     updateShortcuts();
 
-    //setKeyBindings("linux");
+    // setKeyBindings("linux");
     startShellProgram();
 }
 
@@ -114,51 +113,46 @@ void TermWidgetImpl::updateShortcuts()
 
     QKeySequence seq;
 
-    if( actionMap.contains(COPY_SELECTION) && settings.contains(COPY_SELECTION) )
-    {
-        seq = QKeySequence::fromString( settings.value(COPY_SELECTION, QKeySequence::Copy).toString() );
+    if (actionMap.contains(COPY_SELECTION) && settings.contains(COPY_SELECTION)) {
+        seq
+            = QKeySequence::fromString(settings.value(COPY_SELECTION,
+                                                      QKeySequence::Copy).toString());
         actionMap[COPY_SELECTION]->setShortcut(seq);
     }
-    if( actionMap.contains(PASTE_CLIPBOARD) && settings.contains(PASTE_CLIPBOARD) )
-    {
-        seq = QKeySequence::fromString( settings.value(PASTE_CLIPBOARD, QKeySequence::Paste).toString() );
+    if (actionMap.contains(PASTE_CLIPBOARD) && settings.contains(PASTE_CLIPBOARD)) {
+        seq = QKeySequence::fromString(settings.value(PASTE_CLIPBOARD,
+                                                      QKeySequence::Paste).toString());
         actionMap[PASTE_CLIPBOARD]->setShortcut(seq);
-    } 
-    if( actionMap.contains(PASTE_SELECTION) && settings.contains(PASTE_SELECTION) )
-    {
-        seq = QKeySequence::fromString( settings.value(PASTE_SELECTION, QKeySequence::Paste).toString() );
+    }
+    if (actionMap.contains(PASTE_SELECTION) && settings.contains(PASTE_SELECTION)) {
+        seq = QKeySequence::fromString(settings.value(PASTE_SELECTION,
+                                                      QKeySequence::Paste).toString());
         actionMap[PASTE_SELECTION]->setShortcut(seq);
     }
-    
-    if( actionMap.contains(ZOOM_IN) && settings.contains(ZOOM_IN) )
-    {
-        seq = QKeySequence::fromString( settings.value(ZOOM_IN, QKeySequence::ZoomIn).toString() );
+
+    if (actionMap.contains(ZOOM_IN) && settings.contains(ZOOM_IN)) {
+        seq = QKeySequence::fromString(settings.value(ZOOM_IN, QKeySequence::ZoomIn).toString());
         actionMap[ZOOM_IN]->setShortcut(seq);
     }
-    if( actionMap.contains(ZOOM_OUT) && settings.contains(ZOOM_OUT) )
-    {
-        seq = QKeySequence::fromString( settings.value(ZOOM_OUT, QKeySequence::ZoomOut).toString() );
+    if (actionMap.contains(ZOOM_OUT) && settings.contains(ZOOM_OUT)) {
+        seq = QKeySequence::fromString(settings.value(ZOOM_OUT, QKeySequence::ZoomOut).toString());
         actionMap[ZOOM_OUT]->setShortcut(seq);
     }
-    if( actionMap.contains(ZOOM_RESET) && settings.contains(ZOOM_RESET) )
-    {
-        seq = QKeySequence::fromString( settings.value(ZOOM_RESET).toString() );
+    if (actionMap.contains(ZOOM_RESET) && settings.contains(ZOOM_RESET)) {
+        seq = QKeySequence::fromString(settings.value(ZOOM_RESET).toString());
         actionMap[ZOOM_RESET]->setShortcut(seq);
     }
-    
-    if( actionMap.contains(SPLIT_HORIZONTAL) && settings.contains(SPLIT_HORIZONTAL) )
-    {
-        seq = QKeySequence::fromString( settings.value(SPLIT_HORIZONTAL).toString() );
+
+    if (actionMap.contains(SPLIT_HORIZONTAL) && settings.contains(SPLIT_HORIZONTAL)) {
+        seq = QKeySequence::fromString(settings.value(SPLIT_HORIZONTAL).toString());
         actionMap[SPLIT_HORIZONTAL]->setShortcut(seq);
     }
-    if( actionMap.contains(SPLIT_VERTICAL) && settings.contains(SPLIT_VERTICAL) )
-    {
-        seq = QKeySequence::fromString( settings.value(SPLIT_VERTICAL).toString() );
+    if (actionMap.contains(SPLIT_VERTICAL) && settings.contains(SPLIT_VERTICAL)) {
+        seq = QKeySequence::fromString(settings.value(SPLIT_VERTICAL).toString());
         actionMap[SPLIT_VERTICAL]->setShortcut(seq);
     }
-    if( actionMap.contains(SUB_COLLAPSE) && settings.contains(SUB_COLLAPSE) )
-    {
-        seq = QKeySequence::fromString( settings.value(SUB_COLLAPSE).toString() );
+    if (actionMap.contains(SUB_COLLAPSE) && settings.contains(SUB_COLLAPSE)) {
+        seq = QKeySequence::fromString(settings.value(SUB_COLLAPSE).toString());
         actionMap[SUB_COLLAPSE]->setShortcut(seq);
     }
 
@@ -171,22 +165,20 @@ void TermWidgetImpl::propertiesChanged()
     setTerminalFont(Properties::Instance()->font);
     setMotionAfterPasting(Properties::Instance()->m_motionAfterPaste);
 
-    if (Properties::Instance()->historyLimited)
-    {
+    if (Properties::Instance()->historyLimited) {
         setHistorySize(Properties::Instance()->historyLimitedTo);
-    }
-    else
-    {
+    } else {
         // Unlimited history
         setHistorySize(-1);
     }
 
-    qDebug() << "TermWidgetImpl::propertiesChanged" << this << "emulation:" << Properties::Instance()->emulation;
+    qDebug() << "TermWidgetImpl::propertiesChanged" << this << "emulation:"
+             << Properties::Instance()->emulation;
     setKeyBindings(Properties::Instance()->emulation);
     setTerminalOpacity(Properties::Instance()->termOpacity/100.0);
 
     /* be consequent with qtermwidget.h here */
-    switch(Properties::Instance()->scrollBarPos) {
+    switch (Properties::Instance()->scrollBarPos) {
     case 0:
         setScrollBarPosition(QTermWidget::NoScrollBar);
         break;
@@ -204,7 +196,7 @@ void TermWidgetImpl::propertiesChanged()
     update();
 }
 
-void TermWidgetImpl::customContextMenuCall(const QPoint & pos)
+void TermWidgetImpl::customContextMenuCall(const QPoint &pos)
 {
     QMenu menu;
     menu.addActions(actions());
@@ -259,8 +251,8 @@ void TermWidgetImpl::enableCollapse(bool enable)
     actionMap[SUB_COLLAPSE]->setEnabled(enable);
 }
 
-TermWidget::TermWidget(const QString & wdir, const QString & shell, QWidget * parent)
-    : QWidget(parent)
+TermWidget::TermWidget(const QString &wdir, const QString &shell, QWidget *parent) :
+    QWidget(parent)
 {
     m_border = palette().color(QPalette::Window);
     m_term = new TermWidgetImpl(wdir, shell, this);
@@ -327,7 +319,7 @@ void TermWidget::term_termLostFocus()
     update();
 }
 
-void TermWidget::paintEvent (QPaintEvent *)
+void TermWidget::paintEvent(QPaintEvent *)
 {
     QPainter p(this);
     QPen pen(m_border);

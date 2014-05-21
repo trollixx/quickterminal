@@ -3,11 +3,9 @@
 #include "properties.h"
 #include "config.h"
 
+Properties *Properties::m_instance = 0;
 
-Properties * Properties::m_instance = 0;
-
-
-Properties * Properties::Instance()
+Properties *Properties::Instance()
 {
     if (!m_instance)
         m_instance = new Properties();
@@ -52,17 +50,16 @@ void Properties::loadSettings()
 
     settings.beginGroup("Shortcuts");
     QStringList keys = settings.childKeys();
-    foreach( QString key, keys )
+    foreach (QString key, keys)
     {
-        QKeySequence sequence = QKeySequence( settings.value( key ).toString() );
-        if( Properties::Instance()->actions.contains( key ) )
-            Properties::Instance()->actions[ key ]->setShortcut( sequence );
+        QKeySequence sequence = QKeySequence(settings.value(key).toString());
+        if (Properties::Instance()->actions.contains(key))
+            Properties::Instance()->actions[ key ]->setShortcut(sequence);
     }
     settings.endGroup();
 
     mainWindowGeometry = settings.value("MainWindow/geometry").toByteArray();
     mainWindowState = settings.value("MainWindow/state").toByteArray();
-
 
     historyLimited = settings.value("HistoryLimited", true).toBool();
     historyLimitedTo = settings.value("HistoryLimitedTo", 1000).toUInt();
@@ -71,8 +68,7 @@ void Properties::loadSettings()
 
     // sessions
     int size = settings.beginReadArray("Sessions");
-    for (int i = 0; i < size; ++i)
-    {
+    for (int i = 0; i < size; ++i) {
         settings.setArrayIndex(i);
         QString name(settings.value("name").toString());
         if (name.isEmpty())
@@ -101,7 +97,9 @@ void Properties::loadSettings()
     // bookmarks
     useBookmarks = settings.value("UseBookmarks", false).toBool();
     bookmarksVisible = settings.value("BookmarksVisible", true).toBool();
-    bookmarksFile = settings.value("BookmarksFile", QFileInfo(settings.fileName()).canonicalPath()+"/qterminal_bookmarks.xml").toString();
+    bookmarksFile = settings.value("BookmarksFile", QFileInfo(
+                                       settings.fileName()).canonicalPath()
+                                   +"/qterminal_bookmarks.xml").toString();
 
     settings.beginGroup("DropMode");
     dropShortCut = QKeySequence(settings.value("ShortCut", "F12").toString());
@@ -123,11 +121,11 @@ void Properties::saveSettings()
 
     settings.beginGroup("Shortcuts");
     QMapIterator< QString, QAction * > it(actions);
-    while( it.hasNext() )
+    while (it.hasNext())
     {
         it.next();
         QKeySequence shortcut = it.value()->shortcut();
-        settings.setValue( it.key(), shortcut.toString() );
+        settings.setValue(it.key(), shortcut.toString());
     }
     settings.endGroup();
 
@@ -177,6 +175,4 @@ void Properties::saveSettings()
     settings.setValue("Width", dropWidht);
     settings.setValue("Height", dropHeight);
     settings.endGroup();
-
 }
-

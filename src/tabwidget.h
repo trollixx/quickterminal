@@ -30,21 +30,27 @@ class TermWidgetHolder;
 class QAction;
 class QActionGroup;
 
-
 class TabWidget : public QTabWidget
 {
-Q_OBJECT
+    Q_OBJECT
 public:
-    TabWidget(QWidget* parent = 0);
+    TabWidget(QWidget *parent = 0);
 
-    TermWidgetHolder * terminalHolder();
+    TermWidgetHolder *terminalHolder();
 
     /* re-implemented */
-    void setTabBar(QTabBar *tabBar) { QTabWidget::setTabBar(tabBar); }
-    QTabBar *tabBar() const { return QTabWidget::tabBar(); }
+    void setTabBar(QTabBar *tabBar)
+    {
+        QTabWidget::setTabBar(tabBar);
+    }
+
+    QTabBar *tabBar() const
+    {
+        return QTabWidget::tabBar();
+    }
 
 public slots:
-    int addNewTab(const QString& shell_program = QString());
+    int addNewTab(const QString &shell_program = QString());
     void removeTab(int);
     void removeCurrentTab();
     int switchToRight();
@@ -53,7 +59,7 @@ public slots:
     void moveLeft();
     void moveRight();
     void renameSession();
-    void setWorkDirectory(const QString&);
+    void setWorkDirectory(const QString &);
 
     void switchNextSubterminal();
     void switchPrevSubterminal();
@@ -74,8 +80,10 @@ signals:
     void closeTabNotification();
 
 protected:
-    enum Direction{Left = 1, Right};
-    void contextMenuEvent(QContextMenuEvent * event);
+    enum Direction {
+        Left = 1, Right
+    };
+    void contextMenuEvent(QContextMenuEvent *event);
     void recountIndexes();
     void move(Direction);
     /*! Event filter for TabWidget's QTabBar. It's installed on tabBar()

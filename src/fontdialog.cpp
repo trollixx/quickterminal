@@ -1,8 +1,7 @@
-
 #include "fontdialog.h"
 
-FontDialog::FontDialog(const QFont &f)
-    : QDialog(0)
+FontDialog::FontDialog(const QFont &f) :
+    QDialog(0)
 {
     setupUi(this);
 
