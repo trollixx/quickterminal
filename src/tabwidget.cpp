@@ -18,14 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <QtGui>
-#include <QtCore>
-
-#include "termwidgetholder.h"
 #include "tabwidget.h"
+
 #include "config.h"
+#include "termwidgetholder.h"
 #include "properties.h"
 
+#include <QContextMenuEvent>
 #include <QInputDialog>
 #include <QMenu>
 #include <QTabBar>

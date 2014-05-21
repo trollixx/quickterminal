@@ -1,13 +1,13 @@
-#include <QtGui>
+#include "propertiesdialog.h"
+
+#include "fontdialog.h"
+#include "properties.h"
+
 #include <qtermwidget.h>
 
+#include <QDebug>
 #include <QFileDialog>
 #include <QStyleFactory>
-
-#include "propertiesdialog.h"
-#include "properties.h"
-#include "fontdialog.h"
-#include "config.h"
 
 PropertiesDialog::PropertiesDialog(QWidget *parent) :
     QDialog(parent)

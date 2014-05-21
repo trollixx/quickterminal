@@ -18,14 +18,17 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include  <QApplication>
-#include <QtGlobal>
+#include "mainwindow.h"
+#include "properties.h"
 
-#include <stdio.h>
+#include <QApplication>
+#include <QDir>
+#include <QSettings>
+#include <QTranslator>
+
 #include <getopt.h>
+#include <stdio.h>
 #include <stdlib.h>
-
-#include  "mainwindow.h"
 
 #define out
 

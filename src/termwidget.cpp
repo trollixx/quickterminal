@@ -1,10 +1,13 @@
-#include <QMenu>
-#include <QVBoxLayout>
-#include <QPainter>
-
 #include "termwidget.h"
+
 #include "config.h"
 #include "properties.h"
+
+#include <QDebug>
+#include <QMenu>
+#include <QPainter>
+#include <QSettings>
+#include <QVBoxLayout>
 
 static int TermWidgetCount = 0;
 

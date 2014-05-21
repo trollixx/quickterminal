@@ -21,10 +21,8 @@
 #ifndef TABWIDGET_H
 #define TABWIDGET_H
 
-#include <QTabWidget>
 #include <QMap>
-
-#include "properties.h"
+#include <QTabWidget>
 
 class TermWidgetHolder;
 class QAction;

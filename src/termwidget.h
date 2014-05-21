@@ -3,7 +3,9 @@
 
 #include <qtermwidget.h>
 
-#include <QAction>
+#include <QMap>
+
+class QAction;
 
 class TermWidgetImpl : public QTermWidget
 {

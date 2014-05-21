@@ -1,10 +1,13 @@
-#include <QtGui>
-
 #include "bookmarkswidget.h"
-#include "properties.h"
-#include "config.h"
 
+#include "config.h"
+#include "properties.h"
+
+#include <QDebug>
+#include <QDir>
+#include <QProcessEnvironment>
 #include <QStandardPaths>
+#include <QXmlStreamReader>
 
 class AbstractBookmarkItem
 {

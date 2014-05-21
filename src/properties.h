@@ -1,16 +1,15 @@
 #ifndef PROPERTIES_H
 #define PROPERTIES_H
 
-#include <QApplication>
-#include <QtCore>
 #include <QFont>
-#include <QAction>
+#include <QKeySequence>
+#include <QMap>
 
 typedef QString Session;
-
 typedef QMap<QString, Session> Sessions;
-
 typedef QMap<QString, QString> ShortcutMap;
+
+class QAction;
 
 class Properties
 {
@@ -67,7 +66,6 @@ public:
     void loadSettings();
 
 private:
-
     // Singleton handling
     static Properties *m_instance;
 

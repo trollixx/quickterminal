@@ -19,19 +19,18 @@
  ***************************************************************************/
 
 #include "mainwindow.h"
-#include "tabwidget.h"
 #include "termwidgetholder.h"
 #include "config.h"
 #include "properties.h"
 #include "propertiesdialog.h"
 #include "bookmarkswidget.h"
 
+#include <QDebug>
 #include <QDesktopWidget>
 #include <QDockWidget>
 #include <QMessageBox>
+#include <QSettings>
 #include <QToolButton>
-
-#include <QtGui>
 
 // TODO/FXIME: probably remove. QSS makes it unusable on mac...
 #define QSS_DROP    "MainWindow {border: 1px solid rgba(0, 0, 0, 50%);}\n"

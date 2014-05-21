@@ -1,7 +1,10 @@
-#include <qtermwidget.h>
-
-#include "properties.h"
 #include "config.h"
+#include "properties.h"
+
+#include <QAction>
+#include <QApplication>
+#include <QFileInfo>
+#include <QSettings>
 
 Properties *Properties::m_instance = 0;
 

@@ -1,8 +1,10 @@
 #ifndef TERMWIDGETHOLDER_H
 #define TERMWIDGETHOLDER_H
 
-#include <QWidget>
 #include "termwidget.h"
+
+#include <QWidget>
+
 class QSplitter;
 
 /*! \brief TermWidget group/session manager.

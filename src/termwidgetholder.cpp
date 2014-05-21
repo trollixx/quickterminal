@@ -1,10 +1,12 @@
-#include <QGridLayout>
-#include <QSplitter>
-#include <QInputDialog>
-
 #include "termwidgetholder.h"
-#include "termwidget.h"
+
 #include "properties.h"
+
+#include <QDebug>
+#include <QGridLayout>
+#include <QInputDialog>
+#include <QSplitter>
+
 #include <assert.h>
 
 TermWidgetHolder::TermWidgetHolder(const QString &wdir, const QString &shell, QWidget *parent) :
