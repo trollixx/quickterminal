@@ -120,7 +120,7 @@ void Properties::saveSettings()
     settings.setValue("font", font);
 
     settings.beginGroup("Shortcuts");
-    QMapIterator< QString, QAction * > it(actions);
+    QMapIterator<QString, QAction *> it(actions);
     while (it.hasNext())
     {
         it.next();

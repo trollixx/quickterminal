@@ -175,7 +175,7 @@ void PropertiesDialog::changeFontButton_clicked()
 
 void PropertiesDialog::saveShortcuts()
 {
-    QList< QString > shortcutKeys = Properties::Instance()->actions.keys();
+    QList<QString> shortcutKeys = Properties::Instance()->actions.keys();
     int shortcutCount = shortcutKeys.count();
 
     shortcutsWidget->setRowCount(shortcutCount);
@@ -194,7 +194,7 @@ void PropertiesDialog::saveShortcuts()
 
 void PropertiesDialog::setupShortcuts()
 {
-    QList< QString > shortcutKeys = Properties::Instance()->actions.keys();
+    QList<QString> shortcutKeys = Properties::Instance()->actions.keys();
     int shortcutCount = shortcutKeys.count();
 
     shortcutsWidget->setRowCount(shortcutCount);
@@ -284,7 +284,7 @@ void PropertiesDialog::saveBookmarksFile(const QString &fname)
 /*
 void PropertiesDialog::setupShortcuts()
 {
-    QList< QString > shortcutKeys = Properties::Instance()->shortcuts.keys();
+    QList<QString> shortcutKeys = Properties::Instance()->shortcuts.keys();
     int shortcutCount = shortcutKeys.count();
 
     shortcutsWidget->setRowCount( shortcutCount );

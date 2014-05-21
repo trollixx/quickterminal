@@ -62,7 +62,7 @@ public:
     int dropWidht;
     int dropHeight;
 
-    QMap< QString, QAction * > actions;
+    QMap<QString, QAction *> actions;
 
     void loadSettings();
 

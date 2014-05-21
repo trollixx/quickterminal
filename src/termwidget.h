@@ -9,7 +9,7 @@ class TermWidgetImpl : public QTermWidget
 {
     Q_OBJECT
 
-    QMap< QString, QAction * > actionMap;
+    QMap<QString, QAction *> actionMap;
 
 public:
 
