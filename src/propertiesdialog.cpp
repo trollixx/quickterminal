@@ -4,7 +4,6 @@
 
 #include <qtermwidget.h>
 
-#include <QDebug>
 #include <QFileDialog>
 #include <QFontDialog>
 #include <QStyleFactory>
@@ -275,10 +274,12 @@ void PropertiesDialog::saveBookmarksFile(const QString &fname)
         return;
 
     QFile f(fname);
-    if (!f.open(QFile::WriteOnly|QFile::Truncate))
-        qDebug() << "Cannot write to file" << f.fileName();
-    else
-        f.write(bookmarkPlainEdit->toPlainText().toUtf8());
+    if (!f.open(QFile::WriteOnly | QFile::Truncate)) {
+        qDebug("Cannot open file '%s'", qPrintable(f.fileName()));
+        return;
+    }
+
+    f.write(bookmarkPlainEdit->toPlainText().toUtf8());
 }
 
 /*

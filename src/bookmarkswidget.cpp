@@ -3,7 +3,6 @@
 #include "config.h"
 #include "properties.h"
 
-#include <QDebug>
 #include <QDir>
 #include <QProcessEnvironment>
 #include <QStandardPaths>
@@ -183,7 +182,7 @@ public:
     {
         QFile f(fname);
         if (!f.open(QIODevice::ReadOnly)) {
-            qDebug() << "Canot open file" << fname;
+            qDebug("Cannot open file '%s'", qPrintable(fname));
             // TODO/FIXME: message box
             return;
         }
@@ -225,8 +224,8 @@ public:
                 break;
             }
             case QXmlStreamReader::Invalid:
-                qDebug() << "XML error: " << xml.errorString().data()
-                         << xml.lineNumber() << xml.columnNumber();
+                qWarning("XML Error (Line %lld, Column %lld): %s",
+                         xml.lineNumber(), xml.columnNumber(), qPrintable(xml.errorString()));
                 m_map.clear();
                 return;
                 break;
@@ -385,7 +384,7 @@ void BookmarksWidget::setup()
 
 void BookmarksWidget::handleCommand(const QModelIndex &index)
 {
-    qDebug() << "HCMD";
+    qDebug("BookmarksWidget::handleCommand()");
     AbstractBookmarkItem *item = static_cast<AbstractBookmarkItem *>(index.internalPointer());
     if (!item && item->type() != AbstractBookmarkItem::Command)
         return;

@@ -25,7 +25,6 @@
 #include "propertiesdialog.h"
 #include "bookmarkswidget.h"
 
-#include <QDebug>
 #include <QDesktopWidget>
 #include <QDockWidget>
 #include <QMessageBox>
@@ -106,7 +105,7 @@ void MainWindow::migrate_settings()
     QString last_version = settings.value("version", "0.0.0").toString();
     // Handle configchanges in 0.4.0 (renaming 'Paste Selection' -> 'Paste Clipboard')
     if (last_version < "0.4.0") {
-        qDebug() << "Migrating settings from" << last_version << "to 0.4.0";
+        qDebug("Migrating settings from %s to 0.4.0", qPrintable(last_version));
         settings.beginGroup("Shortcuts");
         QString tmp = settings.value("Paste Selection", PASTE_CLIPBOARD_SHORTCUT).toString();
         settings.setValue(PASTE_CLIPBOARD, tmp);
