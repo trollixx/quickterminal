@@ -496,12 +496,12 @@ void MainWindow::closeEvent(QCloseEvent *ev)
         return;
     }
 
-    QMessageBox *mb = new QMessageBox(this);
+    QScopedPointer<QMessageBox> mb(new QMessageBox(this));
     mb->setWindowTitle(tr("Exit QTerminal"));
     mb->setText(tr("Are you sure you want to exit?"));
     mb->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 
-    QCheckBox *dontAskCheckBox = new QCheckBox(tr("Do not ask again"), mb);
+    QCheckBox *dontAskCheckBox = new QCheckBox(tr("Do not ask again"), mb.data());
     mb->setCheckBox(dontAskCheckBox);
 
     if (mb->exec() == QMessageBox::Yes) {
@@ -513,8 +513,6 @@ void MainWindow::closeEvent(QCloseEvent *ev)
     } else {
         ev->ignore();
     }
-
-    mb->deleteLater();
 }
 
 void MainWindow::actAbout_triggered()
@@ -525,9 +523,9 @@ void MainWindow::actAbout_triggered()
 
 void MainWindow::actProperties_triggered()
 {
-    PropertiesDialog *p = new PropertiesDialog(this);
-    connect(p, SIGNAL(propertiesChanged()), this, SLOT(propertiesChanged()));
-    p->exec();
+    QScopedPointer<PropertiesDialog> pd(new PropertiesDialog(this));
+    connect(pd.data(), SIGNAL(propertiesChanged()), this, SLOT(propertiesChanged()));
+    pd->exec();
 }
 
 void MainWindow::propertiesChanged()
