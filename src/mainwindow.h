@@ -71,8 +71,8 @@ private:
 
     QAction *toggleBorder, *toggleTabbar, *renameSession;
 
-    QString m_initWorkDir;
     QString m_initShell;
+    QString m_initWorkDir;
 
     QDockWidget *m_bookmarksDock;
 

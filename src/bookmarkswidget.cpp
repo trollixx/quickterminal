@@ -210,6 +210,8 @@ public:
                 m_map.clear();
                 return;
                 break;
+            default:
+                break;
             } // switch
         } // while
     } // constructor
@@ -283,12 +285,6 @@ AbstractBookmarkItem *BookmarksModel::getItem(const QModelIndex &index) const
     }
     return m_root;
  }
-
-QVariant BookmarksModel::headerData(int section, Qt::Orientation orientation,
-                                    int role) const
-{
-    return QVariant();
-}
 
 QModelIndex BookmarksModel::index(int row, int column, const QModelIndex &parent) const
 {
