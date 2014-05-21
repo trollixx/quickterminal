@@ -497,35 +497,25 @@ void MainWindow::closeEvent(QCloseEvent *ev)
         return;
     }
 
-    // ask user for cancel only when there is at least one terminal active in this window
-    QDialog *dia = new QDialog(this);
-    dia->setObjectName("exitDialog");
-    dia->setWindowTitle(tr("Exit QTerminal"));
+    QMessageBox *mb = new QMessageBox(this);
+    mb->setWindowTitle(tr("Exit QTerminal"));
+    mb->setText(tr("Are you sure you want to exit?"));
+    mb->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 
-    QCheckBox *dontAskCheck = new QCheckBox(tr("Do not ask again"), dia);
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Yes | QDialogButtonBox::No,
-                                                       Qt::Horizontal, dia);
+    QCheckBox *dontAskCheckBox = new QCheckBox(tr("Do not ask again"), mb);
+    mb->setCheckBox(dontAskCheckBox);
 
-    connect(buttonBox, SIGNAL(accepted()), dia, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), dia, SLOT(reject()));
-
-    QVBoxLayout *lay = new QVBoxLayout();
-    lay->addWidget(new QLabel(tr("Are you sure you want to exit?")));
-    lay->addWidget(dontAskCheck);
-    lay->addWidget(buttonBox);
-    dia->setLayout(lay);
-
-    if (dia->exec() == QDialog::Accepted) {
+    if (mb->exec() == QMessageBox::Yes) {
         Properties::Instance()->mainWindowGeometry = saveGeometry();
         Properties::Instance()->mainWindowState = saveState();
-        Properties::Instance()->askOnExit = !dontAskCheck->isChecked();
+        Properties::Instance()->askOnExit = !dontAskCheckBox->isChecked();
         Properties::Instance()->saveSettings();
         ev->accept();
     } else {
         ev->ignore();
     }
 
-    dia->deleteLater();
+    mb->deleteLater();
 }
 
 void MainWindow::actAbout_triggered()
