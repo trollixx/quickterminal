@@ -411,8 +411,8 @@ void MainWindow::setup_ViewMenu_Actions()
     tabPosition->addAction(tabLeft);
     tabPosition->addAction(tabRight);
 
-    for (int i = 0; i < tabPosition->actions().size(); ++i)
-        tabPosition->actions().at(i)->setCheckable(true);
+    foreach (QAction *action, tabPosition->actions())
+        action->setCheckable(true);
 
     if (tabPosition->actions().count() > Properties::Instance()->tabsPos)
         tabPosition->actions().at(Properties::Instance()->tabsPos)->setChecked(true);
@@ -423,8 +423,8 @@ void MainWindow::setup_ViewMenu_Actions()
     tabPosMenu = new QMenu(tr("Tabs Layout"), menu_View);
     tabPosMenu->setObjectName("tabPosMenu");
 
-    for (int i = 0; i < tabPosition->actions().size(); ++i)
-        tabPosMenu->addAction(tabPosition->actions().at(i));
+    foreach (QAction *action, tabPosition->actions())
+        tabPosMenu->addAction(action);
 
     connect(menu_View, SIGNAL(hovered(QAction *)),
             this, SLOT(updateActionGroup(QAction *)));
@@ -442,8 +442,8 @@ void MainWindow::setup_ViewMenu_Actions()
     scrollBarPosition->addAction(scrollLeft);
     scrollBarPosition->addAction(scrollRight);
 
-    for (int i = 0; i < scrollBarPosition->actions().size(); ++i)
-        scrollBarPosition->actions().at(i)->setCheckable(true);
+    foreach (QAction *action, scrollBarPosition->actions())
+        action->setCheckable(true);
 
     if (Properties::Instance()->scrollBarPos < scrollBarPosition->actions().size())
         scrollBarPosition->actions().at(Properties::Instance()->scrollBarPos)->setChecked(true);
@@ -454,8 +454,8 @@ void MainWindow::setup_ViewMenu_Actions()
     scrollPosMenu = new QMenu(tr("Scrollbar Layout"), menu_View);
     scrollPosMenu->setObjectName("scrollPosMenu");
 
-    for (int i = 0; i < scrollBarPosition->actions().size(); ++i)
-        scrollPosMenu->addAction(scrollBarPosition->actions().at(i));
+    foreach (QAction *action, scrollBarPosition->actions())
+        scrollPosMenu->addAction(action);
 
     menu_View->addMenu(scrollPosMenu);
 }
