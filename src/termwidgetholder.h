@@ -20,7 +20,7 @@ class TermWidgetHolder : public QWidget
     Q_OBJECT
 
 public:
-    TermWidgetHolder(const QString &wdir, const QString &shell = QString(), QWidget *parent = 0);
+    TermWidgetHolder(const QString &wdir, const QString &shell = QString(), QWidget *parent = nullptr);
 
     void propertiesChanged();
     void setInitialFocus();
@@ -51,7 +51,7 @@ signals:
 private:
     QString m_wdir;
     QString m_shell;
-    TermWidget *m_currentTerm;
+    TermWidget *m_currentTerm = nullptr;
 
     void split(TermWidget *term, Qt::Orientation orientation);
     TermWidget *newTerm(const QString &wdir = QString(), const QString &shell = QString());

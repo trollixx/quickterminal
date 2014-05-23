@@ -32,7 +32,7 @@ class TabWidget : public QTabWidget
 {
     Q_OBJECT
 public:
-    TabWidget(QWidget *parent = 0);
+    TabWidget(QWidget *parent = nullptr);
 
     TermWidgetHolder *terminalHolder();
 
@@ -92,7 +92,7 @@ protected:
     bool eventFilter(QObject *obj, QEvent *event);
 
 private:
-    int tabNumerator;
+    int tabNumerator = 0;
     QString work_dir;
     /* re-order naming of the tabs then removeCurrentTab() */
     void renameTabsAfterRemove();

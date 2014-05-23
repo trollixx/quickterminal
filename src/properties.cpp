@@ -6,7 +6,7 @@
 #include <QFileInfo>
 #include <QSettings>
 
-Properties *Properties::m_instance = 0;
+Properties *Properties::m_instance = nullptr;
 
 Properties *Properties::Instance()
 {
@@ -25,7 +25,7 @@ Properties::~Properties()
     qDebug("Properties destructor called");
     saveSettings();
     delete m_instance;
-    m_instance = 0;
+    m_instance = nullptr;
 }
 
 QFont Properties::defaultFont() const

@@ -9,9 +9,8 @@ class BookmarksModel;
 class BookmarksWidget : public QWidget, Ui::BookmarksWidget
 {
     Q_OBJECT
-
 public:
-    BookmarksWidget(QWidget *parent = NULL);
+    BookmarksWidget(QWidget *parent = nullptr);
 
     void setup();
 
@@ -28,9 +27,8 @@ private slots:
 class BookmarksModel : public QAbstractItemModel
 {
     Q_OBJECT
-
 public:
-    BookmarksModel(QObject *parent = 0);
+    BookmarksModel(QObject *parent = nullptr);
     ~BookmarksModel();
 
     void setup();
@@ -45,7 +43,7 @@ public:
 
 private:
     AbstractBookmarkItem *getItem(const QModelIndex &index) const;
-    AbstractBookmarkItem *m_root;
+    AbstractBookmarkItem *m_root = nullptr;
 };
 
 #endif // BOOKMARKSWIDGET_H

@@ -39,7 +39,6 @@ MainWindow::MainWindow(const QString &work_dir, const QString &command, bool dro
     QMainWindow(parent, f),
     m_initShell(command),
     m_initWorkDir(work_dir),
-    m_dropLockButton(0),
     m_dropMode(dropMode)
 {
     setupUi(this);

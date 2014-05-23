@@ -12,8 +12,7 @@
 TermWidgetHolder::TermWidgetHolder(const QString &wdir, const QString &shell, QWidget *parent) :
     QWidget(parent),
     m_wdir(wdir),
-    m_shell(shell),
-    m_currentTerm(0)
+    m_shell(shell)
 {
     setFocusPolicy(Qt::NoFocus);
     QGridLayout *lay = new QGridLayout(this);

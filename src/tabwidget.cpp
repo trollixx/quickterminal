@@ -31,8 +31,8 @@
 
 #define TAB_INDEX_PROPERTY "tab_index"
 
-TabWidget::TabWidget(QWidget *parent) : QTabWidget(parent),
-    tabNumerator(0)
+TabWidget::TabWidget(QWidget *parent) :
+    QTabWidget(parent)
 {
     setFocusPolicy(Qt::NoFocus);
 

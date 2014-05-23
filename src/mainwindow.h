@@ -36,8 +36,8 @@ class MainWindow : public QMainWindow, private Ui::mainWindow
     Q_OBJECT
 
 public:
-    MainWindow(const QString &work_dir, const QString &command, bool dropMode, QWidget *parent = 0,
-               Qt::WindowFlags f = 0);
+    MainWindow(const QString &work_dir, const QString &command, bool dropMode,
+               QWidget *parent = nullptr, Qt::WindowFlags f = 0);
 
     bool dropMode()
     {
@@ -86,7 +86,7 @@ private:
     void closeEvent(QCloseEvent *);
 
     void enableDropMode();
-    QToolButton *m_dropLockButton;
+    QToolButton *m_dropLockButton = nullptr;
     bool m_dropMode;
 
     void realign();
