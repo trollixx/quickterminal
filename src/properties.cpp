@@ -28,7 +28,7 @@ Properties::~Properties()
     m_instance = 0;
 }
 
-QFont Properties::defaultFont()
+QFont Properties::defaultFont() const
 {
     QFont default_font = QApplication::font();
     default_font.setFamily(DEFAULT_FONT);

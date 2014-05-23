@@ -16,7 +16,7 @@ class Properties
 public:
     static Properties *Instance();
 
-    QFont defaultFont();
+    QFont defaultFont() const;
     void saveSettings();
 
     QByteArray mainWindowGeometry;
