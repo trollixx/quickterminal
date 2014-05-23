@@ -117,11 +117,7 @@ void PropertiesDialog::apply()
     Properties::Instance()->emulation = emulationComboBox->currentText();
 
     /* do not allow to go above 99 or we lose transparency option */
-    (appOpacityBox->value() >= 100)
-    ? Properties::Instance()->appOpacity = 99
-                                           :
-                                           Properties::Instance()->appOpacity
-                                               = appOpacityBox->value();
+    Properties::Instance()->appOpacity = qMin(appOpacityBox->value(), 99);
 
     Properties::Instance()->termOpacity = termOpacityBox->value();
     Properties::Instance()->highlightCurrentTerminal = highlightCurrentCheckBox->isChecked();
