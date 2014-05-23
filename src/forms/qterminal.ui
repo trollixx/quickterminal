@@ -65,7 +65,7 @@
    </property>
    <widget class="QMenu" name="menu_File">
     <property name="title">
-     <string>File</string>
+     <string>&amp;File</string>
     </property>
     <property name="Title" stdset="0">
      <string/>
@@ -73,19 +73,19 @@
    </widget>
    <widget class="QMenu" name="menu_Actions">
     <property name="title">
-     <string>Actions</string>
+     <string>&amp;Actions</string>
     </property>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
-     <string>Help</string>
+     <string>&amp;Help</string>
     </property>
     <addaction name="actAbout"/>
     <addaction name="actAboutQt"/>
    </widget>
    <widget class="QMenu" name="menu_View">
     <property name="title">
-     <string>View</string>
+     <string>&amp;View</string>
     </property>
    </widget>
    <addaction name="menu_File"/>
@@ -95,12 +95,12 @@
   </widget>
   <action name="actAbout">
    <property name="text">
-    <string>About...</string>
+    <string>&amp;About...</string>
    </property>
   </action>
   <action name="actAboutQt">
    <property name="text">
-    <string>About Qt...</string>
+    <string>About &amp;Qt...</string>
    </property>
   </action>
   <action name="actProperties">
