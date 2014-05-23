@@ -39,7 +39,7 @@ public:
     MainWindow(const QString &work_dir, const QString &command, bool dropMode,
                QWidget *parent = nullptr, Qt::WindowFlags f = 0);
 
-    bool dropMode()
+    bool dropMode() const
     {
         return m_dropMode;
     }
@@ -83,7 +83,7 @@ private:
     void setup_ActionsMenu_Actions();
     void setup_ViewMenu_Actions();
 
-    void closeEvent(QCloseEvent *);
+    void closeEvent(QCloseEvent *event) override;
 
     void enableDropMode();
     QToolButton *m_dropLockButton = nullptr;

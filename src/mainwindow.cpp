@@ -480,14 +480,13 @@ void MainWindow::toggleMenu()
     Properties::Instance()->menuVisible = m_menuBar->isVisible();
 }
 
-void MainWindow::closeEvent(QCloseEvent *ev)
+void MainWindow::closeEvent(QCloseEvent *event)
 {
-    if (!Properties::Instance()->askOnExit
-        || !consoleTabulator->count()) {
+    if (!Properties::Instance()->askOnExit || !consoleTabulator->count()) {
         Properties::Instance()->mainWindowGeometry = saveGeometry();
         Properties::Instance()->mainWindowState = saveState();
         Properties::Instance()->saveSettings();
-        ev->accept();
+        event->accept();
         return;
     }
 
@@ -504,9 +503,9 @@ void MainWindow::closeEvent(QCloseEvent *ev)
         Properties::Instance()->mainWindowState = saveState();
         Properties::Instance()->askOnExit = !dontAskCheckBox->isChecked();
         Properties::Instance()->saveSettings();
-        ev->accept();
+        event->accept();
     } else {
-        ev->ignore();
+        event->ignore();
     }
 }
 
@@ -534,7 +533,6 @@ void MainWindow::propertiesChanged()
 #endif
 
     m_menuBar->setVisible(Properties::Instance()->menuVisible);
-
     m_bookmarksDock->setVisible(Properties::Instance()->useBookmarks
                                 && Properties::Instance()->bookmarksVisible);
     m_bookmarksDock->toggleViewAction()->setVisible(Properties::Instance()->useBookmarks);
@@ -548,18 +546,16 @@ void MainWindow::propertiesChanged()
 
 void MainWindow::realign()
 {
-    if (m_dropMode) {
-        QRect desktop = QApplication::desktop()->availableGeometry(this);
-        QRect geometry = QRect(0, 0,
-                               desktop.width()  * Properties::Instance()->dropWidht  / 100,
-                               desktop.height() * Properties::Instance()->dropHeight / 100
-                               );
-        geometry.moveCenter(desktop.center());
-        // do not use 0 here - we need to calculate with potential panel on top
-        geometry.setTop(desktop.top());
-
-        setGeometry(geometry);
-    }
+    if (!m_dropMode)
+        return;
+    QRect desktop = QApplication::desktop()->availableGeometry(this);
+    QRect geometry = QRect(0, 0,
+                           desktop.width()  * Properties::Instance()->dropWidht  / 100,
+                           desktop.height() * Properties::Instance()->dropHeight / 100);
+    geometry.moveCenter(desktop.center());
+    // do not use 0 here - we need to calculate with potential panel on top
+    geometry.setTop(desktop.top());
+    setGeometry(geometry);
 }
 
 void MainWindow::updateActionGroup(QAction *a)
@@ -601,12 +597,11 @@ void MainWindow::find()
 
 bool MainWindow::event(QEvent *event)
 {
-    if (event->type() == QEvent::WindowDeactivate) {
-        if (m_dropMode
+    if (event->type() == QEvent::WindowDeactivate
+            && m_dropMode
             && !Properties::Instance()->dropKeepOpen
-            && qApp->activeWindow() == 0
-            )
-            hide();
+            && qApp->activeWindow() == nullptr) {
+        hide();
     }
     return QMainWindow::event(event);
 }

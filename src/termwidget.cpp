@@ -117,8 +117,7 @@ void TermWidgetImpl::updateShortcuts()
     QKeySequence seq;
 
     if (actionMap.contains(COPY_SELECTION) && settings.contains(COPY_SELECTION)) {
-        seq
-            = QKeySequence::fromString(settings.value(COPY_SELECTION,
+        seq = QKeySequence::fromString(settings.value(COPY_SELECTION,
                                                       QKeySequence::Copy).toString());
         actionMap[COPY_SELECTION]->setShortcut(seq);
     }
@@ -261,7 +260,7 @@ TermWidget::TermWidget(const QString &wdir, const QString &shell, QWidget *paren
     m_term = new TermWidgetImpl(wdir, shell, this);
     setFocusProxy(m_term);
 
-    m_layout = new QVBoxLayout;
+    m_layout = new QVBoxLayout();
     setLayout(m_layout);
 
     m_layout->addWidget(m_term);
@@ -269,12 +268,9 @@ TermWidget::TermWidget(const QString &wdir, const QString &shell, QWidget *paren
     propertiesChanged();
 
     connect(m_term, SIGNAL(finished()), this, SIGNAL(finished()));
-    connect(m_term, SIGNAL(splitHorizontal()),
-            this, SLOT(term_splitHorizontal()));
-    connect(m_term, SIGNAL(splitVertical()),
-            this, SLOT(term_splitVertical()));
-    connect(m_term, SIGNAL(splitCollapse()),
-            this, SLOT(term_splitCollapse()));
+    connect(m_term, SIGNAL(splitHorizontal()), this, SLOT(term_splitHorizontal()));
+    connect(m_term, SIGNAL(splitVertical()), this, SLOT(term_splitVertical()));
+    connect(m_term, SIGNAL(splitCollapse()), this, SLOT(term_splitCollapse()));
     connect(m_term, SIGNAL(termGetFocus()), this, SLOT(term_termGetFocus()));
     connect(m_term, SIGNAL(termLostFocus()), this, SLOT(term_termLostFocus()));
 }

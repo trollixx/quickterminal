@@ -21,8 +21,8 @@
 #include "tabwidget.h"
 
 #include "config.h"
-#include "termwidgetholder.h"
 #include "properties.h"
+#include "termwidgetholder.h"
 
 #include <QContextMenuEvent>
 #include <QInputDialog>
@@ -126,9 +126,8 @@ void TabWidget::recountIndexes()
 void TabWidget::renameSession()
 {
     bool ok = false;
-    QString text = QInputDialog::getText(this, tr("Tab name"),
-                                         tr("New tab name:"), QLineEdit::Normal,
-                                         QString(), &ok);
+    QString text = QInputDialog::getText(this, tr("Tab name"), tr("New tab name:"),
+                                         QLineEdit::Normal, QString(), &ok);
     if (ok && !text.isEmpty())
         setTabText(currentIndex(), text);
 }
@@ -240,35 +239,36 @@ int TabWidget::switchToLeft()
 
 void TabWidget::move(Direction dir)
 {
-    if (count() > 1) {
-        int index = currentIndex();
-        QWidget *child = widget(index);
-        QString label = tabText(index);
-        QString toolTip = tabToolTip(index);
-        QIcon icon = tabIcon(index);
+    if (count() == 0)
+        return;
 
-        int newIndex = 0;
-        if (dir == Left) {
-            if (index == 0)
-                newIndex = count() -1;
-            else
-                newIndex = index - 1;
-        } else if (index == count() - 1) {
-            newIndex = 0;
-        } else {
-            newIndex = index + 1;
-        }
+    int index = currentIndex();
+    QWidget *child = widget(index);
+    QString label = tabText(index);
+    QString toolTip = tabToolTip(index);
+    QIcon icon = tabIcon(index);
 
-        setUpdatesEnabled(false);
-        QTabWidget::removeTab(index);
-        newIndex = insertTab(newIndex, child, label);
-        setTabToolTip(newIndex, toolTip);
-        setTabIcon(newIndex, icon);
-        setUpdatesEnabled(true);
-        setCurrentIndex(newIndex);
-        child->setFocus();
-        recountIndexes();
+    int newIndex = 0;
+    if (dir == Left) {
+        if (index == 0)
+            newIndex = count() - 1;
+        else
+            newIndex = index - 1;
+    } else if (index == count() - 1) {
+        newIndex = 0;
+    } else {
+        newIndex = index + 1;
     }
+
+    setUpdatesEnabled(false);
+    QTabWidget::removeTab(index);
+    newIndex = insertTab(newIndex, child, label);
+    setTabToolTip(newIndex, toolTip);
+    setTabIcon(newIndex, icon);
+    setUpdatesEnabled(true);
+    setCurrentIndex(newIndex);
+    child->setFocus();
+    recountIndexes();
 }
 
 void TabWidget::moveLeft()
@@ -287,8 +287,7 @@ void TabWidget::changeScrollPosition(QAction *triggered)
     if (!scrollPosition)
         qFatal("scrollPosition is NULL");
 
-    Properties::Instance()->scrollBarPos
-        = scrollPosition->actions().indexOf(triggered);
+    Properties::Instance()->scrollBarPos = scrollPosition->actions().indexOf(triggered);
 
     Properties::Instance()->saveSettings();
     propertiesChanged();
@@ -302,8 +301,8 @@ void TabWidget::changeTabPosition(QAction *triggered)
 
     Properties *prop = Properties::Instance();
     /* order is dictated from mainwindow.cpp */
-    QTabWidget::TabPosition position = (QTabWidget::TabPosition)tabPosition->actions().indexOf(
-        triggered);
+    QTabWidget::TabPosition position
+            = (QTabWidget::TabPosition)tabPosition->actions().indexOf(triggered);
     setTabPosition(position);
     prop->tabsPos = position;
     prop->saveSettings();
