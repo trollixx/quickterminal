@@ -83,14 +83,14 @@
     <addaction name="actAbout"/>
     <addaction name="actAboutQt"/>
    </widget>
-   <widget class="QMenu" name="menu_Window">
+   <widget class="QMenu" name="menu_View">
     <property name="title">
      <string>View</string>
     </property>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Actions"/>
-   <addaction name="menu_Window"/>
+   <addaction name="menu_View"/>
    <addaction name="menu_Help"/>
   </widget>
   <action name="actAbout">

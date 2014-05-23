@@ -376,7 +376,7 @@ void MainWindow::setup_ViewMenu_Actions()
 // if (Properties::Instance()->borderless)
 // toggleBorderless();
     connect(toggleBorder, SIGNAL(triggered()), this, SLOT(toggleBorderless()));
-    menu_Window->addAction(toggleBorder);
+    menu_View->addAction(toggleBorder);
     toggleBorder->setVisible(!m_dropMode);
 
     toggleTabbar = new QAction(tr("Show Tab Bar"), this);
@@ -385,7 +385,7 @@ void MainWindow::setup_ViewMenu_Actions()
     toggleTabbar->setChecked(!Properties::Instance()->tabBarless);
     toggleTabBar();
     connect(toggleTabbar, SIGNAL(triggered()), this, SLOT(toggleTabBar()));
-    menu_Window->addAction(toggleTabbar);
+    menu_View->addAction(toggleTabbar);
 
     QSettings settings;
     settings.beginGroup("Shortcuts");
@@ -394,11 +394,11 @@ void MainWindow::setup_ViewMenu_Actions()
         = QKeySequence::fromString(settings.value(TOGGLE_BOOKMARKS,
                                                   TOGGLE_BOOKMARKS_SHORTCUT).toString());
     Properties::Instance()->actions[TOGGLE_BOOKMARKS]->setShortcut(seq);
-    menu_Window->addAction(Properties::Instance()->actions[TOGGLE_BOOKMARKS]);
+    menu_View->addAction(Properties::Instance()->actions[TOGGLE_BOOKMARKS]);
     addAction(Properties::Instance()->actions[TOGGLE_BOOKMARKS]);
     settings.endGroup();
 
-    menu_Window->addSeparator();
+    menu_View->addSeparator();
 
     /* tabs position */
     tabPosition = new QActionGroup(this);
@@ -420,15 +420,15 @@ void MainWindow::setup_ViewMenu_Actions()
     connect(tabPosition, SIGNAL(triggered(QAction *)),
             consoleTabulator, SLOT(changeTabPosition(QAction *)));
 
-    tabPosMenu = new QMenu(tr("Tabs Layout"), menu_Window);
+    tabPosMenu = new QMenu(tr("Tabs Layout"), menu_View);
     tabPosMenu->setObjectName("tabPosMenu");
 
     for (int i = 0; i < tabPosition->actions().size(); ++i)
         tabPosMenu->addAction(tabPosition->actions().at(i));
 
-    connect(menu_Window, SIGNAL(hovered(QAction *)),
+    connect(menu_View, SIGNAL(hovered(QAction *)),
             this, SLOT(updateActionGroup(QAction *)));
-    menu_Window->addMenu(tabPosMenu);
+    menu_View->addMenu(tabPosMenu);
     /* */
 
     /* Scrollbar */
@@ -451,13 +451,13 @@ void MainWindow::setup_ViewMenu_Actions()
     connect(scrollBarPosition, SIGNAL(triggered(QAction *)),
             consoleTabulator, SLOT(changeScrollPosition(QAction *)));
 
-    scrollPosMenu = new QMenu(tr("Scrollbar Layout"), menu_Window);
+    scrollPosMenu = new QMenu(tr("Scrollbar Layout"), menu_View);
     scrollPosMenu->setObjectName("scrollPosMenu");
 
     for (int i = 0; i < scrollBarPosition->actions().size(); ++i)
         scrollPosMenu->addAction(scrollBarPosition->actions().at(i));
 
-    menu_Window->addMenu(scrollPosMenu);
+    menu_View->addMenu(scrollPosMenu);
 }
 
 void MainWindow::on_consoleTabulator_currentChanged(int)
