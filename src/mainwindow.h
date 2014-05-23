@@ -38,7 +38,6 @@ class MainWindow : public QMainWindow, private Ui::mainWindow
 public:
     MainWindow(const QString &work_dir, const QString &command, bool dropMode, QWidget *parent = 0,
                Qt::WindowFlags f = 0);
-    ~MainWindow();
 
     bool dropMode()
     {

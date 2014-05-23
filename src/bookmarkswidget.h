@@ -12,7 +12,6 @@ class BookmarksWidget : public QWidget, Ui::BookmarksWidget
 
 public:
     BookmarksWidget(QWidget *parent = NULL);
-    ~BookmarksWidget();
 
     void setup();
 

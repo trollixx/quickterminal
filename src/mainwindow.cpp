@@ -92,10 +92,6 @@ MainWindow::MainWindow(const QString &work_dir, const QString &command, bool dro
     addAction(renameSession);
 }
 
-MainWindow::~MainWindow()
-{
-}
-
 void MainWindow::migrate_settings()
 {
     // Deal with rearrangements of settings.

@@ -369,10 +369,6 @@ BookmarksWidget::BookmarksWidget(QWidget *parent) :
             this, SLOT(handleCommand(QModelIndex)));
 }
 
-BookmarksWidget::~BookmarksWidget()
-{
-}
-
 void BookmarksWidget::setup()
 {
     m_model->setup();

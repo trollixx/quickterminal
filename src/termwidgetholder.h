@@ -21,7 +21,6 @@ class TermWidgetHolder : public QWidget
 
 public:
     TermWidgetHolder(const QString &wdir, const QString &shell = QString(), QWidget *parent = 0);
-    ~TermWidgetHolder();
 
     void propertiesChanged();
     void setInitialFocus();

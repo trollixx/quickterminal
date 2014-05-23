@@ -29,10 +29,6 @@ TermWidgetHolder::TermWidgetHolder(const QString &wdir, const QString &shell, QW
     setLayout(lay);
 }
 
-TermWidgetHolder::~TermWidgetHolder()
-{
-}
-
 void TermWidgetHolder::setInitialFocus()
 {
     QList<TermWidget *> list = findChildren<TermWidget *>();

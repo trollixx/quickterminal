@@ -97,10 +97,6 @@ PropertiesDialog::PropertiesDialog(QWidget *parent) :
             this, SLOT(bookmarksButton_clicked()));
 }
 
-PropertiesDialog::~PropertiesDialog()
-{
-}
-
 void PropertiesDialog::accept()
 {
     apply();
