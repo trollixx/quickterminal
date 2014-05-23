@@ -53,8 +53,7 @@ void Properties::loadSettings()
 
     settings.beginGroup("Shortcuts");
     QStringList keys = settings.childKeys();
-    foreach (QString key, keys)
-    {
+    foreach (const QString &key, keys) {
         QKeySequence sequence = QKeySequence(settings.value(key).toString());
         if (Properties::Instance()->actions.contains(key))
             Properties::Instance()->actions[ key ]->setShortcut(sequence);

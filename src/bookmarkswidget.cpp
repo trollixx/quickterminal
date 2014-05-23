@@ -137,8 +137,7 @@ public:
         QDir d;
 
         // standard $HOME subdirs
-        foreach (QStandardPaths::StandardLocation i, locations)
-        {
+        foreach (QStandardPaths::StandardLocation i, locations) {
             path = QStandardPaths::writableLocation(i);
             if (!d.exists(path)) {
                 // qDebug() << "Dir:" << path << "does not exist. Skipping.";
@@ -154,8 +153,7 @@ public:
 
         // system env - include dirs in the tree
         QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-        foreach (QString i, env.keys())
-        {
+        foreach (const QString &i, env.keys()) {
             path = env.value(i);
             if (!d.exists(path) || !QFileInfo(path).isDir()) {
                 // qDebug() << "Env Dir:" << path << "does not exist. Skipping.";

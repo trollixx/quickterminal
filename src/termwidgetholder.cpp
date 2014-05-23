@@ -46,8 +46,7 @@ void TermWidgetHolder::loadSession()
     if (!ok || name.isEmpty())
         return;
 #if 0
-    foreach (QWidget * w, findChildren<QWidget *>())
-    {
+    foreach (QWidget *w, findChildren<QWidget *>()) {
         if (w) {
             delete w;
             w = 0;
@@ -57,8 +56,7 @@ void TermWidgetHolder::loadSession()
     qDebug() << "load" << name << QString(Properties::Instance()->sessions[name]);
     QStringList splitters = QString(Properties::Instance()->sessions[name]).split("|",
                                                                                   QString::SkipEmptyParts);
-    foreach (QString splitter, splitters)
-    {
+    foreach (const QString &splitter, splitters) {
         QStringList components = splitter.split(",");
         qDebug() << "comp" << components;
         // orientation
@@ -68,8 +66,7 @@ void TermWidgetHolder::loadSession()
         // sizes
         QList<int> sizes;
         QList<TermWidget *> widgets;
-        foreach (QString s, components)
-        {
+        foreach (const QString &s, components) {
             sizes << s.toInt();
             widgets << newTerm();
         }
@@ -82,11 +79,10 @@ void TermWidgetHolder::saveSession(const QString &name)
 {
     Session dump;
     QString num("%1");
-    foreach (QSplitter *w, findChildren<QSplitter *>())
-    {
+    foreach (QSplitter *w, findChildren<QSplitter *>()) {
         dump += '|' + num.arg(w->orientation());
         foreach (int i, w->sizes())
-        dump += ',' + num.arg(i);
+            dump += ',' + num.arg(i);
     }
     Properties::Instance()->sessions[name] = dump;
     qDebug() << "dump" << dump;
@@ -108,11 +104,10 @@ void TermWidgetHolder::switchNextSubterminal()
     // TODO/FIXME: merge switchPrevSubterminal with switchNextSubterminal
     QList<TermWidget *> l = findChildren<TermWidget *>();
     int ix = -1;
-    foreach (TermWidget * w, l)
-    {
+    foreach (TermWidget *w, l) {
         ++ix;
-// qDebug() << ix << w << w->impl() << w->impl()->hasFocus() << QApplication::focusWidget();
-// qDebug() << "parent: " << w->parent();
+        // qDebug() << ix << w << w->impl() << w->impl()->hasFocus() << QApplication::focusWidget();
+        // qDebug() << "parent: " << w->parent();
         if (w->impl()->hasFocus())
             break;
     }
@@ -128,11 +123,10 @@ void TermWidgetHolder::switchPrevSubterminal()
     // TODO/FIXME: merge switchPrevSubterminal with switchNextSubterminal
     QList<TermWidget *> l = findChildren<TermWidget *>();
     int ix = -1;
-    foreach (TermWidget * w, l)
-    {
+    foreach (TermWidget *w, l) {
         ++ix;
-// qDebug() << ix << w << w->impl() << w->impl()->hasFocus() << QApplication::focusWidget();
-// qDebug() << "parent: " << w->parent();
+        // qDebug() << ix << w << w->impl() << w->impl()->hasFocus() << QApplication::focusWidget();
+        // qDebug() << "parent: " << w->parent();
         if (w->impl()->hasFocus())
             break;
     }
@@ -152,7 +146,7 @@ void TermWidgetHolder::clearActiveTerminal()
 void TermWidgetHolder::propertiesChanged()
 {
     foreach (TermWidget *w, findChildren<TermWidget *>())
-    w->propertiesChanged();
+        w->propertiesChanged();
 }
 
 void TermWidgetHolder::splitHorizontal(TermWidget *term)
