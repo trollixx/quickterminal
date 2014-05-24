@@ -64,7 +64,7 @@ MainWindow::MainWindow(const QString &work_dir, const QString &command, bool dro
 
     setContentsMargins(0, 0, 0, 0);
     if (m_dropMode) {
-        this->enableDropMode();
+        enableDropMode();
         setStyleSheet(QSS_DROP);
     } else {
         restoreGeometry(Properties::Instance()->mainWindowGeometry);

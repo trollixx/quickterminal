@@ -60,7 +60,7 @@ TermWidgetHolder *TabWidget::terminalHolder()
 
 void TabWidget::setWorkDirectory(const QString &dir)
 {
-    this->work_dir = dir;
+    work_dir = dir;
 }
 
 int TabWidget::addNewTab(const QString &shell_program)
