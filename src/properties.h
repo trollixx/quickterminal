@@ -5,10 +5,6 @@
 #include <QKeySequence>
 #include <QMap>
 
-typedef QString Session;
-typedef QMap<QString, Session> Sessions;
-typedef QMap<QString, QString> ShortcutMap;
-
 class QAction;
 
 class Properties
@@ -33,7 +29,7 @@ public:
 
     QString emulation;
 
-    Sessions sessions;
+    QMap<QString, QString> sessions;
 
     int appOpacity;
     int termOpacity;

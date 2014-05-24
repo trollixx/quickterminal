@@ -10,25 +10,25 @@ class BookmarksWidget : public QWidget, Ui::BookmarksWidget
 {
     Q_OBJECT
 public:
-    BookmarksWidget(QWidget *parent = nullptr);
+    explicit BookmarksWidget(QWidget *parent = nullptr);
 
     void setup();
 
 signals:
     void callCommand(const QString &cmd);
 
-private:
-    BookmarksModel *m_model;
-
 private slots:
     void handleCommand(const QModelIndex &index);
+
+private:
+    BookmarksModel *m_model;
 };
 
 class BookmarksModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    BookmarksModel(QObject *parent = nullptr);
+    explicit BookmarksModel(QObject *parent = nullptr);
     ~BookmarksModel();
 
     void setup();

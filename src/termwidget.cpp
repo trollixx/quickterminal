@@ -325,5 +325,5 @@ void TermWidget::paintEvent(QPaintEvent *)
     pen.setWidth(30);
     pen.setBrush(m_border);
     p.setPen(pen);
-    p.drawRect(0, 0, width()-1, height()-1);
+    p.drawRect(0, 0, width() - 1, height() - 1);
 }

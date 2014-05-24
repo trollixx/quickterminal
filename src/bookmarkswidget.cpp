@@ -17,9 +17,9 @@ public:
         Command = 2
     };
 
-    AbstractBookmarkItem(AbstractBookmarkItem *parent = nullptr)
+    explicit AbstractBookmarkItem(AbstractBookmarkItem *parent = nullptr) :
+        m_parent(parent)
     {
-        m_parent = parent;
     }
 
     ~AbstractBookmarkItem()
@@ -27,17 +27,17 @@ public:
         qDeleteAll(m_children);
     }
 
-    ItemType type()
+    ItemType type() const
     {
         return m_type;
     }
 
-    QString value()
+    QString value() const
     {
         return m_value;
     }
 
-    QString display()
+    QString display() const
     {
         return m_display;
     }
@@ -47,32 +47,32 @@ public:
         m_children << item;
     }
 
-    int childCount()
+    int childCount() const
     {
         return m_children.count();
     }
 
-    QList<AbstractBookmarkItem *> children()
+    QList<AbstractBookmarkItem *> children() const
     {
         return m_children;
     }
 
-    AbstractBookmarkItem *child(int number)
+    AbstractBookmarkItem *child(int number) const
     {
         return m_children.value(number);
     }
 
-    AbstractBookmarkItem *parent()
+    AbstractBookmarkItem *parent() const
     {
         return m_parent;
     }
 
     int childNumber() const
     {
-        if (m_parent)
-            return m_parent->children().indexOf(const_cast<AbstractBookmarkItem *>(this));
+        if (!m_parent)
+            return 0;
 
-        return 0;
+        return m_parent->children().indexOf(const_cast<AbstractBookmarkItem *>(this));
     }
 
 protected:

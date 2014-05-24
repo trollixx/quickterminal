@@ -24,28 +24,18 @@
 #include <QMap>
 #include <QTabWidget>
 
-class TermWidgetHolder;
 class QAction;
 class QActionGroup;
+
+class TermWidgetHolder;
 
 class TabWidget : public QTabWidget
 {
     Q_OBJECT
 public:
-    TabWidget(QWidget *parent = nullptr);
+    explicit TabWidget(QWidget *parent = nullptr);
 
-    TermWidgetHolder *terminalHolder();
-
-    /* re-implemented */
-    void setTabBar(QTabBar *tabBar)
-    {
-        QTabWidget::setTabBar(tabBar);
-    }
-
-    QTabBar *tabBar() const
-    {
-        return QTabWidget::tabBar();
-    }
+    TermWidgetHolder *terminalHolder() const;
 
 public slots:
     int addNewTab(const QString &shell_program = QString());

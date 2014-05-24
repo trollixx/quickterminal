@@ -7,7 +7,7 @@ class PropertiesDialog : public QDialog, Ui::PropertiesDialog
 {
     Q_OBJECT
 public:
-    PropertiesDialog(QWidget *parent = nullptr);
+    explicit PropertiesDialog(QWidget *parent = nullptr);
 
 signals:
     void propertiesChanged();

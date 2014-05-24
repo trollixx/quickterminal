@@ -10,12 +10,9 @@ class QAction;
 class TermWidgetImpl : public QTermWidget
 {
     Q_OBJECT
-
-    QMap<QString, QAction *> actionMap;
-
 public:
-
-    TermWidgetImpl(const QString &wdir, const QString &shell = QString(), QWidget *parent = nullptr);
+    explicit TermWidgetImpl(const QString &wdir, const QString &shell = QString(),
+                   QWidget *parent = nullptr);
     void propertiesChanged();
 
 signals:
@@ -37,26 +34,21 @@ private slots:
     void zoomIn();
     void zoomOut();
     void zoomReset();
+
+private:
+    QMap<QString, QAction *> actionMap;
 };
 
 class TermWidget : public QWidget
 {
     Q_OBJECT
-
-    TermWidgetImpl *m_term;
-    QVBoxLayout *m_layout;
-    QColor m_border;
-
 public:
-    TermWidget(const QString &wdir, const QString &shell = QString(), QWidget *parent = nullptr);
+    explicit TermWidget(const QString &wdir, const QString &shell = QString(),
+                        QWidget *parent = nullptr);
 
     void propertiesChanged();
-    QStringList availableKeyBindings()
-    {
-        return m_term->availableKeyBindings();
-    }
 
-    TermWidgetImpl *impl()
+    TermWidgetImpl *impl() const
     {
         return m_term;
     }
@@ -82,6 +74,11 @@ private slots:
     void term_splitCollapse();
     void term_termGetFocus();
     void term_termLostFocus();
+
+private:
+    TermWidgetImpl *m_term = nullptr;
+    QVBoxLayout *m_layout = nullptr;
+    QColor m_border;
 };
 
 #endif // TERMWIDGET_H

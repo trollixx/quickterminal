@@ -91,6 +91,11 @@ MainWindow::MainWindow(const QString &work_dir, const QString &command, bool dro
     addAction(renameSession);
 }
 
+bool MainWindow::dropMode() const
+{
+    return m_dropMode;
+}
+
 void MainWindow::migrate_settings()
 {
     // Deal with rearrangements of settings.

@@ -42,8 +42,6 @@ TabWidget::TabWidget(QWidget *parent) :
      */
     setDocumentMode(true);
 
-    tabBar()->setUsesScrollButtons(true);
-
     setTabsClosable(true);
     setMovable(true);
     setUsesScrollButtons(true);
@@ -53,7 +51,7 @@ TabWidget::TabWidget(QWidget *parent) :
     connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(removeTab(int)));
 }
 
-TermWidgetHolder *TabWidget::terminalHolder()
+TermWidgetHolder *TabWidget::terminalHolder() const
 {
     return reinterpret_cast<TermWidgetHolder *>(widget(currentIndex()));
 }

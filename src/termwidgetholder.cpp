@@ -31,9 +31,9 @@ TermWidgetHolder::TermWidgetHolder(const QString &wdir, const QString &shell, QW
 void TermWidgetHolder::setInitialFocus()
 {
     QList<TermWidget *> list = findChildren<TermWidget *>();
-    TermWidget *w = list.count() == 0 ? 0 : list.at(0);
-    if (w)
-        w->setFocus(Qt::OtherFocusReason);
+    if (list.isEmpty())
+        return;
+    list.first()->setFocus(Qt::OtherFocusReason);
 }
 
 void TermWidgetHolder::loadSession()
@@ -77,7 +77,7 @@ void TermWidgetHolder::loadSession()
 
 void TermWidgetHolder::saveSession(const QString &name)
 {
-    Session dump;
+    QString dump;
     QString num("%1");
     foreach (QSplitter *w, findChildren<QSplitter *>()) {
         dump += '|' + num.arg(w->orientation());
@@ -88,7 +88,7 @@ void TermWidgetHolder::saveSession(const QString &name)
     qDebug() << "dump" << dump;
 }
 
-TermWidget *TermWidgetHolder::currentTerminal()
+TermWidget *TermWidgetHolder::currentTerminal() const
 {
     qDebug() << m_currentTerm << "current terminal";
     return m_currentTerm;

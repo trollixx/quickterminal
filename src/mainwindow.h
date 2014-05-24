@@ -36,13 +36,10 @@ class MainWindow : public QMainWindow, private Ui::mainWindow
     Q_OBJECT
 
 public:
-    MainWindow(const QString &work_dir, const QString &command, bool dropMode,
-               QWidget *parent = nullptr, Qt::WindowFlags f = 0);
+    explicit MainWindow(const QString &work_dir, const QString &command, bool dropMode,
+                        QWidget *parent = nullptr, Qt::WindowFlags f = 0);
 
-    bool dropMode() const
-    {
-        return m_dropMode;
-    }
+    bool dropMode() const;
 
 protected slots:
     void on_consoleTabulator_currentChanged(int);
@@ -67,6 +64,17 @@ protected:
     bool event(QEvent *event);
 
 private:
+    void migrate_settings();
+
+    void setup_FileMenu_Actions();
+    void setup_ActionsMenu_Actions();
+    void setup_ViewMenu_Actions();
+
+    void closeEvent(QCloseEvent *event) override;
+
+    void enableDropMode();
+    void realign();
+
     QActionGroup *tabPosition, *scrollBarPosition;
     QMenu *tabPosMenu, *scrollPosMenu;
 
@@ -77,20 +85,8 @@ private:
 
     QDockWidget *m_bookmarksDock;
 
-    void migrate_settings();
-
-    void setup_FileMenu_Actions();
-    void setup_ActionsMenu_Actions();
-    void setup_ViewMenu_Actions();
-
-    void closeEvent(QCloseEvent *event) override;
-
-    void enableDropMode();
     QToolButton *m_dropLockButton = nullptr;
     bool m_dropMode;
-
-    void realign();
-
 #ifdef LIB_QXT
     QxtGlobalShortcut m_dropShortcut;
     void setDropShortcut(QKeySequence dropShortCut);

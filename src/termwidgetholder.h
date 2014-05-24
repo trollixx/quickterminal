@@ -20,7 +20,8 @@ class TermWidgetHolder : public QWidget
     Q_OBJECT
 
 public:
-    TermWidgetHolder(const QString &wdir, const QString &shell = QString(), QWidget *parent = nullptr);
+    explicit TermWidgetHolder(const QString &wdir, const QString &shell = QString(),
+                              QWidget *parent = nullptr);
 
     void propertiesChanged();
     void setInitialFocus();
@@ -30,7 +31,7 @@ public:
     void zoomIn(uint step);
     void zoomOut(uint step);
 
-    TermWidget *currentTerminal();
+    TermWidget *currentTerminal() const;
 
 public slots:
     void splitHorizontal(TermWidget *term);

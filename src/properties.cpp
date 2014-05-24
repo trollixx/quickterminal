@@ -1,5 +1,6 @@
-#include "config.h"
 #include "properties.h"
+
+#include "config.h"
 
 #include <QAction>
 #include <QApplication>
@@ -123,8 +124,7 @@ void Properties::saveSettings()
 
     settings.beginGroup("Shortcuts");
     QMapIterator<QString, QAction *> it(actions);
-    while (it.hasNext())
-    {
+    while (it.hasNext()) {
         it.next();
         QKeySequence shortcut = it.value()->shortcut();
         settings.setValue(it.key(), shortcut.toString());
@@ -142,9 +142,8 @@ void Properties::saveSettings()
     // sessions
     settings.beginWriteArray("Sessions");
     int i = 0;
-    Sessions::iterator sit = sessions.begin();
-    while (sit != sessions.end())
-    {
+    QMap<QString, QString>::iterator sit = sessions.begin();
+    while (sit != sessions.end()) {
         settings.setArrayIndex(i);
         settings.setValue("name", sit.key());
         settings.setValue("state", sit.value());
