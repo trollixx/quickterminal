@@ -256,7 +256,7 @@ void TermWidgetImpl::enableCollapse(bool enable)
 TermWidget::TermWidget(const QString &wdir, const QString &shell, QWidget *parent) :
     QWidget(parent)
 {
-    m_border = palette().color(QPalette::Window);
+    m_borderColor = palette().color(QPalette::Window);
     m_term = new TermWidgetImpl(wdir, shell, this);
     setFocusProxy(m_term);
 
@@ -285,6 +285,11 @@ void TermWidget::propertiesChanged()
     m_term->propertiesChanged();
 }
 
+TermWidgetImpl *TermWidget::impl() const
+{
+    return m_term;
+}
+
 void TermWidget::enableCollapse(bool enable)
 {
     m_term->enableCollapse(enable);
@@ -307,23 +312,23 @@ void TermWidget::term_splitCollapse()
 
 void TermWidget::term_termGetFocus()
 {
-    m_border = palette().color(QPalette::Highlight);
+    m_borderColor = palette().color(QPalette::Highlight);
     emit termGetFocus(this);
     update();
 }
 
 void TermWidget::term_termLostFocus()
 {
-    m_border = palette().color(QPalette::Window);
+    m_borderColor = palette().color(QPalette::Window);
     update();
 }
 
 void TermWidget::paintEvent(QPaintEvent *)
 {
     QPainter p(this);
-    QPen pen(m_border);
+    QPen pen(m_borderColor);
     pen.setWidth(30);
-    pen.setBrush(m_border);
+    pen.setBrush(m_borderColor);
     p.setPen(pen);
     p.drawRect(0, 0, width() - 1, height() - 1);
 }

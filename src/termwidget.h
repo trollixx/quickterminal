@@ -48,10 +48,7 @@ public:
 
     void propertiesChanged();
 
-    TermWidgetImpl *impl() const
-    {
-        return m_term;
-    }
+    TermWidgetImpl *impl() const;
 
 signals:
     void finished();
@@ -78,7 +75,7 @@ private slots:
 private:
     TermWidgetImpl *m_term = nullptr;
     QVBoxLayout *m_layout = nullptr;
-    QColor m_border;
+    QColor m_borderColor;
 };
 
 #endif // TERMWIDGET_H
