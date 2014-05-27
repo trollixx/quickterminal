@@ -132,7 +132,7 @@ void TabWidget::renameSession()
 
 void TabWidget::renameTabsAfterRemove()
 {
-// it breaks custom names - it replaces original/custom title with shell no #
+    // it breaks custom names - it replaces original/custom title with shell no #
 #if 0
     for (int i = 0; i < count(); i++)
         setTabText(i, QString(tr("Shell No. %1")).arg(i+1));
@@ -147,7 +147,6 @@ void TabWidget::contextMenuEvent(QContextMenuEvent *event)
     menu.addAction(QIcon(":/icons/document-close.png"), tr("Close session"),
                    this, SLOT(removeCurrentTab()));
     menu.addAction(tr("Rename session"), this, SLOT(renameSession()), tr(RENAME_SESSION_SHORTCUT));
-
     menu.exec(event->globalPos());
 }
 
@@ -173,8 +172,8 @@ void TabWidget::removeFinished()
     if (prop.isValid() && prop.canConvert(QVariant::Int)) {
         int index = prop.toInt();
         removeTab(index);
-// if (count() == 0)
-// emit closeTabNotification();
+        // if (count() == 0)
+        // emit closeTabNotification();
     }
 }
 
@@ -190,8 +189,8 @@ void TabWidget::removeTab(int index)
     int current = currentIndex();
     if (current >= 0)
         qobject_cast<TermWidgetHolder *>(widget(current))->setInitialFocus();
-// do not decrease it as renaming is disabled in renameTabsAfterRemove
-// tabNumerator--;
+    // do not decrease it as renaming is disabled in renameTabsAfterRemove
+    // tabNumerator--;
     setUpdatesEnabled(true);
 
     if (count() == 0)
@@ -204,11 +203,11 @@ void TabWidget::removeTab(int index)
 void TabWidget::removeCurrentTab()
 {
     // question disabled due user requests. Yes I agree it was anoying.
-// if (QMessageBox::question(this,
-// tr("Close current session"),
-// tr("Are you sure you want to close current sesstion?"),
-// QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes)
-// {
+    // if (QMessageBox::question(this,
+    // tr("Close current session"),
+    // tr("Are you sure you want to close current sesstion?"),
+    // QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes)
+    // {
     if (count() > 1)
         removeTab(currentIndex());
     else

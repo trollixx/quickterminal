@@ -283,7 +283,7 @@ QVariant BookmarksModel::data(const QModelIndex &index, int role) const
     {
         QFont f;
         if (static_cast<AbstractBookmarkItem *>(index.internalPointer())->type()
-            == AbstractBookmarkItem::Group)
+                == AbstractBookmarkItem::Group)
             f.setBold(true);
         return f;
     }

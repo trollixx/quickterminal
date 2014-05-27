@@ -108,7 +108,7 @@ void PropertiesDialog::apply()
     Properties::Instance()->colorScheme = colorSchemaCombo->currentText();
     Properties::Instance()->font = fontSampleLabel->font(); // fontComboBox->currentFont();
     Properties::Instance()->guiStyle = (styleComboBox->currentText() == tr("System Default"))
-                                       ? QString() : styleComboBox->currentText();
+            ? QString() : styleComboBox->currentText();
 
     Properties::Instance()->emulation = emulationComboBox->currentText();
 
@@ -204,7 +204,7 @@ void PropertiesDialog::setupShortcuts()
     }
 
     shortcutsWidget->resizeColumnsToContents();
-/*
+    /*
     connect(shortcutsWidget, SIGNAL(currentChanged(int, int)),
             this, SLOT(recordAction(int, int)));
     connect(shortcutsWidget, SIGNAL(valueChanged(int, int)),

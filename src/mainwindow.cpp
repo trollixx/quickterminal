@@ -326,7 +326,7 @@ void MainWindow::setup_FileMenu_Actions()
     QKeySequence seq;
 
     Properties::Instance()->actions[ADD_TAB]
-        = new QAction(QIcon(":/icons/list-add.png"), tr("New Tab"), this);
+            = new QAction(QIcon(":/icons/list-add.png"), tr("New Tab"), this);
     seq = QKeySequence::fromString(settings.value(ADD_TAB, ADD_TAB_SHORTCUT).toString());
     Properties::Instance()->actions[ADD_TAB]->setShortcut(seq);
     connect(Properties::Instance()->actions[ADD_TAB], SIGNAL(triggered()), consoleTabulator,
@@ -335,7 +335,7 @@ void MainWindow::setup_FileMenu_Actions()
     addAction(Properties::Instance()->actions[ADD_TAB]);
 
     Properties::Instance()->actions[CLOSE_TAB]
-        = new QAction(QIcon(":/icons/list-remove.png"), tr("Close Tab"), this);
+            = new QAction(QIcon(":/icons/list-remove.png"), tr("Close Tab"), this);
     seq = QKeySequence::fromString(settings.value(CLOSE_TAB, CLOSE_TAB_SHORTCUT).toString());
     Properties::Instance()->actions[CLOSE_TAB]->setShortcut(seq);
     connect(Properties::Instance()->actions[CLOSE_TAB], SIGNAL(triggered()), consoleTabulator,
@@ -371,10 +371,10 @@ void MainWindow::setup_ViewMenu_Actions()
     toggleBorder = new QAction(tr("Hide Window Borders"), this);
     // toggleBorder->setObjectName("toggle_Borderless");
     toggleBorder->setCheckable(true);
-// TODO/FIXME: it's broken somehow. When I call toggleBorderless() here the non-responsive window appear
-// toggleBorder->setChecked(Properties::Instance()->borderless);
-// if (Properties::Instance()->borderless)
-// toggleBorderless();
+    // TODO/FIXME: it's broken somehow. When I call toggleBorderless() here the non-responsive window appear
+    // toggleBorder->setChecked(Properties::Instance()->borderless);
+    // if (Properties::Instance()->borderless)
+    // toggleBorderless();
     connect(toggleBorder, SIGNAL(triggered()), this, SLOT(toggleBorderless()));
     menu_View->addAction(toggleBorder);
     toggleBorder->setVisible(!m_dropMode);
@@ -391,8 +391,8 @@ void MainWindow::setup_ViewMenu_Actions()
     settings.beginGroup("Shortcuts");
     Properties::Instance()->actions[TOGGLE_BOOKMARKS] = m_bookmarksDock->toggleViewAction();
     QKeySequence seq
-        = QKeySequence::fromString(settings.value(TOGGLE_BOOKMARKS,
-                                                  TOGGLE_BOOKMARKS_SHORTCUT).toString());
+            = QKeySequence::fromString(settings.value(TOGGLE_BOOKMARKS,
+                                                      TOGGLE_BOOKMARKS_SHORTCUT).toString());
     Properties::Instance()->actions[TOGGLE_BOOKMARKS]->setShortcut(seq);
     menu_View->addAction(Properties::Instance()->actions[TOGGLE_BOOKMARKS]);
     addAction(Properties::Instance()->actions[TOGGLE_BOOKMARKS]);

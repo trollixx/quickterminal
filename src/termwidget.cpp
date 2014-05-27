@@ -44,7 +44,7 @@ TermWidgetImpl::TermWidgetImpl(const QString &wdir, const QString &shell, QWidge
     setMotionAfterPasting(Properties::Instance()->m_motionAfterPaste);
 
     actionMap[COPY_SELECTION]
-        = new QAction(QIcon(":/icons/edit-copy.png"), tr(COPY_SELECTION), this);
+            = new QAction(QIcon(":/icons/edit-copy.png"), tr(COPY_SELECTION), this);
     connect(actionMap[COPY_SELECTION], SIGNAL(triggered()), this, SLOT(copyClipboard()));
     addAction(actionMap[COPY_SELECTION]);
 
@@ -202,7 +202,7 @@ void TermWidgetImpl::customContextMenuCall(const QPoint &pos)
 {
     QMenu menu;
     menu.addActions(actions());
-/*
+    /*
     menu.addSeparator();
     menu.addAction(QIcon(":/icons/close.png"),
         tr("Close session"), this,
