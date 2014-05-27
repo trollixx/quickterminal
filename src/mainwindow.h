@@ -61,6 +61,7 @@ protected slots:
     void bookmarksDock_visibilityChanged(bool visible);
 
 protected:
+    void closeEvent(QCloseEvent *event) override;
     bool event(QEvent *event);
 
 private:
@@ -69,8 +70,6 @@ private:
     void setup_FileMenu_Actions();
     void setup_ActionsMenu_Actions();
     void setup_ViewMenu_Actions();
-
-    void closeEvent(QCloseEvent *event) override;
 
     void enableDropMode();
     void realign();

@@ -485,35 +485,6 @@ void MainWindow::toggleMenu()
     Properties::Instance()->menuVisible = m_menuBar->isVisible();
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
-{
-    if (!Properties::Instance()->askOnExit || !consoleTabulator->count()) {
-        Properties::Instance()->mainWindowGeometry = saveGeometry();
-        Properties::Instance()->mainWindowState = saveState();
-        Properties::Instance()->saveSettings();
-        event->accept();
-        return;
-    }
-
-    QScopedPointer<QMessageBox> mb(new QMessageBox(this));
-    mb->setWindowTitle(tr("Exit QTerminal"));
-    mb->setText(tr("Are you sure you want to exit?"));
-    mb->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-
-    QCheckBox *dontAskCheckBox = new QCheckBox(tr("Do not ask again"), mb.data());
-    mb->setCheckBox(dontAskCheckBox);
-
-    if (mb->exec() == QMessageBox::Yes) {
-        Properties::Instance()->mainWindowGeometry = saveGeometry();
-        Properties::Instance()->mainWindowState = saveState();
-        Properties::Instance()->askOnExit = !dontAskCheckBox->isChecked();
-        Properties::Instance()->saveSettings();
-        event->accept();
-    } else {
-        event->ignore();
-    }
-}
-
 void MainWindow::actAbout_triggered()
 {
     QMessageBox::about(this, QString("QTerminal ") + STR_VERSION,
@@ -598,6 +569,35 @@ void MainWindow::find()
 {
     // A bit ugly perhaps with 4 levels of indirection...
     consoleTabulator->terminalHolder()->currentTerminal()->impl()->toggleShowSearchBar();
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if (!Properties::Instance()->askOnExit || !consoleTabulator->count()) {
+        Properties::Instance()->mainWindowGeometry = saveGeometry();
+        Properties::Instance()->mainWindowState = saveState();
+        Properties::Instance()->saveSettings();
+        event->accept();
+        return;
+    }
+
+    QScopedPointer<QMessageBox> mb(new QMessageBox(this));
+    mb->setWindowTitle(tr("Exit QTerminal"));
+    mb->setText(tr("Are you sure you want to exit?"));
+    mb->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+
+    QCheckBox *dontAskCheckBox = new QCheckBox(tr("Do not ask again"), mb.data());
+    mb->setCheckBox(dontAskCheckBox);
+
+    if (mb->exec() == QMessageBox::Yes) {
+        Properties::Instance()->mainWindowGeometry = saveGeometry();
+        Properties::Instance()->mainWindowState = saveState();
+        Properties::Instance()->askOnExit = !dontAskCheckBox->isChecked();
+        Properties::Instance()->saveSettings();
+        event->accept();
+    } else {
+        event->ignore();
+    }
 }
 
 bool MainWindow::event(QEvent *event)
