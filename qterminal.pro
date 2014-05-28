@@ -1,17 +1,21 @@
 TEMPLATE = app
 
 CONFIG += c++11 link_pkgconfig
-QT += widgets
-PKGCONFIG += qtermwidget5
+QT += gui gui-private widgets
+PKGCONFIG += qtermwidget5 x11
 
 TARGET = qterminal
 
 DEFINES += STR_VERSION=\\\"1.0\\\"
 
+# QxtGlobalShortcut
+HEADERS += $$files(src/3rdparty/*.h)
+SOURCES += $$files(src/3rdparty/*.cpp)
+
 HEADERS += $$files(src/*.h)
 SOURCES += $$files(src/*.cpp)
 
-INCLUDEPATH += src
+INCLUDEPATH += src src/3rdparty
 
 RESOURCES += src/icons.qrc
 FORMS += $$files(src/forms/*.ui)

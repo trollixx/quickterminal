@@ -31,6 +31,8 @@
 #include <QSettings>
 #include <QToolButton>
 
+#include <qxtglobalshortcut.h>
+
 // TODO/FXIME: probably remove. QSS makes it unusable on mac...
 #define QSS_DROP    "MainWindow {border: 1px solid rgba(0, 0, 0, 50%);}\n"
 
@@ -39,7 +41,8 @@ MainWindow::MainWindow(const QString &work_dir, const QString &command, bool dro
     QMainWindow(parent, f),
     m_initShell(command),
     m_initWorkDir(work_dir),
-    m_dropMode(dropMode)
+    m_dropMode(dropMode),
+    m_dropShortcut(new QxtGlobalShortcut(this))
 {
     setupUi(this);
     Properties::Instance()->loadSettings();
@@ -58,9 +61,7 @@ MainWindow::MainWindow(const QString &work_dir, const QString &command, bool dro
 
     connect(actAbout, SIGNAL(triggered()), SLOT(actAbout_triggered()));
     connect(actAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
-#ifdef LIB_QXT
-    connect(&m_dropShortcut, SIGNAL(activated()), SLOT(showHide()));
-#endif
+    connect(m_dropShortcut, SIGNAL(activated()), this, SLOT(showHide()));
 
     setContentsMargins(0, 0, 0, 0);
     if (m_dropMode) {
@@ -128,25 +129,18 @@ void MainWindow::enableDropMode()
     setKeepOpen(Properties::Instance()->dropKeepOpen);
     m_dropLockButton->setAutoRaise(true);
 
-#ifdef LIB_QXT
     setDropShortcut(Properties::Instance()->dropShortCut);
-#endif
     realign();
 }
 
-#ifdef LIB_QXT
 void MainWindow::setDropShortcut(QKeySequence dropShortCut)
 {
-    if (!m_dropMode)
+    if (!m_dropMode || m_dropShortcut->shortcut() == dropShortCut)
         return;
 
-    if (m_dropShortcut.shortcut() != dropShortCut) {
-        m_dropShortcut.setShortcut(dropShortCut);
-        qWarning() << tr("Press \"%1\" to see the terminal.").arg(dropShortCut.toString());
-    }
+    m_dropShortcut->setShortcut(dropShortCut);
+    qWarning("Press \"%s\" to see the terminal.", qPrintable(dropShortCut.toString()));
 }
-
-#endif
 
 void MainWindow::setup_ActionsMenu_Actions()
 {
@@ -504,9 +498,7 @@ void MainWindow::propertiesChanged()
     setWindowOpacity(Properties::Instance()->appOpacity/100.0);
     consoleTabulator->setTabPosition((QTabWidget::TabPosition)Properties::Instance()->tabsPos);
     consoleTabulator->propertiesChanged();
-#ifdef LIB_QXT
     setDropShortcut(Properties::Instance()->dropShortCut);
-#endif
 
     m_menuBar->setVisible(Properties::Instance()->menuVisible);
     m_bookmarksDock->setVisible(Properties::Instance()->useBookmarks
