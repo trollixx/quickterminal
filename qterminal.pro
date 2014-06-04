@@ -1,7 +1,5 @@
-TEMPLATE = app
-
-CONFIG += c++11 link_pkgconfig
 QT += gui gui-private widgets
+CONFIG += c++11 link_pkgconfig
 PKGCONFIG += qtermwidget5 x11
 
 TARGET = qterminal
