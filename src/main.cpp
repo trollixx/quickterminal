@@ -22,92 +22,10 @@
 #include "properties.h"
 
 #include <QApplication>
+#include <QCommandLineParser>
 #include <QDir>
 #include <QSettings>
 #include <QTranslator>
-
-#include <getopt.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-#define out
-
-const char *const short_options = "vhw:e:d";
-
-const struct option long_options[] = {
-    {
-        "version", 0, NULL, 'v'
-    },
-    {
-        "help", 0, NULL, 'h'
-    },
-    {
-        "workdir", 1, NULL, 'w'
-    },
-    {
-        "execute", 1, NULL, 'e'
-    },
-    {
-        "drop", 0, NULL, 'd'
-    },
-    {
-        NULL, 0, NULL, 0
-    }
-};
-
-void print_usage_and_exit(int code)
-{
-    printf("QTerminal %s\n", STR_VERSION);
-    puts("Usage: qterminal [OPTION]...\n");
-    puts("  -d,  --drop               Start in \"dropdown mode\" (like Yakuake or Tilda)");
-    puts("  -e,  --execute <command>  Execute command instead of shell");
-    puts("  -h,  --help               Print this help");
-    puts("  -v,  --version            Prints application version and exits");
-    puts("  -w,  --workdir <dir>      Start session with specified work directory");
-    puts("\nHomepage: <https://github.com/qterminal>");
-    puts("Report bugs to <https://github.com/qterminal/qterminal>");
-    exit(code);
-}
-
-void print_version_and_exit(int code = 0)
-{
-    printf("%s\n", STR_VERSION);
-    exit(code);
-}
-
-void parse_args(int argc, char *argv[], QString &workdir, QString &shell_command,
-                out bool &dropMode)
-{
-    int next_option;
-    dropMode = false;
-    do {
-        next_option = getopt_long(argc, argv, short_options, long_options, NULL);
-        switch (next_option) {
-        case 'h':
-            print_usage_and_exit(0);
-        case 'w':
-            workdir = QString(optarg);
-            break;
-        case 'e':
-            shell_command = QString(optarg);
-            // #15 "Raw" -e params
-            // Passing "raw" params (like konsole -e mcedit /tmp/tmp.txt") is more preferable - then I can call QString("qterminal -e ") + cmd_line in other programs
-            while (optind < argc)
-            {
-                // printf("arg: %d - %s\n", optind, argv[optind]);
-                shell_command += ' ' + QString(argv[optind++]);
-            }
-            break;
-        case 'd':
-            dropMode = true;
-            break;
-        case '?':
-            print_usage_and_exit(1);
-        case 'v':
-            print_version_and_exit();
-        }
-    } while (next_option != -1);
-}
 
 int main(int argc, char *argv[])
 {
@@ -120,12 +38,34 @@ int main(int argc, char *argv[])
     QSettings::setDefaultFormat(QSettings::IniFormat);
 
     QApplication app(argc, argv);
-    QString workdir, shell_command;
-    bool dropMode;
-    parse_args(argc, argv, workdir, shell_command, dropMode);
 
-    if (workdir.isEmpty())
-        workdir = QDir::homePath();
+    QCommandLineParser parser;
+
+    QCommandLineOption dropdownOption(
+                {QStringLiteral("d"), QStringLiteral("dropdown")},
+                QStringLiteral("Run in 'dropdown mode' (like Yakuake or Tilda)"));
+    parser.addOption(dropdownOption);
+
+    QCommandLineOption commandOption(
+                {QStringLiteral("e"), QStringLiteral("command")},
+                QStringLiteral("Specify a command to execute inside the terminal"),
+                QStringLiteral("COMMAND"));
+    parser.addOption(commandOption);
+
+    QCommandLineOption workingDirectoryOption(
+                {QStringLiteral("w"), QStringLiteral("working-directory")},
+                QStringLiteral("Set the working directory"),
+                QStringLiteral("DIR"), QDir::homePath());
+    parser.addOption(workingDirectoryOption);
+
+    parser.addHelpOption();
+    parser.addVersionOption();
+
+    parser.process(app);
+
+    bool dropMode = parser.isSet(dropdownOption);
+    QString workdir = parser.value(workingDirectoryOption);
+    QString shell_command = parser.value(commandOption);
 
     // translations
     QString fname = QString("qterminal_%1.qm").arg(QLocale::system().name().left(2));
