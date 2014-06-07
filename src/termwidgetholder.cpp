@@ -1,6 +1,6 @@
 #include "termwidgetholder.h"
 
-#include "properties.h"
+#include "preferences.h"
 
 #include <QDebug>
 #include <QGridLayout>
@@ -41,7 +41,7 @@ void TermWidgetHolder::loadSession()
     bool ok;
     QString name = QInputDialog::getItem(this, tr("Load Session"),
                                          tr("List of saved sessions:"),
-                                         Properties::Instance()->sessions.keys(),
+                                         Preferences::instance()->sessions.keys(),
                                          0, false, &ok);
     if (!ok || name.isEmpty())
         return;
@@ -84,7 +84,7 @@ void TermWidgetHolder::saveSession(const QString &name)
         foreach (int i, w->sizes())
             dump += ',' + num.arg(i);
     }
-    Properties::Instance()->sessions[name] = dump;
+    Preferences::instance()->sessions[name] = dump;
     qDebug() << "dump" << dump;
 }
 
@@ -202,7 +202,7 @@ void TermWidgetHolder::split(TermWidget *term, Qt::Orientation orientation)
 
     // wdir settings
     QString wd(m_wdir);
-    if (Properties::Instance()->useCWD) {
+    if (Preferences::instance()->useCWD) {
         wd = term->impl()->workingDirectory();
         if (wd.isEmpty())
             wd = m_wdir;

@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "mainwindow.h"
-#include "properties.h"
+#include "preferences.h"
 
 #include <QApplication>
 #include <QCommandLineParser>
@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
     if (dropMode) {
         QWidget *hiddenPreviewParent = new QWidget(0, Qt::Tool);
         window = new MainWindow(workdir, shell_command, dropMode, hiddenPreviewParent);
-        if (Properties::Instance()->dropShowOnStart)
+        if (Preferences::instance()->dropShowOnStart)
             window->show();
     } else {
         window = new MainWindow(workdir, shell_command, dropMode);

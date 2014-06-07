@@ -7,13 +7,15 @@
 
 class QAction;
 
-class Properties
+class Preferences
 {
 public:
-    static Properties *Instance();
+    static Preferences *instance();
+
+    void load();
+    void save();
 
     QFont defaultFont() const;
-    void saveSettings();
 
     QByteArray mainWindowGeometry;
     QByteArray mainWindowState;
@@ -59,18 +61,15 @@ public:
 
     QMap<QString, QAction *> actions;
 
-    void loadSettings();
-
 private:
     // Singleton handling
-    static Properties *m_instance;
+    static Preferences *m_instance;
 
-    Properties();
-    Properties(const Properties &)
-    {
-    }
+    Preferences();
+    Preferences(const Preferences &);
+    ~Preferences();
 
-    ~Properties();
+    void migrate();
 };
 
 #endif // PROPERTIES_H

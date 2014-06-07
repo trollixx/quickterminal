@@ -21,7 +21,7 @@
 #include "tabwidget.h"
 
 #include "config.h"
-#include "properties.h"
+#include "preferences.h"
 #include "termwidgetholder.h"
 
 #include <QContextMenuEvent>
@@ -68,7 +68,7 @@ int TabWidget::addNewTab(const QString &shell_program)
 
     TermWidgetHolder *ch = terminalHolder();
     QString cwd(work_dir);
-    if (Properties::Instance()->useCWD && ch) {
+    if (Preferences::instance()->useCWD && ch) {
         cwd = ch->currentTerminal()->impl()->workingDirectory();
         if (cwd.isEmpty())
             cwd = work_dir;
@@ -284,9 +284,9 @@ void TabWidget::changeScrollPosition(QAction *triggered)
     if (!scrollPosition)
         qFatal("scrollPosition is NULL");
 
-    Properties::Instance()->scrollBarPos = scrollPosition->actions().indexOf(triggered);
+    Preferences::instance()->scrollBarPos = scrollPosition->actions().indexOf(triggered);
 
-    Properties::Instance()->saveSettings();
+    Preferences::instance()->save();
     propertiesChanged();
 }
 
@@ -296,13 +296,13 @@ void TabWidget::changeTabPosition(QAction *triggered)
     if (!tabPosition)
         qFatal("tabPosition is NULL");
 
-    Properties *prop = Properties::Instance();
+    Preferences *prop = Preferences::instance();
     /* order is dictated from mainwindow.cpp */
     QTabWidget::TabPosition position
             = (QTabWidget::TabPosition)tabPosition->actions().indexOf(triggered);
     setTabPosition(position);
     prop->tabsPos = position;
-    prop->saveSettings();
+    prop->save();
 }
 
 void TabWidget::propertiesChanged()
@@ -332,7 +332,7 @@ void TabWidget::loadSession()
 
 void TabWidget::showHideTabBar()
 {
-    if (!Properties::Instance()->alwaysShowTabs)
+    if (!Preferences::instance()->alwaysShowTabs)
         tabBar()->setVisible(count() > 1);
     else
         tabBar()->setVisible(true);

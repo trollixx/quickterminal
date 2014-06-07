@@ -62,8 +62,6 @@ protected:
     bool event(QEvent *event);
 
 private:
-    void migrate_settings();
-
     void setup_FileMenu_Actions();
     void setup_ActionsMenu_Actions();
     void setup_ViewMenu_Actions();

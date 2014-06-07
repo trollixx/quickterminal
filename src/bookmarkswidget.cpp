@@ -1,7 +1,7 @@
 #include "bookmarkswidget.h"
 
 #include "config.h"
-#include "properties.h"
+#include "preferences.h"
 
 #include <QDir>
 #include <QProcessEnvironment>
@@ -255,7 +255,7 @@ void BookmarksModel::setup()
         delete m_root;
     m_root = new BookmarkRootItem();
     m_root->addChild(new BookmarkLocalGroupItem(m_root));
-    m_root->addChild(new BookmarkFileGroupItem(m_root, Properties::Instance()->bookmarksFile));
+    m_root->addChild(new BookmarkFileGroupItem(m_root, Preferences::instance()->bookmarksFile));
     // reset();
 }
 

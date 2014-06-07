@@ -1,4 +1,4 @@
-#include "properties.h"
+#include "preferences.h"
 
 #include "config.h"
 
@@ -7,39 +7,53 @@
 #include <QFileInfo>
 #include <QSettings>
 
-Properties *Properties::m_instance = nullptr;
+Preferences *Preferences::m_instance = nullptr;
 
-Properties *Properties::Instance()
+Preferences *Preferences::instance()
 {
     if (!m_instance)
-        m_instance = new Properties();
+        m_instance = new Preferences();
     return m_instance;
 }
 
-Properties::Properties()
+Preferences::Preferences()
 {
     qDebug("Properties constructor called");
 }
 
-Properties::~Properties()
+Preferences::~Preferences()
 {
     qDebug("Properties destructor called");
-    saveSettings();
+    save();
     delete m_instance;
     m_instance = nullptr;
 }
 
-QFont Properties::defaultFont() const
+void Preferences::migrate()
 {
-    QFont default_font = QApplication::font();
-    default_font.setFamily(DEFAULT_FONT);
-    default_font.setPointSize(12);
-    default_font.setStyleHint(QFont::TypeWriter);
-    return default_font;
+    // Deal with rearrangements of settings.
+    // If this method becomes unbearably huge we should look at the config-update
+    // system used by kde and razor.
+    QSettings settings;
+    QString last_version = settings.value("version", "0.0.0").toString();
+    // Handle configchanges in 0.4.0 (renaming 'Paste Selection' -> 'Paste Clipboard')
+    if (last_version >= "0.4.0")
+        return;
+
+    qDebug("Migrating settings from %s to 0.4.0", qPrintable(last_version));
+    settings.beginGroup("Shortcuts");
+    QString tmp = settings.value("Paste Selection", PASTE_CLIPBOARD_SHORTCUT).toString();
+    settings.setValue(PASTE_CLIPBOARD, tmp);
+    settings.remove("Paste Selection");
+    settings.endGroup();
+
+    settings.setValue("version", "0.4.0");
 }
 
-void Properties::loadSettings()
+void Preferences::load()
 {
+    migrate();
+
     QSettings settings;
 
     guiStyle = settings.value("guiStyle", QString()).toString();
@@ -56,8 +70,8 @@ void Properties::loadSettings()
     QStringList keys = settings.childKeys();
     foreach (const QString &key, keys) {
         QKeySequence sequence = QKeySequence(settings.value(key).toString());
-        if (Properties::Instance()->actions.contains(key))
-            Properties::Instance()->actions[ key ]->setShortcut(sequence);
+        if (Preferences::instance()->actions.contains(key))
+            Preferences::instance()->actions[ key ]->setShortcut(sequence);
     }
     settings.endGroup();
 
@@ -113,7 +127,7 @@ void Properties::loadSettings()
     settings.endGroup();
 }
 
-void Properties::saveSettings()
+void Preferences::save()
 {
     QSettings settings;
 
@@ -176,4 +190,13 @@ void Properties::saveSettings()
     settings.setValue("Width", dropWidht);
     settings.setValue("Height", dropHeight);
     settings.endGroup();
+}
+
+QFont Preferences::defaultFont() const
+{
+    QFont default_font = QApplication::font();
+    default_font.setFamily(DEFAULT_FONT);
+    default_font.setPointSize(12);
+    default_font.setStyleHint(QFont::TypeWriter);
+    return default_font;
 }

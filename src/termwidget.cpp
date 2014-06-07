@@ -1,7 +1,7 @@
 #include "termwidget.h"
 
 #include "config.h"
-#include "properties.h"
+#include "preferences.h"
 
 #include <QDebug>
 #include <QMenu>
@@ -29,8 +29,8 @@ TermWidgetImpl::TermWidgetImpl(const QString &wdir, const QString &shell, QWidge
         setWorkingDirectory(wdir);
 
     if (shell.isNull()) {
-        if (!Properties::Instance()->shell.isNull())
-            setShellProgram(Properties::Instance()->shell);
+        if (!Preferences::instance()->shell.isNull())
+            setShellProgram(Preferences::instance()->shell);
     } else {
         qDebug() << "Settings custom shell program:" << shell;
         QStringList parts = shell.split(QRegExp("\\s+"), QString::SkipEmptyParts);
@@ -41,7 +41,7 @@ TermWidgetImpl::TermWidgetImpl(const QString &wdir, const QString &shell, QWidge
             setArgs(parts);
     }
 
-    setMotionAfterPasting(Properties::Instance()->m_motionAfterPaste);
+    setMotionAfterPasting(Preferences::instance()->m_motionAfterPaste);
 
     actionMap[COPY_SELECTION]
             = new QAction(QIcon(":/icons/edit-copy.png"), tr(COPY_SELECTION), this);
@@ -163,24 +163,24 @@ void TermWidgetImpl::updateShortcuts()
 
 void TermWidgetImpl::propertiesChanged()
 {
-    setColorScheme(Properties::Instance()->colorScheme);
-    setTerminalFont(Properties::Instance()->font);
-    setMotionAfterPasting(Properties::Instance()->m_motionAfterPaste);
+    setColorScheme(Preferences::instance()->colorScheme);
+    setTerminalFont(Preferences::instance()->font);
+    setMotionAfterPasting(Preferences::instance()->m_motionAfterPaste);
 
-    if (Properties::Instance()->historyLimited) {
-        setHistorySize(Properties::Instance()->historyLimitedTo);
+    if (Preferences::instance()->historyLimited) {
+        setHistorySize(Preferences::instance()->historyLimitedTo);
     } else {
         // Unlimited history
         setHistorySize(-1);
     }
 
     qDebug() << "TermWidgetImpl::propertiesChanged" << this << "emulation:"
-             << Properties::Instance()->emulation;
-    setKeyBindings(Properties::Instance()->emulation);
-    setTerminalOpacity(Properties::Instance()->termOpacity/100.0);
+             << Preferences::instance()->emulation;
+    setKeyBindings(Preferences::instance()->emulation);
+    setTerminalOpacity(Preferences::instance()->termOpacity/100.0);
 
     /* be consequent with qtermwidget.h here */
-    switch (Properties::Instance()->scrollBarPos) {
+    switch (Preferences::instance()->scrollBarPos) {
     case 0:
         setScrollBarPosition(QTermWidget::NoScrollBar);
         break;
@@ -230,22 +230,22 @@ void TermWidgetImpl::act_splitCollapse()
 void TermWidgetImpl::zoomIn()
 {
     emit QTermWidget::zoomIn();
-    Properties::Instance()->font = getTerminalFont();
-    Properties::Instance()->saveSettings();
+    Preferences::instance()->font = getTerminalFont();
+    Preferences::instance()->save();
 }
 
 void TermWidgetImpl::zoomOut()
 {
     emit QTermWidget::zoomOut();
-    Properties::Instance()->font = getTerminalFont();
-    Properties::Instance()->saveSettings();
+    Preferences::instance()->font = getTerminalFont();
+    Preferences::instance()->save();
 }
 
 void TermWidgetImpl::zoomReset()
 {
-    Properties::Instance()->font = Properties::Instance()->defaultFont();
-    setTerminalFont(Properties::Instance()->font);
-    Properties::Instance()->saveSettings();
+    Preferences::instance()->font = Preferences::instance()->defaultFont();
+    setTerminalFont(Preferences::instance()->font);
+    Preferences::instance()->save();
 }
 
 void TermWidgetImpl::enableCollapse(bool enable)
@@ -277,7 +277,7 @@ TermWidget::TermWidget(const QString &wdir, const QString &shell, QWidget *paren
 
 void TermWidget::propertiesChanged()
 {
-    if (Properties::Instance()->highlightCurrentTerminal)
+    if (Preferences::instance()->highlightCurrentTerminal)
         m_layout->setContentsMargins(2, 2, 2, 2);
     else
         m_layout->setContentsMargins(0, 0, 0, 0);
