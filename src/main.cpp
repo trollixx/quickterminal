@@ -18,12 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include "application.h"
 #include "mainwindow.h"
 #include "preferences.h"
 
 #include <QApplication>
-#include <QCommandLineParser>
-#include <QDir>
 #include <QSettings>
 #include <QTranslator>
 
@@ -37,35 +36,7 @@ int main(int argc, char *argv[])
     // Warning: do not change settings format. It can screw bookmarks later.
     QSettings::setDefaultFormat(QSettings::IniFormat);
 
-    QApplication app(argc, argv);
-
-    QCommandLineParser parser;
-
-    QCommandLineOption dropdownOption(
-                {QStringLiteral("d"), QStringLiteral("dropdown")},
-                QStringLiteral("Run in 'dropdown mode' (like Yakuake or Tilda)"));
-    parser.addOption(dropdownOption);
-
-    QCommandLineOption commandOption(
-                {QStringLiteral("e"), QStringLiteral("command")},
-                QStringLiteral("Specify a command to execute inside the terminal"),
-                QStringLiteral("COMMAND"));
-    parser.addOption(commandOption);
-
-    QCommandLineOption workingDirectoryOption(
-                {QStringLiteral("w"), QStringLiteral("working-directory")},
-                QStringLiteral("Set the working directory"),
-                QStringLiteral("DIR"), QDir::homePath());
-    parser.addOption(workingDirectoryOption);
-
-    parser.addHelpOption();
-    parser.addVersionOption();
-
-    parser.process(app);
-
-    bool dropMode = parser.isSet(dropdownOption);
-    QString workdir = parser.value(workingDirectoryOption);
-    QString shell_command = parser.value(commandOption);
+    QScopedPointer<QApplication> qapp(new QApplication(argc, argv));
 
     // translations
     QString fname = QString("qterminal_%1.qm").arg(QLocale::system().name().left(2));
@@ -82,18 +53,9 @@ int main(int argc, char *argv[])
                                                    QApplication::applicationDirPath()+"../translations",
                                                    "_");
 #endif
-    app.installTranslator(&translator);
+    qapp->installTranslator(&translator);
 
-    MainWindow *window;
-    if (dropMode) {
-        QWidget *hiddenPreviewParent = new QWidget(0, Qt::Tool);
-        window = new MainWindow(workdir, shell_command, dropMode, hiddenPreviewParent);
-        if (Preferences::instance()->dropShowOnStart)
-            window->show();
-    } else {
-        window = new MainWindow(workdir, shell_command, dropMode);
-        window->show();
-    }
+    QScopedPointer<Application> app(new Application());
 
-    return app.exec();
+    return qapp->exec();
 }

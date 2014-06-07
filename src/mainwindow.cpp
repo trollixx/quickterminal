@@ -31,7 +31,6 @@
 #include <QSettings>
 #include <QToolButton>
 
-#include <qxtglobalshortcut.h>
 
 // TODO/FXIME: probably remove. QSS makes it unusable on mac...
 #define QSS_DROP    "MainWindow {border: 1px solid rgba(0, 0, 0, 50%);}\n"
@@ -41,8 +40,7 @@ MainWindow::MainWindow(const QString &work_dir, const QString &command, bool dro
     QMainWindow(parent, f),
     m_initShell(command),
     m_initWorkDir(work_dir),
-    m_dropMode(dropMode),
-    m_dropShortcut(new QxtGlobalShortcut(this))
+    m_dropMode(dropMode)
 {
     setupUi(this);
 
@@ -62,7 +60,6 @@ MainWindow::MainWindow(const QString &work_dir, const QString &command, bool dro
 
     connect(Preferences::instance(), &Preferences::changed,
             this, &MainWindow::preferencesChanged);
-    connect(m_dropShortcut, SIGNAL(activated()), this, SLOT(showHide()));
 
     setContentsMargins(0, 0, 0, 0);
     if (m_dropMode) {
@@ -108,18 +105,7 @@ void MainWindow::enableDropMode()
     m_dropLockButton->connect(m_dropLockButton, SIGNAL(clicked(bool)), SLOT(setKeepOpen(bool)));
     setKeepOpen(Preferences::instance()->dropKeepOpen);
     m_dropLockButton->setAutoRaise(true);
-
-    setDropShortcut(Preferences::instance()->dropShortCut);
     realign();
-}
-
-void MainWindow::setDropShortcut(QKeySequence dropShortCut)
-{
-    if (!m_dropMode || m_dropShortcut->shortcut() == dropShortCut)
-        return;
-
-    m_dropShortcut->setShortcut(dropShortCut);
-    qWarning("Press \"%s\" to see the terminal.", qPrintable(dropShortCut.toString()));
 }
 
 void MainWindow::setup_ActionsMenu_Actions()
@@ -477,7 +463,6 @@ void MainWindow::preferencesChanged()
     setWindowOpacity(Preferences::instance()->appOpacity/100.0);
     consoleTabulator->setTabPosition((QTabWidget::TabPosition)Preferences::instance()->tabsPos);
     consoleTabulator->propertiesChanged();
-    setDropShortcut(Preferences::instance()->dropShortCut);
 
     m_menuBar->setVisible(Preferences::instance()->menuVisible);
     m_bookmarksDock->setVisible(Preferences::instance()->useBookmarks

@@ -26,7 +26,6 @@
 #include <QMainWindow>
 
 class QToolButton;
-class QxtGlobalShortcut;
 
 class MainWindow : public QMainWindow, private Ui::mainWindow
 {
@@ -81,8 +80,5 @@ private:
 
     QToolButton *m_dropLockButton = nullptr;
     bool m_dropMode;
-
-    QxtGlobalShortcut *m_dropShortcut = nullptr;
-    void setDropShortcut(QKeySequence dropShortCut);
 };
 #endif // MAINWINDOW_H
