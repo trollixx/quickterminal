@@ -144,7 +144,7 @@ void PropertiesDialog::apply()
     Preferences::instance()->bookmarksFile = bookmarksLineEdit->text();
     saveBookmarksFile(Preferences::instance()->bookmarksFile);
 
-    emit propertiesChanged();
+    Preferences::instance()->emitChanged();
 }
 
 void PropertiesDialog::setFontSample(const QFont &f)

@@ -40,7 +40,7 @@ public:
 
 protected slots:
     void on_consoleTabulator_currentChanged(int);
-    void propertiesChanged();
+    void preferencesChanged();
     void actAbout_triggered();
     void actProperties_triggered();
     void updateActionGroup(QAction *);

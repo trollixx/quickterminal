@@ -9,9 +9,6 @@ class PropertiesDialog : public QDialog, Ui::PropertiesDialog
 public:
     explicit PropertiesDialog(QWidget *parent = nullptr);
 
-signals:
-    void propertiesChanged();
-
 protected:
     void setupShortcuts();
     void saveShortcuts();

@@ -45,7 +45,6 @@ MainWindow::MainWindow(const QString &work_dir, const QString &command, bool dro
     m_dropShortcut(new QxtGlobalShortcut(this))
 {
     setupUi(this);
-    Preferences::instance()->load();
 
     m_bookmarksDock = new QDockWidget(tr("Bookmarks"), this);
     m_bookmarksDock->setObjectName("bookmarksDock");
@@ -60,6 +59,9 @@ MainWindow::MainWindow(const QString &work_dir, const QString &command, bool dro
 
     connect(actAbout, SIGNAL(triggered()), SLOT(actAbout_triggered()));
     connect(actAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+
+    connect(Preferences::instance(), &Preferences::changed,
+            this, &MainWindow::preferencesChanged);
     connect(m_dropShortcut, SIGNAL(activated()), this, SLOT(showHide()));
 
     setContentsMargins(0, 0, 0, 0);
@@ -287,7 +289,7 @@ void MainWindow::setup_ActionsMenu_Actions()
     settings.endGroup();
 
     // apply props
-    propertiesChanged();
+    preferencesChanged();
 }
 
 void MainWindow::setup_FileMenu_Actions()
@@ -466,11 +468,10 @@ void MainWindow::actAbout_triggered()
 void MainWindow::actProperties_triggered()
 {
     QScopedPointer<PropertiesDialog> pd(new PropertiesDialog(this));
-    connect(pd.data(), SIGNAL(propertiesChanged()), this, SLOT(propertiesChanged()));
     pd->exec();
 }
 
-void MainWindow::propertiesChanged()
+void MainWindow::preferencesChanged()
 {
     QApplication::setStyle(Preferences::instance()->guiStyle);
     setWindowOpacity(Preferences::instance()->appOpacity/100.0);

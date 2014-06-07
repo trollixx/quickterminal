@@ -16,9 +16,11 @@ Preferences *Preferences::instance()
     return m_instance;
 }
 
-Preferences::Preferences()
+Preferences::Preferences(QObject *parent) :
+    QObject(parent)
 {
     qDebug("Properties constructor called");
+    load();
 }
 
 Preferences::~Preferences()
@@ -70,8 +72,8 @@ void Preferences::load()
     QStringList keys = settings.childKeys();
     foreach (const QString &key, keys) {
         QKeySequence sequence = QKeySequence(settings.value(key).toString());
-        if (Preferences::instance()->actions.contains(key))
-            Preferences::instance()->actions[ key ]->setShortcut(sequence);
+        if (actions.contains(key))
+            actions[ key ]->setShortcut(sequence);
     }
     settings.endGroup();
 
@@ -199,4 +201,9 @@ QFont Preferences::defaultFont() const
     default_font.setPointSize(12);
     default_font.setStyleHint(QFont::TypeWriter);
     return default_font;
+}
+
+void Preferences::emitChanged()
+{
+    emit changed();
 }

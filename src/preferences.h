@@ -4,11 +4,13 @@
 #include <QFont>
 #include <QKeySequence>
 #include <QMap>
+#include <QObject>
 
 class QAction;
 
-class Preferences
+class Preferences : public QObject
 {
+    Q_OBJECT
 public:
     static Preferences *instance();
 
@@ -61,13 +63,19 @@ public:
 
     QMap<QString, QAction *> actions;
 
+public slots:
+    /// TODO: Remove in a new implementation
+    void emitChanged();
+
+signals:
+    void changed();
+
 private:
-    // Singleton handling
     static Preferences *m_instance;
 
-    Preferences();
-    Preferences(const Preferences &);
-    ~Preferences();
+    Preferences(QObject *parent = nullptr);
+    Q_DISABLE_COPY(Preferences)
+    ~Preferences() override;
 
     void migrate();
 };
