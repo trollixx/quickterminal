@@ -21,15 +21,17 @@ PropertiesDialog::PropertiesDialog(QWidget *parent) :
     QStringList emulations = QTermWidget::availableKeyBindings();
     QStringList colorSchemes = QTermWidget::availableColorSchemes();
 
+    const Preferences * const preferences = Preferences::instance();
+
     listWidget->setCurrentRow(0);
 
     colorSchemaCombo->addItems(colorSchemes);
-    int csix = colorSchemaCombo->findText(Preferences::instance()->colorScheme);
+    int csix = colorSchemaCombo->findText(preferences->colorScheme);
     if (csix != -1)
         colorSchemaCombo->setCurrentIndex(csix);
 
     emulationComboBox->addItems(emulations);
-    int eix = emulationComboBox->findText(Preferences::instance()->emulation);
+    int eix = emulationComboBox->findText(preferences->emulation);
     emulationComboBox->setCurrentIndex(eix != -1 ? eix : 0);
 
     /* shortcuts */
@@ -39,62 +41,61 @@ PropertiesDialog::PropertiesDialog(QWidget *parent) :
     QStringList scrollBarPosList;
     scrollBarPosList << "No scrollbar" << "Left" << "Right";
     scrollBarPos_comboBox->addItems(scrollBarPosList);
-    scrollBarPos_comboBox->setCurrentIndex(Preferences::instance()->scrollBarPos);
+    scrollBarPos_comboBox->setCurrentIndex(preferences->scrollBarPos);
 
     /* tabs position */
     QStringList tabsPosList;
     tabsPosList << "Top" << "Bottom" << "Left" << "Right";
     tabsPos_comboBox->addItems(tabsPosList);
-    tabsPos_comboBox->setCurrentIndex(Preferences::instance()->tabsPos);
+    tabsPos_comboBox->setCurrentIndex(preferences->tabsPos);
 
-    alwaysShowTabsCheckBox->setChecked(Preferences::instance()->alwaysShowTabs);
+    alwaysShowTabsCheckBox->setChecked(preferences->alwaysShowTabs);
 
     // show main menu bar
-    showMenuCheckBox->setChecked(Preferences::instance()->menuVisible);
+    showMenuCheckBox->setChecked(preferences->menuVisible);
 
     /* actions by motion after paste */
 
     QStringList motionAfter;
     motionAfter << "No move" << "Move start" << "Move end";
     motionAfterPasting_comboBox->addItems(motionAfter);
-    motionAfterPasting_comboBox->setCurrentIndex(Preferences::instance()->m_motionAfterPaste);
+    motionAfterPasting_comboBox->setCurrentIndex(preferences->m_motionAfterPaste);
 
     // Setting windows style actions
     styleComboBox->addItem(tr("System Default"));
     styleComboBox->addItems(QStyleFactory::keys());
 
-    int ix = styleComboBox->findText(Preferences::instance()->guiStyle);
+    int ix = styleComboBox->findText(preferences->guiStyle);
     if (ix != -1)
         styleComboBox->setCurrentIndex(ix);
 
-    setFontSample(Preferences::instance()->font);
+    setFontSample(preferences->font);
 
-    appOpacityBox->setValue(Preferences::instance()->appOpacity);
+    appOpacityBox->setValue(preferences->appOpacity);
     // connect(appOpacityBox, SIGNAL(valueChanged(int)), this, SLOT(apply()));
 
-    termOpacityBox->setValue(Preferences::instance()->termOpacity);
+    termOpacityBox->setValue(preferences->termOpacity);
     // connect(termOpacityBox, SIGNAL(valueChanged(int)), this, SLOT(apply()));
 
-    highlightCurrentCheckBox->setChecked(Preferences::instance()->highlightCurrentTerminal);
+    highlightCurrentCheckBox->setChecked(preferences->highlightCurrentTerminal);
 
-    askOnExitCheckBox->setChecked(Preferences::instance()->askOnExit);
+    askOnExitCheckBox->setChecked(preferences->askOnExit);
 
-    useCwdCheckBox->setChecked(Preferences::instance()->useCWD);
+    useCwdCheckBox->setChecked(preferences->useCWD);
 
-    historyLimited->setChecked(Preferences::instance()->historyLimited);
-    historyUnlimited->setChecked(!Preferences::instance()->historyLimited);
-    historyLimitedTo->setValue(Preferences::instance()->historyLimitedTo);
+    historyLimited->setChecked(preferences->historyLimited);
+    historyUnlimited->setChecked(!preferences->historyLimited);
+    historyLimitedTo->setValue(preferences->historyLimitedTo);
 
-    dropShowOnStartCheckBox->setChecked(Preferences::instance()->dropShowOnStart);
-    dropHeightSpinBox->setValue(Preferences::instance()->dropHeight);
-    dropWidthSpinBox->setValue(Preferences::instance()->dropWidht);
-    dropShortCutEdit->setText(Preferences::instance()->dropShortCut.toString());
+    dropShowOnStartCheckBox->setChecked(preferences->dropShowOnStart);
+    dropHeightSpinBox->setValue(preferences->dropHeight);
+    dropWidthSpinBox->setValue(preferences->dropWidht);
+    dropShortCutEdit->setText(preferences->dropShortCut.toString());
 
-    useBookmarksCheckBox->setChecked(Preferences::instance()->useBookmarks);
-    bookmarksLineEdit->setText(Preferences::instance()->bookmarksFile);
-    openBookmarksFile(Preferences::instance()->bookmarksFile);
-    connect(bookmarksButton, SIGNAL(clicked()),
-            this, SLOT(bookmarksButton_clicked()));
+    useBookmarksCheckBox->setChecked(preferences->useBookmarks);
+    bookmarksLineEdit->setText(preferences->bookmarksFile);
+    openBookmarksFile(preferences->bookmarksFile);
+    connect(bookmarksButton, SIGNAL(clicked()), SLOT(bookmarksButton_clicked()));
 }
 
 void PropertiesDialog::accept()
@@ -105,46 +106,47 @@ void PropertiesDialog::accept()
 
 void PropertiesDialog::apply()
 {
-    Preferences::instance()->colorScheme = colorSchemaCombo->currentText();
-    Preferences::instance()->font = fontSampleLabel->font(); // fontComboBox->currentFont();
-    Preferences::instance()->guiStyle = (styleComboBox->currentText() == tr("System Default"))
+    Preferences * const preferences = Preferences::instance();
+    preferences->colorScheme = colorSchemaCombo->currentText();
+    preferences->font = fontSampleLabel->font(); // fontComboBox->currentFont();
+    preferences->guiStyle = (styleComboBox->currentText() == tr("System Default"))
             ? QString() : styleComboBox->currentText();
 
-    Preferences::instance()->emulation = emulationComboBox->currentText();
+    preferences->emulation = emulationComboBox->currentText();
 
     /* do not allow to go above 99 or we lose transparency option */
-    Preferences::instance()->appOpacity = qMin(appOpacityBox->value(), 99);
+    preferences->appOpacity = qMin(appOpacityBox->value(), 99);
 
-    Preferences::instance()->termOpacity = termOpacityBox->value();
-    Preferences::instance()->highlightCurrentTerminal = highlightCurrentCheckBox->isChecked();
+    preferences->termOpacity = termOpacityBox->value();
+    preferences->highlightCurrentTerminal = highlightCurrentCheckBox->isChecked();
 
-    Preferences::instance()->askOnExit = askOnExitCheckBox->isChecked();
+    preferences->askOnExit = askOnExitCheckBox->isChecked();
 
-    Preferences::instance()->useCWD = useCwdCheckBox->isChecked();
+    preferences->useCWD = useCwdCheckBox->isChecked();
 
-    Preferences::instance()->scrollBarPos = scrollBarPos_comboBox->currentIndex();
-    Preferences::instance()->tabsPos = tabsPos_comboBox->currentIndex();
-    Preferences::instance()->alwaysShowTabs = alwaysShowTabsCheckBox->isChecked();
-    Preferences::instance()->menuVisible = showMenuCheckBox->isChecked();
-    Preferences::instance()->m_motionAfterPaste = motionAfterPasting_comboBox->currentIndex();
+    preferences->scrollBarPos = scrollBarPos_comboBox->currentIndex();
+    preferences->tabsPos = tabsPos_comboBox->currentIndex();
+    preferences->alwaysShowTabs = alwaysShowTabsCheckBox->isChecked();
+    preferences->menuVisible = showMenuCheckBox->isChecked();
+    preferences->m_motionAfterPaste = motionAfterPasting_comboBox->currentIndex();
 
-    Preferences::instance()->historyLimited = historyLimited->isChecked();
-    Preferences::instance()->historyLimitedTo = historyLimitedTo->value();
+    preferences->historyLimited = historyLimited->isChecked();
+    preferences->historyLimitedTo = historyLimitedTo->value();
 
     saveShortcuts();
 
-    Preferences::instance()->save();
+    preferences->save();
 
-    Preferences::instance()->dropShowOnStart = dropShowOnStartCheckBox->isChecked();
-    Preferences::instance()->dropHeight = dropHeightSpinBox->value();
-    Preferences::instance()->dropWidht = dropWidthSpinBox->value();
-    Preferences::instance()->dropShortCut = QKeySequence(dropShortCutEdit->text());
+    preferences->dropShowOnStart = dropShowOnStartCheckBox->isChecked();
+    preferences->dropHeight = dropHeightSpinBox->value();
+    preferences->dropWidht = dropWidthSpinBox->value();
+    preferences->dropShortCut = QKeySequence(dropShortCutEdit->text());
 
-    Preferences::instance()->useBookmarks = useBookmarksCheckBox->isChecked();
-    Preferences::instance()->bookmarksFile = bookmarksLineEdit->text();
-    saveBookmarksFile(Preferences::instance()->bookmarksFile);
+    preferences->useBookmarks = useBookmarksCheckBox->isChecked();
+    preferences->bookmarksFile = bookmarksLineEdit->text();
+    saveBookmarksFile(preferences->bookmarksFile);
 
-    Preferences::instance()->emitChanged();
+    preferences->emitChanged();
 }
 
 void PropertiesDialog::setFontSample(const QFont &f)
