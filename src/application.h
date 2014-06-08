@@ -3,8 +3,9 @@
 
 #include <QObject>
 
-class QMainWindow;
 class QxtGlobalShortcut;
+
+class MainWindow;
 
 class Application : public QObject
 {
@@ -24,7 +25,7 @@ private:
     void parseOptions();
     void setDropShortcut(const QKeySequence &shortcut);
 
-    QList<QMainWindow *> m_windows;
+    QList<MainWindow *> m_windows;
 
     // Command line options
     QString m_command;
