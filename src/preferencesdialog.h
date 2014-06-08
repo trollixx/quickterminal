@@ -1,13 +1,13 @@
-#ifndef PROPERTIESDIALOG_H
-#define PROPERTIESDIALOG_H
+#ifndef PREFERENCESDIALOG_H
+#define PREFERENCESDIALOG_H
 
-#include "ui_propertiesdialog.h"
+#include "ui_preferencesdialog.h"
 
-class PropertiesDialog : public QDialog, Ui::PropertiesDialog
+class PreferencesDialog : public QDialog, public Ui::PreferencesDialog
 {
     Q_OBJECT
 public:
-    explicit PropertiesDialog(QWidget *parent = nullptr);
+    explicit PreferencesDialog(QWidget *parent = nullptr);
 
 protected:
     void setupShortcuts();
@@ -30,4 +30,4 @@ private:
     QString oldAccelText; // Placeholder when editing shortcut
 };
 
-#endif // PROPERTIESDIALOG_H
+#endif // PREFERENCESDIALOG_H

@@ -95,7 +95,7 @@ TermWidgetImpl::TermWidgetImpl(const QString &wdir, const QString &shell, QWidge
     // addAction(act);
     //
     // act = new QAction(tr("&Rename session..."), this);
-    // act->setShortcut(Properties::Instance()->shortcuts[RENAME_SESSION]);
+    // act->setShortcut(Preferences::instance()->shortcuts[RENAME_SESSION]);
     // connect(act, SIGNAL(triggered()), this, SIGNAL(renameSession()));
     // addAction(act);
 
@@ -207,7 +207,7 @@ void TermWidgetImpl::customContextMenuCall(const QPoint &pos)
     menu.addAction(QIcon(":/icons/close.png"),
         tr("Close session"), this,
         SIGNAL(removeCurrentSession()),
-        Properties::Instance()->shortcuts[CLOSE_TAB]);
+        Preferences::instance()->shortcuts[CLOSE_TAB]);
 */
     menu.exec(mapToGlobal(pos));
 }

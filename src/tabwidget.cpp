@@ -287,7 +287,7 @@ void TabWidget::changeScrollPosition(QAction *triggered)
     Preferences::instance()->scrollBarPos = scrollPosition->actions().indexOf(triggered);
 
     Preferences::instance()->save();
-    propertiesChanged();
+    preferencesChanged();
 }
 
 void TabWidget::changeTabPosition(QAction *triggered)
@@ -305,7 +305,7 @@ void TabWidget::changeTabPosition(QAction *triggered)
     prop->save();
 }
 
-void TabWidget::propertiesChanged()
+void TabWidget::preferencesChanged()
 {
     for (int i = 0; i < count(); ++i) {
         TermWidgetHolder *console = static_cast<TermWidgetHolder *>(widget(i));

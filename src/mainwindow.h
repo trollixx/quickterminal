@@ -41,7 +41,7 @@ protected slots:
     void on_consoleTabulator_currentChanged(int);
     void preferencesChanged();
     void actAbout_triggered();
-    void actProperties_triggered();
+    void actPreferences_triggered();
     void updateActionGroup(QAction *);
 
     void toggleBorderless();

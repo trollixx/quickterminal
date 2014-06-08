@@ -53,8 +53,8 @@ void TermWidgetHolder::loadSession()
         }
     }
 
-    qDebug() << "load" << name << QString(Properties::Instance()->sessions[name]);
-    QStringList splitters = QString(Properties::Instance()->sessions[name]).split("|",
+    qDebug() << "load" << name << QString(Preferences::instance()->sessions[name]);
+    QStringList splitters = QString(Preferences::instance()->sessions[name]).split("|",
                                                                                   QString::SkipEmptyParts);
     foreach (const QString &splitter, splitters) {
         QStringList components = splitter.split(",");

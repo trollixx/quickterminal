@@ -1,5 +1,5 @@
-#ifndef PROPERTIES_H
-#define PROPERTIES_H
+#ifndef PREFERENCES_H
+#define PREFERENCES_H
 
 #include <QFont>
 #include <QKeySequence>
@@ -80,4 +80,4 @@ private:
     void migrate();
 };
 
-#endif // PROPERTIES_H
+#endif // PREFERENCES_H

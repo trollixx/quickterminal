@@ -19,13 +19,13 @@ Preferences *Preferences::instance()
 Preferences::Preferences(QObject *parent) :
     QObject(parent)
 {
-    qDebug("Properties constructor called");
+    qDebug("Preferences constructor called");
     load();
 }
 
 Preferences::~Preferences()
 {
-    qDebug("Properties destructor called");
+    qDebug("Preferences destructor called");
     save();
     delete m_instance;
     m_instance = nullptr;

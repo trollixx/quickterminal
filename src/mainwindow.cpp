@@ -22,7 +22,7 @@
 #include "termwidgetholder.h"
 #include "config.h"
 #include "preferences.h"
-#include "propertiesdialog.h"
+#include "preferencesdialog.h"
 #include "bookmarkswidget.h"
 
 #include <QDesktopWidget>
@@ -313,8 +313,8 @@ void MainWindow::setup_FileMenu_Actions()
 
     menu_File->addSeparator();
 
-    Preferences::instance()->actions[PREFERENCES] = actProperties;
-    connect(actProperties, SIGNAL(triggered()), SLOT(actProperties_triggered()));
+    Preferences::instance()->actions[PREFERENCES] = actPreferences;
+    connect(actPreferences, SIGNAL(triggered()), SLOT(actPreferences_triggered()));
     menu_File->addAction(Preferences::instance()->actions[PREFERENCES]);
 
     menu_File->addSeparator();
@@ -332,8 +332,8 @@ void MainWindow::setup_ViewMenu_Actions()
     // toggleBorder->setObjectName("toggle_Borderless");
     toggleBorder->setCheckable(true);
     // TODO/FIXME: it's broken somehow. When I call toggleBorderless() here the non-responsive window appear
-    // toggleBorder->setChecked(Properties::Instance()->borderless);
-    // if (Properties::Instance()->borderless)
+    // toggleBorder->setChecked(Preferences::instance()->borderless);
+    // if (Preferences::instance()->borderless)
     // toggleBorderless();
     connect(toggleBorder, SIGNAL(triggered()), this, SLOT(toggleBorderless()));
     menu_View->addAction(toggleBorder);
@@ -451,9 +451,9 @@ void MainWindow::actAbout_triggered()
                        tr("A lightweight multiplatform terminal emulator"));
 }
 
-void MainWindow::actProperties_triggered()
+void MainWindow::actPreferences_triggered()
 {
-    QScopedPointer<PropertiesDialog> pd(new PropertiesDialog(this));
+    QScopedPointer<PreferencesDialog> pd(new PreferencesDialog(this));
     pd->exec();
 }
 
@@ -462,7 +462,7 @@ void MainWindow::preferencesChanged()
     QApplication::setStyle(Preferences::instance()->guiStyle);
     setWindowOpacity(Preferences::instance()->appOpacity/100.0);
     consoleTabulator->setTabPosition((QTabWidget::TabPosition)Preferences::instance()->tabsPos);
-    consoleTabulator->propertiesChanged();
+    consoleTabulator->preferencesChanged();
 
     m_menuBar->setVisible(Preferences::instance()->menuVisible);
     m_bookmarksDock->setVisible(Preferences::instance()->useBookmarks

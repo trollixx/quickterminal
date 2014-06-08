@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PropertiesDialog</class>
- <widget class="QDialog" name="PropertiesDialog">
+ <class>PreferencesDialog</class>
+ <widget class="QDialog" name="PreferencesDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>463</width>
-    <height>386</height>
+    <height>394</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>QTerminal Properties</string>
+   <string>QTerminal Preferences</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_4">
    <item row="1" column="0" colspan="2">
@@ -581,7 +581,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>PropertiesDialog</receiver>
+   <receiver>PreferencesDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -597,7 +597,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>PropertiesDialog</receiver>
+   <receiver>PreferencesDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

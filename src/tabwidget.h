@@ -57,7 +57,7 @@ public slots:
 
     void changeTabPosition(QAction *);
     void changeScrollPosition(QAction *);
-    void propertiesChanged();
+    void preferencesChanged();
 
     void clearActiveTerminal();
 

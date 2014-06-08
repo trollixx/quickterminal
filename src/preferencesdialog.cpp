@@ -1,4 +1,4 @@
-#include "propertiesdialog.h"
+#include "preferencesdialog.h"
 
 #include "preferences.h"
 
@@ -8,7 +8,7 @@
 #include <QFontDialog>
 #include <QStyleFactory>
 
-PropertiesDialog::PropertiesDialog(QWidget *parent) :
+PreferencesDialog::PreferencesDialog(QWidget *parent) :
     QDialog(parent)
 {
     setupUi(this);
@@ -98,13 +98,13 @@ PropertiesDialog::PropertiesDialog(QWidget *parent) :
     connect(bookmarksButton, SIGNAL(clicked()), SLOT(bookmarksButton_clicked()));
 }
 
-void PropertiesDialog::accept()
+void PreferencesDialog::accept()
 {
     apply();
     QDialog::accept();
 }
 
-void PropertiesDialog::apply()
+void PreferencesDialog::apply()
 {
     Preferences * const preferences = Preferences::instance();
     preferences->colorScheme = colorSchemaCombo->currentText();
@@ -149,14 +149,14 @@ void PropertiesDialog::apply()
     preferences->emitChanged();
 }
 
-void PropertiesDialog::setFontSample(const QFont &f)
+void PreferencesDialog::setFontSample(const QFont &f)
 {
     fontSampleLabel->setFont(f);
     QString sample("%1 %2 pt");
     fontSampleLabel->setText(sample.arg(f.family()).arg(f.pointSize()));
 }
 
-void PropertiesDialog::changeFontButton_clicked()
+void PreferencesDialog::changeFontButton_clicked()
 {
     bool ok;
     QFont font = QFontDialog::getFont(&ok, fontSampleLabel->font(), this,
@@ -166,7 +166,7 @@ void PropertiesDialog::changeFontButton_clicked()
     setFontSample(font);
 }
 
-void PropertiesDialog::saveShortcuts()
+void PreferencesDialog::saveShortcuts()
 {
     QList<QString> shortcutKeys = Preferences::instance()->actions.keys();
     int shortcutCount = shortcutKeys.count();
@@ -185,7 +185,7 @@ void PropertiesDialog::saveShortcuts()
     }
 }
 
-void PropertiesDialog::setupShortcuts()
+void PreferencesDialog::setupShortcuts()
 {
     QList<QString> shortcutKeys = Preferences::instance()->actions.keys();
     int shortcutCount = shortcutKeys.count();
@@ -214,12 +214,12 @@ void PropertiesDialog::setupShortcuts()
 */
 }
 
-void PropertiesDialog::recordAction(int row, int column)
+void PreferencesDialog::recordAction(int row, int column)
 {
     oldAccelText = shortcutsWidget->item(row, column)->text();
 }
 
-void PropertiesDialog::validateAction(int row, int column)
+void PreferencesDialog::validateAction(int row, int column)
 {
     QTableWidgetItem *item = shortcutsWidget->item(row, column);
     QString accelText = QKeySequence(item->text()).toString();
@@ -230,7 +230,7 @@ void PropertiesDialog::validateAction(int row, int column)
         item->setText(accelText);
 }
 
-void PropertiesDialog::bookmarksButton_clicked()
+void PreferencesDialog::bookmarksButton_clicked()
 {
     QFileDialog dia(this, tr("Open or create bookmarks file"));
     dia.setConfirmOverwrite(false);
@@ -246,7 +246,7 @@ void PropertiesDialog::bookmarksButton_clicked()
     openBookmarksFile(bookmarksLineEdit->text());
 }
 
-void PropertiesDialog::openBookmarksFile(const QString &fname)
+void PreferencesDialog::openBookmarksFile(const QString &fname)
 {
     QFile f(fname);
     QString content;
@@ -259,7 +259,7 @@ void PropertiesDialog::openBookmarksFile(const QString &fname)
     bookmarkPlainEdit->document()->setModified(false);
 }
 
-void PropertiesDialog::saveBookmarksFile(const QString &fname)
+void PreferencesDialog::saveBookmarksFile(const QString &fname)
 {
     if (!bookmarkPlainEdit->document()->isModified())
         return;
@@ -274,9 +274,9 @@ void PropertiesDialog::saveBookmarksFile(const QString &fname)
 }
 
 /*
-void PropertiesDialog::setupShortcuts()
+void PreferencesDialog::setupShortcuts()
 {
-    QList<QString> shortcutKeys = Properties::Instance()->shortcuts.keys();
+    QList<QString> shortcutKeys = Preferences::instance()->shortcuts.keys();
     int shortcutCount = shortcutKeys.count();
 
     shortcutsWidget->setRowCount( shortcutCount );
@@ -286,7 +286,7 @@ void PropertiesDialog::setupShortcuts()
         QString keyValue = shortcutKeys.at(x);
 
         QLabel *lblShortcut = new QLabel( keyValue, this );
-        QPushButton *btnLaunch = new QPushButton( Properties::Instance()->shortcuts.value( keyValue ), this );
+        QPushButton *btnLaunch = new QPushButton( Preferences::instance()->shortcuts.value( keyValue ), this );
 
         btnLaunch->setObjectName(keyValue);
         connect( btnLaunch, SIGNAL(clicked()), this, SLOT(shortcutPrompt()) );
@@ -296,7 +296,7 @@ void PropertiesDialog::setupShortcuts()
     }
 }
 
-void PropertiesDialog::shortcutPrompt()
+void PreferencesDialog::shortcutPrompt()
 {
     QObject *objectSender = sender();
 
@@ -309,15 +309,15 @@ void PropertiesDialog::shortcutPrompt()
     DialogShortcut *dlgShortcut = new DialogShortcut(this);
     dlgShortcut->setTitle( tr("Select a key sequence for %1").arg(name) );
 
-    QString sequenceString = Properties::Instance()->shortcuts[name];
+    QString sequenceString = Preferences::instance()->shortcuts[name];
     dlgShortcut->setKey(sequenceString);
 
     int result = dlgShortcut->exec();
     if( result == QDialog::Accepted )
     {
         sequenceString = dlgShortcut->getKey();
-        Properties::Instance()->shortcuts[name] = sequenceString;
-        Properties::Instance()->saveSettings();
+        Preferences::instance()->shortcuts[name] = sequenceString;
+        Preferences::instance()->saveSettings();
     }
 }
 */
