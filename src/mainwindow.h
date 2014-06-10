@@ -28,6 +28,7 @@
 class QToolButton;
 
 class ActionManager;
+class Preferences;
 class TermWidget;
 
 class MainWindow : public QMainWindow
@@ -73,6 +74,7 @@ private:
 
     Ui::MainWindow *m_ui = nullptr;
 
+    Preferences * const m_preferences = nullptr;
     ActionManager *m_actionManager = nullptr;
 
     QMenu *m_contextMenu = nullptr;
