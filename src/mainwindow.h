@@ -34,7 +34,7 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit MainWindow(const QString &work_dir, const QString &command, bool dropMode,
+    explicit MainWindow(const QString &workingDir, const QString &command, bool dropMode,
                         QWidget *parent = nullptr, Qt::WindowFlags f = 0);
     ~MainWindow();
 
@@ -81,9 +81,6 @@ private:
     QMenu *tabPosMenu, *scrollPosMenu;
 
     QAction *renameSession;
-
-    QString m_initShell;
-    QString m_initWorkDir;
 
     QToolButton *m_dropLockButton = nullptr;
     bool m_dropMode;

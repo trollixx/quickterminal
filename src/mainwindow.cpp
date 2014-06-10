@@ -31,13 +31,11 @@
 #include <QMessageBox>
 #include <QToolButton>
 
-MainWindow::MainWindow(const QString &work_dir, const QString &command, bool dropMode,
+MainWindow::MainWindow(const QString &workingDir, const QString &command, bool dropMode,
                        QWidget *parent, Qt::WindowFlags f) :
     QMainWindow(parent, f),
     m_ui(new Ui::MainWindow),
     m_actionManager(new ActionManager(this)),
-    m_initShell(command),
-    m_initWorkDir(work_dir),
     m_dropMode(dropMode)
 {
     /// TODO: Check why it is not set by default
@@ -57,7 +55,7 @@ MainWindow::MainWindow(const QString &work_dir, const QString &command, bool dro
     }
 
     connect(m_ui->consoleTabulator, SIGNAL(closeTabNotification()), SLOT(close()));
-    m_ui->consoleTabulator->setWorkDirectory(work_dir);
+    m_ui->consoleTabulator->setWorkDirectory(workingDir);
     m_ui->consoleTabulator->setTabPosition((QTabWidget::TabPosition)Preferences::instance()->tabsPos);
     // ui->consoleTabulator->setShellProgram(command);
     m_ui->consoleTabulator->addNewTab(command);
