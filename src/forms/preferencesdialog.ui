@@ -77,11 +77,6 @@
        <string>DropDown</string>
       </property>
      </item>
-     <item>
-      <property name="text">
-       <string>Bookmarks</string>
-      </property>
-     </item>
     </widget>
    </item>
    <item row="0" column="1">
@@ -90,7 +85,7 @@
       <enum>QFrame::StyledPanel</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>5</number>
      </property>
      <widget class="QWidget" name="fontPage">
       <layout class="QGridLayout" name="gridLayout_2">
@@ -508,70 +503,6 @@
           </size>
          </property>
         </spacer>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="page_2">
-      <layout class="QGridLayout" name="gridLayout_9">
-       <item row="3" column="0">
-        <widget class="QGroupBox" name="groupBox_5">
-         <property name="title">
-          <string>Edit File Content</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_10">
-          <item row="0" column="0">
-           <widget class="QPlainTextEdit" name="bookmarkPlainEdit">
-            <property name="font">
-             <font>
-              <family>Bera Sans Mono [bitstream]</family>
-              <pointsize>11</pointsize>
-             </font>
-            </property>
-            <property name="lineWrapMode">
-             <enum>QPlainTextEdit::NoWrap</enum>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QCheckBox" name="useBookmarksCheckBox">
-         <property name="text">
-          <string>Use Bookmarks</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <item>
-          <widget class="QLabel" name="label_10">
-           <property name="text">
-            <string>Bookmark FIle:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="bookmarksLineEdit"/>
-         </item>
-         <item>
-          <widget class="QPushButton" name="bookmarksButton">
-           <property name="text">
-            <string>Find...</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_11">
-         <property name="text">
-          <string>You can specify your own bookmarks file location. It allows easy bookmark sharing with tools like OwnCloud or Dropbox.</string>
-         </property>
-         <property name="wordWrap">
-          <bool>true</bool>
-         </property>
-        </widget>
        </item>
       </layout>
      </widget>

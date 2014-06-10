@@ -19,12 +19,9 @@ private slots:
     void accept() override;
 
     void changeFontButton_clicked();
-    void bookmarksButton_clicked();
 
 private:
     void setFontSample(const QFont &f);
-    void openBookmarksFile(const QString &fname);
-    void saveBookmarksFile(const QString &fname);
 
     QString oldAccelText; // Placeholder when editing shortcut
 };

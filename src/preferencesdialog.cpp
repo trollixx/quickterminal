@@ -175,49 +175,6 @@ void PreferencesDialog::validateAction(int row, int column)
         item->setText(accelText);
 }
 
-void PreferencesDialog::bookmarksButton_clicked()
-{
-    QFileDialog dia(this, tr("Open or create bookmarks file"));
-    dia.setConfirmOverwrite(false);
-    dia.setFileMode(QFileDialog::AnyFile);
-    if (!dia.exec())
-        return;
-
-    QString fname = dia.selectedFiles().count() ? dia.selectedFiles().at(0) : QString();
-    if (fname.isNull())
-        return;
-
-    bookmarksLineEdit->setText(fname);
-    openBookmarksFile(bookmarksLineEdit->text());
-}
-
-void PreferencesDialog::openBookmarksFile(const QString &fname)
-{
-    QFile f(fname);
-    QString content;
-    if (!f.open(QFile::ReadOnly))
-        content = "<qterminal>\n  <group name\"group1\">\n    <command name=\"cmd1\" value=\"cd $HOME\"/>\n  </group>\n</qterminal>";
-    else
-        content = f.readAll();
-
-    bookmarkPlainEdit->setPlainText(content);
-    bookmarkPlainEdit->document()->setModified(false);
-}
-
-void PreferencesDialog::saveBookmarksFile(const QString &fname)
-{
-    if (!bookmarkPlainEdit->document()->isModified())
-        return;
-
-    QFile f(fname);
-    if (!f.open(QFile::WriteOnly | QFile::Truncate)) {
-        qDebug("Cannot open file '%s'", qPrintable(f.fileName()));
-        return;
-    }
-
-    f.write(bookmarkPlainEdit->toPlainText().toUtf8());
-}
-
 /*
 void PreferencesDialog::setupShortcuts()
 {
