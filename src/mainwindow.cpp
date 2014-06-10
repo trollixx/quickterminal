@@ -34,9 +34,6 @@
 
 #include <QDebug>
 
-// TODO/FXIME: probably remove. QSS makes it unusable on mac...
-#define QSS_DROP "MainWindow {border: 1px solid rgba(0, 0, 0, 50%);}\n"
-
 MainWindow::MainWindow(const QString &work_dir, const QString &command, bool dropMode,
                        QWidget *parent, Qt::WindowFlags f) :
     QMainWindow(parent, f),
@@ -57,7 +54,6 @@ MainWindow::MainWindow(const QString &work_dir, const QString &command, bool dro
     setContentsMargins(0, 0, 0, 0);
     if (m_dropMode) {
         enableDropMode();
-        setStyleSheet(QSS_DROP);
     } else {
         restoreGeometry(Preferences::instance()->mainWindowGeometry);
         restoreState(Preferences::instance()->mainWindowState);
@@ -87,6 +83,7 @@ MainWindow::~MainWindow()
 void MainWindow::enableDropMode()
 {
     setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint | Qt::CustomizeWindowHint);
+    setStyleSheet(QStringLiteral("MainWindow {border: 1px solid rgba(0, 0, 0, 50%);}\n"));
 
     m_dropLockButton = new QToolButton(this);
     m_ui->consoleTabulator->setCornerWidget(m_dropLockButton, Qt::BottomRightCorner);
