@@ -78,6 +78,7 @@ MainWindow::MainWindow(const QString &work_dir, const QString &command, bool dro
 
 MainWindow::~MainWindow()
 {
+    delete m_ui;
 }
 
 void MainWindow::enableDropMode()
