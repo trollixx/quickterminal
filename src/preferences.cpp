@@ -1,11 +1,11 @@
 #include "preferences.h"
 
-#include <QAction>
 #include <QApplication>
-#include <QFileInfo>
 #include <QSettings>
 
-#define DEFAULT_FONT "Monospace"
+namespace {
+const char DefaultFont[] = "Monospace";
+}
 
 Preferences *Preferences::m_instance = nullptr;
 
@@ -146,11 +146,11 @@ void Preferences::save()
 
 QFont Preferences::defaultFont() const
 {
-    QFont default_font = QApplication::font();
-    default_font.setFamily(DEFAULT_FONT);
-    default_font.setPointSize(12);
-    default_font.setStyleHint(QFont::TypeWriter);
-    return default_font;
+    QFont font = QApplication::font();
+    font.setFamily(QLatin1String(DefaultFont));
+    font.setPointSize(12);
+    font.setStyleHint(QFont::TypeWriter);
+    return font;
 }
 
 QKeySequence Preferences::shortcut(const QString &actionId, const QKeySequence &fallback) const
