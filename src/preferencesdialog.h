@@ -10,7 +10,6 @@ public:
     explicit PreferencesDialog(QWidget *parent = nullptr);
 
 protected:
-    void setupShortcuts();
     void saveShortcuts();
     void recordAction(int row, int column);
     void validateAction(int row, int column);

@@ -34,9 +34,6 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     int eix = emulationComboBox->findText(preferences->emulation);
     emulationComboBox->setCurrentIndex(eix != -1 ? eix : 0);
 
-    /* shortcuts */
-    setupShortcuts();
-
     /* scrollbar position */
     QStringList scrollBarPosList;
     scrollBarPosList << "No scrollbar" << "Left" << "Right";
@@ -159,50 +156,7 @@ void PreferencesDialog::changeFontButton_clicked()
 
 void PreferencesDialog::saveShortcuts()
 {
-    QList<QString> shortcutKeys = Preferences::instance()->actions.keys();
-    int shortcutCount = shortcutKeys.count();
-
-    shortcutsWidget->setRowCount(shortcutCount);
-
-    for (int x = 0; x < shortcutCount; x++) {
-        QString keyValue = shortcutKeys.at(x);
-        QAction *keyAction = Preferences::instance()->actions[keyValue];
-
-        QTableWidgetItem *item = shortcutsWidget->item(x, 1);
-        QKeySequence sequence = QKeySequence(item->text());
-        QString sequenceString = sequence.toString();
-
-        keyAction->setShortcut(sequenceString);
-    }
-}
-
-void PreferencesDialog::setupShortcuts()
-{
-    QList<QString> shortcutKeys = Preferences::instance()->actions.keys();
-    int shortcutCount = shortcutKeys.count();
-
-    shortcutsWidget->setRowCount(shortcutCount);
-
-    for (int x = 0; x < shortcutCount; x++) {
-        QString keyValue = shortcutKeys.at(x);
-        QAction *keyAction = Preferences::instance()->actions[keyValue];
-
-        QTableWidgetItem *itemName = new QTableWidgetItem(tr(keyValue.toStdString().c_str()));
-        QTableWidgetItem *itemShortcut = new QTableWidgetItem(keyAction->shortcut().toString());
-
-        itemName->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-
-        shortcutsWidget->setItem(x, 0, itemName);
-        shortcutsWidget->setItem(x, 1, itemShortcut);
-    }
-
-    shortcutsWidget->resizeColumnsToContents();
-    /*
-    connect(shortcutsWidget, SIGNAL(currentChanged(int, int)),
-            this, SLOT(recordAction(int, int)));
-    connect(shortcutsWidget, SIGNAL(valueChanged(int, int)),
-            this, SLOT(validateAction(int, int)));
-*/
+    /// TODO: ActionManager support
 }
 
 void PreferencesDialog::recordAction(int row, int column)

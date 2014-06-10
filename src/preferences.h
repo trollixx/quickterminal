@@ -61,8 +61,6 @@ public:
     int dropWidht;
     int dropHeight;
 
-    QMap<QString, QAction *> actions;
-
 public slots:
     /// TODO: Remove in a new implementation
     void emitChanged();
