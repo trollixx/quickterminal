@@ -40,14 +40,12 @@ public slots:
     void setWDir(const QString &wdir);
     void switchNextSubterminal();
     void switchPrevSubterminal();
-    void clearActiveTerminal();
 
 signals:
+    void terminalContextMenuRequested(const QPoint &pos);
     void finished();
     void lastTerminalClosed();
     void renameSession();
-
-    void enableCollapse(bool);
 
 private:
     QString m_wdir;

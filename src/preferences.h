@@ -7,6 +7,7 @@
 #include <QObject>
 
 class QAction;
+class QSettings;
 
 class Preferences : public QObject
 {
@@ -18,6 +19,9 @@ public:
     void save();
 
     QFont defaultFont() const;
+
+    QKeySequence shortcut(const QString &actionId, const QKeySequence &fallback = QKeySequence()) const;
+    void setShortcut(const QString &actionId, const QKeySequence &shortcut);
 
     QByteArray mainWindowGeometry;
     QByteArray mainWindowState;
@@ -78,6 +82,9 @@ private:
     ~Preferences() override;
 
     void migrate();
+
+    QSettings *m_settings = nullptr;
+    QMap<QString, QKeySequence> m_shortcuts;
 };
 
 #endif // PREFERENCES_H

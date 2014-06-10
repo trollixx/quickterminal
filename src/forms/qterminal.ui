@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>mainWindow</class>
- <widget class="QMainWindow" name="mainWindow">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -54,7 +54,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="m_menuBar">
+  <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -63,7 +63,7 @@
      <height>19</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu_File">
+   <widget class="QMenu" name="fileMenu">
     <property name="title">
      <string>&amp;File</string>
     </property>
@@ -71,52 +71,26 @@
      <string/>
     </property>
    </widget>
-   <widget class="QMenu" name="menu_Actions">
-    <property name="title">
-     <string>&amp;Actions</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menu_Help">
+   <widget class="QMenu" name="helpMenu">
     <property name="title">
      <string>&amp;Help</string>
     </property>
-    <addaction name="actAbout"/>
-    <addaction name="actAboutQt"/>
    </widget>
-   <widget class="QMenu" name="menu_View">
+   <widget class="QMenu" name="viewMenu">
     <property name="title">
      <string>&amp;View</string>
     </property>
    </widget>
-   <addaction name="menu_File"/>
-   <addaction name="menu_Actions"/>
-   <addaction name="menu_View"/>
-   <addaction name="menu_Help"/>
+   <widget class="QMenu" name="editMenu">
+    <property name="title">
+     <string>&amp;Edit</string>
+    </property>
+   </widget>
+   <addaction name="fileMenu"/>
+   <addaction name="editMenu"/>
+   <addaction name="viewMenu"/>
+   <addaction name="helpMenu"/>
   </widget>
-  <action name="actAbout">
-   <property name="text">
-    <string>&amp;About...</string>
-   </property>
-  </action>
-  <action name="actAboutQt">
-   <property name="text">
-    <string>About &amp;Qt...</string>
-   </property>
-  </action>
-  <action name="actPreferences">
-   <property name="text">
-    <string>&amp;Preferences...</string>
-   </property>
-  </action>
-  <action name="actQuit">
-   <property name="icon">
-    <iconset resource="../icons.qrc">
-     <normaloff>:/icons/application-exit.png</normaloff>:/icons/application-exit.png</iconset>
-   </property>
-   <property name="text">
-    <string>&amp;Quit</string>
-   </property>
-  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -126,8 +100,6 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="../icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

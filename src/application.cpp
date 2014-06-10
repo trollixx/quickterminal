@@ -1,8 +1,12 @@
 #include "application.h"
+
+#include "constants.h"
 #include "mainwindow.h"
 #include "preferences.h"
 
+#include <QAction>
 #include <QCommandLineParser>
+#include <QDebug>
 #include <QDir>
 
 #include <qxtglobalshortcut.h>
@@ -17,9 +21,20 @@ Application::Application(QObject *parent) :
     createWindow();
 }
 
+Application::~Application()
+{
+    qDeleteAll(m_windows);
+    Preferences::instance()->deleteLater();
+}
+
 void Application::createWindow()
 {
     MainWindow *window = new MainWindow(m_workingDir, m_command, m_dropMode);
+
+    connect(window, &MainWindow::newWindow, this, &Application::createWindow);
+    connect(window, &MainWindow::quit, this, &Application::quit);
+    connect(window, &MainWindow::destroyed, this, &Application::windowDeleted);
+
     m_windows.append(window);
 
     if (m_dropMode && m_windows.size() == 1) {
@@ -39,9 +54,20 @@ void Application::createWindow()
     window->show();
 }
 
+void Application::quit()
+{
+    qApp->quit();
+}
+
 void Application::preferencesChanged()
 {
     setDropShortcut(Preferences::instance()->dropShortCut);
+}
+
+void Application::windowDeleted(QObject *object)
+{
+    /// FIXME: Cast should be qobject_cast
+    m_windows.removeAll(static_cast<MainWindow *>(object));
 }
 
 void Application::parseOptions()

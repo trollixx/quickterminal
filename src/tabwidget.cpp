@@ -143,10 +143,9 @@ void TabWidget::renameTabsAfterRemove()
 void TabWidget::contextMenuEvent(QContextMenuEvent *event)
 {
     QMenu menu(this);
-
     menu.addAction(QIcon(":/icons/document-close.png"), tr("Close session"),
                    this, SLOT(removeCurrentTab()));
-    menu.addAction(tr("Rename session"), this, SLOT(renameSession()), tr(RENAME_SESSION_SHORTCUT));
+    menu.addAction(tr("Rename session"), this, SLOT(renameSession()));
     menu.exec(event->globalPos());
 }
 
@@ -314,11 +313,6 @@ void TabWidget::preferencesChanged()
     showHideTabBar();
 }
 
-void TabWidget::clearActiveTerminal()
-{
-    reinterpret_cast<TermWidgetHolder *>(widget(currentIndex()))->clearActiveTerminal();
-}
-
 void TabWidget::saveSession()
 {
     int ix = currentIndex();
@@ -332,8 +326,5 @@ void TabWidget::loadSession()
 
 void TabWidget::showHideTabBar()
 {
-    if (!Preferences::instance()->alwaysShowTabs)
-        tabBar()->setVisible(count() > 1);
-    else
-        tabBar()->setVisible(true);
+    tabBar()->setVisible(Preferences::instance()->alwaysShowTabs || count() > 1);
 }

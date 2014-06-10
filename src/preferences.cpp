@@ -17,9 +17,9 @@ Preferences *Preferences::instance()
 }
 
 Preferences::Preferences(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    m_settings(new QSettings(this))
 {
-    qDebug("Preferences constructor called");
     load();
 }
 
@@ -27,171 +27,135 @@ Preferences::~Preferences()
 {
     qDebug("Preferences destructor called");
     save();
-    delete m_instance;
     m_instance = nullptr;
-}
-
-void Preferences::migrate()
-{
-    // Deal with rearrangements of settings.
-    // If this method becomes unbearably huge we should look at the config-update
-    // system used by kde and razor.
-    QSettings settings;
-    QString last_version = settings.value("version", "0.0.0").toString();
-    // Handle configchanges in 0.4.0 (renaming 'Paste Selection' -> 'Paste Clipboard')
-    if (last_version >= "0.4.0")
-        return;
-
-    qDebug("Migrating settings from %s to 0.4.0", qPrintable(last_version));
-    settings.beginGroup("Shortcuts");
-    QString tmp = settings.value("Paste Selection", PASTE_CLIPBOARD_SHORTCUT).toString();
-    settings.setValue(PASTE_CLIPBOARD, tmp);
-    settings.remove("Paste Selection");
-    settings.endGroup();
-
-    settings.setValue("version", "0.4.0");
 }
 
 void Preferences::load()
 {
-    migrate();
-
-    QSettings settings;
-
-    guiStyle = settings.value("guiStyle", QString()).toString();
+    guiStyle = m_settings->value("guiStyle", QString()).toString();
     if (!guiStyle.isNull())
         QApplication::setStyle(guiStyle);
 
-    colorScheme = settings.value("colorScheme", "Linux").toString();
+    colorScheme = m_settings->value("colorScheme", "Linux").toString();
 
-    highlightCurrentTerminal = settings.value("highlightCurrentTerminal", true).toBool();
+    highlightCurrentTerminal = m_settings->value("highlightCurrentTerminal", true).toBool();
 
-    font = qvariant_cast<QFont>(settings.value("font", defaultFont()));
+    font = qvariant_cast<QFont>(m_settings->value("font", defaultFont()));
 
-    settings.beginGroup("Shortcuts");
-    QStringList keys = settings.childKeys();
-    foreach (const QString &key, keys) {
-        QKeySequence sequence = QKeySequence(settings.value(key).toString());
-        if (actions.contains(key))
-            actions[ key ]->setShortcut(sequence);
-    }
-    settings.endGroup();
+    m_settings->beginGroup("Shortcuts");
+    foreach (const QString &key, m_settings->childKeys())
+        m_shortcuts.insert(key, m_settings->value(key).toString());
+    m_settings->endGroup();
 
-    mainWindowGeometry = settings.value("MainWindow/geometry").toByteArray();
-    mainWindowState = settings.value("MainWindow/state").toByteArray();
+    mainWindowGeometry = m_settings->value("MainWindow/geometry").toByteArray();
+    mainWindowState = m_settings->value("MainWindow/state").toByteArray();
 
-    historyLimited = settings.value("HistoryLimited", true).toBool();
-    historyLimitedTo = settings.value("HistoryLimitedTo", 1000).toUInt();
+    historyLimited = m_settings->value("HistoryLimited", true).toBool();
+    historyLimitedTo = m_settings->value("HistoryLimitedTo", 1000).toUInt();
 
-    emulation = settings.value("emulation", "default").toString();
+    emulation = m_settings->value("emulation", "default").toString();
 
     // sessions
-    int size = settings.beginReadArray("Sessions");
+    int size = m_settings->beginReadArray("Sessions");
     for (int i = 0; i < size; ++i) {
-        settings.setArrayIndex(i);
-        QString name(settings.value("name").toString());
+        m_settings->setArrayIndex(i);
+        QString name(m_settings->value("name").toString());
         if (name.isEmpty())
             continue;
-        sessions[name] = settings.value("state").toByteArray();
+        sessions[name] = m_settings->value("state").toByteArray();
     }
-    settings.endArray();
+    m_settings->endArray();
 
-    appOpacity = settings.value("MainWindow/appOpacity", 100).toInt();
-    termOpacity = settings.value("termOpacity", 100).toInt();
+    appOpacity = m_settings->value("MainWindow/appOpacity", 100).toInt();
+    termOpacity = m_settings->value("termOpacity", 100).toInt();
 
     /* default to Right. see qtermwidget.h */
-    scrollBarPos = settings.value("ScrollbarPosition", 2).toInt();
+    scrollBarPos = m_settings->value("ScrollbarPosition", 2).toInt();
     /* default to North. I'd prefer South but North is standard (they say) */
-    tabsPos = settings.value("TabsPosition", 0).toInt();
-    alwaysShowTabs = settings.value("AlwaysShowTabs", true).toBool();
-    m_motionAfterPaste = settings.value("MotionAfterPaste", 0).toInt();
+    tabsPos = m_settings->value("TabsPosition", 0).toInt();
+    alwaysShowTabs = m_settings->value("AlwaysShowTabs", true).toBool();
+    m_motionAfterPaste = m_settings->value("MotionAfterPaste", 0).toInt();
 
     /* toggles */
-    borderless = settings.value("Borderless", false).toBool();
-    tabBarless = settings.value("TabBarless", false).toBool();
-    menuVisible = settings.value("MenuVisible", true).toBool();
-    askOnExit = settings.value("AskOnExit", true).toBool();
-    useCWD = settings.value("UseCWD", false).toBool();
+    borderless = m_settings->value("Borderless", false).toBool();
+    tabBarless = m_settings->value("TabBarless", false).toBool();
+    menuVisible = m_settings->value("MenuVisible", true).toBool();
+    askOnExit = m_settings->value("AskOnExit", true).toBool();
+    useCWD = m_settings->value("UseCWD", false).toBool();
 
     // bookmarks
-    useBookmarks = settings.value("UseBookmarks", false).toBool();
-    bookmarksVisible = settings.value("BookmarksVisible", true).toBool();
-    bookmarksFile = settings.value("BookmarksFile", QFileInfo(
-                                       settings.fileName()).canonicalPath()
-                                   +"/qterminal_bookmarks.xml").toString();
+    useBookmarks = m_settings->value("UseBookmarks", false).toBool();
+    bookmarksVisible = m_settings->value("BookmarksVisible", true).toBool();
+    bookmarksFile = m_settings->value("BookmarksFile", QFileInfo(
+                                          m_settings->fileName()).canonicalPath()
+                                      +"/qterminal_bookmarks.xml").toString();
 
-    settings.beginGroup("DropMode");
-    dropShortCut = QKeySequence(settings.value("ShortCut", "F12").toString());
-    dropKeepOpen = settings.value("KeepOpen", false).toBool();
-    dropShowOnStart = settings.value("ShowOnStart", true).toBool();
-    dropWidht = settings.value("Width", 70).toInt();
-    dropHeight = settings.value("Height", 45).toInt();
-    settings.endGroup();
+    m_settings->beginGroup("DropMode");
+    dropShortCut = QKeySequence(m_settings->value("ShortCut", "F12").toString());
+    dropKeepOpen = m_settings->value("KeepOpen", false).toBool();
+    dropShowOnStart = m_settings->value("ShowOnStart", true).toBool();
+    dropWidht = m_settings->value("Width", 70).toInt();
+    dropHeight = m_settings->value("Height", 45).toInt();
+    m_settings->endGroup();
 }
 
 void Preferences::save()
 {
-    QSettings settings;
+    m_settings->setValue("guiStyle", guiStyle);
+    m_settings->setValue("colorScheme", colorScheme);
+    m_settings->setValue("highlightCurrentTerminal", highlightCurrentTerminal);
+    m_settings->setValue("font", font);
 
-    settings.setValue("guiStyle", guiStyle);
-    settings.setValue("colorScheme", colorScheme);
-    settings.setValue("highlightCurrentTerminal", highlightCurrentTerminal);
-    settings.setValue("font", font);
+    m_settings->beginGroup("Shortcuts");
+    for (auto it = m_shortcuts.cbegin(); it != m_shortcuts.cend(); ++it)
+        m_settings->setValue(it.key(), it.value());
+    m_settings->endGroup();
 
-    settings.beginGroup("Shortcuts");
-    QMapIterator<QString, QAction *> it(actions);
-    while (it.hasNext()) {
-        it.next();
-        QKeySequence shortcut = it.value()->shortcut();
-        settings.setValue(it.key(), shortcut.toString());
-    }
-    settings.endGroup();
+    m_settings->setValue("MainWindow/geometry", mainWindowGeometry);
+    m_settings->setValue("MainWindow/state", mainWindowState);
 
-    settings.setValue("MainWindow/geometry", mainWindowGeometry);
-    settings.setValue("MainWindow/state", mainWindowState);
+    m_settings->setValue("HistoryLimited", historyLimited);
+    m_settings->setValue("HistoryLimitedTo", historyLimitedTo);
 
-    settings.setValue("HistoryLimited", historyLimited);
-    settings.setValue("HistoryLimitedTo", historyLimitedTo);
-
-    settings.setValue("emulation", emulation);
+    m_settings->setValue("emulation", emulation);
 
     // sessions
-    settings.beginWriteArray("Sessions");
+    m_settings->beginWriteArray("Sessions");
     int i = 0;
-    QMap<QString, QString>::iterator sit = sessions.begin();
+    auto sit = sessions.begin();
     while (sit != sessions.end()) {
-        settings.setArrayIndex(i);
-        settings.setValue("name", sit.key());
-        settings.setValue("state", sit.value());
+        m_settings->setArrayIndex(i);
+        m_settings->setValue("name", sit.key());
+        m_settings->setValue("state", sit.value());
         ++sit;
         ++i;
     }
-    settings.endArray();
+    m_settings->endArray();
 
-    settings.setValue("MainWindow/appOpacity", appOpacity);
-    settings.setValue("termOpacity", termOpacity);
-    settings.setValue("ScrollbarPosition", scrollBarPos);
-    settings.setValue("TabsPosition", tabsPos);
-    settings.setValue("AlwaysShowTabs", alwaysShowTabs);
-    settings.setValue("MotionAfterPaste", m_motionAfterPaste);
-    settings.setValue("Borderless", borderless);
-    settings.setValue("TabBarless", tabBarless);
-    settings.setValue("MenuVisible", menuVisible);
-    settings.setValue("AskOnExit", askOnExit);
-    settings.setValue("UseCWD", useCWD);
+    m_settings->setValue("MainWindow/appOpacity", appOpacity);
+    m_settings->setValue("termOpacity", termOpacity);
+    m_settings->setValue("ScrollbarPosition", scrollBarPos);
+    m_settings->setValue("TabsPosition", tabsPos);
+    m_settings->setValue("AlwaysShowTabs", alwaysShowTabs);
+    m_settings->setValue("MotionAfterPaste", m_motionAfterPaste);
+    m_settings->setValue("Borderless", borderless);
+    m_settings->setValue("TabBarless", tabBarless);
+    m_settings->setValue("MenuVisible", menuVisible);
+    m_settings->setValue("AskOnExit", askOnExit);
+    m_settings->setValue("UseCWD", useCWD);
 
     // bookmarks
-    settings.setValue("UseBookmarks", useBookmarks);
-    settings.setValue("BookmarksVisible", bookmarksVisible);
-    settings.setValue("BookmarksFile", bookmarksFile);
+    m_settings->setValue("UseBookmarks", useBookmarks);
+    m_settings->setValue("BookmarksVisible", bookmarksVisible);
+    m_settings->setValue("BookmarksFile", bookmarksFile);
 
-    settings.beginGroup("DropMode");
-    settings.setValue("ShortCut", dropShortCut.toString());
-    settings.setValue("KeepOpen", dropKeepOpen);
-    settings.setValue("ShowOnStart", dropShowOnStart);
-    settings.setValue("Width", dropWidht);
-    settings.setValue("Height", dropHeight);
-    settings.endGroup();
+    m_settings->beginGroup("DropMode");
+    m_settings->setValue("ShortCut", dropShortCut.toString());
+    m_settings->setValue("KeepOpen", dropKeepOpen);
+    m_settings->setValue("ShowOnStart", dropShowOnStart);
+    m_settings->setValue("Width", dropWidht);
+    m_settings->setValue("Height", dropHeight);
+    m_settings->endGroup();
 }
 
 QFont Preferences::defaultFont() const
@@ -201,6 +165,16 @@ QFont Preferences::defaultFont() const
     default_font.setPointSize(12);
     default_font.setStyleHint(QFont::TypeWriter);
     return default_font;
+}
+
+QKeySequence Preferences::shortcut(const QString &actionId, const QKeySequence &fallback) const
+{
+    return m_shortcuts.value(actionId, fallback);
+}
+
+void Preferences::setShortcut(const QString &actionId, const QKeySequence &shortcut)
+{
+    m_shortcuts.insert(actionId, shortcut);
 }
 
 void Preferences::emitChanged()

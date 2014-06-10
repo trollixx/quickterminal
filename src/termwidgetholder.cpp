@@ -90,7 +90,6 @@ void TermWidgetHolder::saveSession(const QString &name)
 
 TermWidget *TermWidgetHolder::currentTerminal() const
 {
-    qDebug() << m_currentTerm << "current terminal";
     return m_currentTerm;
 }
 
@@ -138,11 +137,6 @@ void TermWidgetHolder::switchPrevSubterminal()
         l.at(l.count()-1)->impl()->setFocus(Qt::OtherFocusReason);
 }
 
-void TermWidgetHolder::clearActiveTerminal()
-{
-    currentTerminal()->impl()->clear();
-}
-
 void TermWidgetHolder::propertiesChanged()
 {
     foreach (TermWidget *w, findChildren<TermWidget *>())
@@ -174,7 +168,6 @@ void TermWidgetHolder::splitCollapse(TermWidget *term)
 
     QList<TermWidget *> tlist = findChildren<TermWidget *>();
     int localCnt = tlist.count();
-    emit enableCollapse(localCnt > 1);
     if (localCnt > 0) {
         tlist.at(0)->setFocus(Qt::OtherFocusReason);
         update();
@@ -229,6 +222,9 @@ TermWidget *TermWidgetHolder::newTerm(const QString &wdir, const QString &shell)
         sh = m_shell;
 
     TermWidget *w = new TermWidget(wd, sh, this);
+    w->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(w, &TermWidget::customContextMenuRequested,
+            this, &TermWidgetHolder::terminalContextMenuRequested);
     // proxy signals
     connect(w, SIGNAL(renameSession()), this, SIGNAL(renameSession()));
     connect(w, SIGNAL(removeCurrentSession()), this, SIGNAL(lastTerminalClosed()));
@@ -242,17 +238,12 @@ TermWidget *TermWidgetHolder::newTerm(const QString &wdir, const QString &shell)
             this, SLOT(splitCollapse(TermWidget *)));
     connect(w, SIGNAL(termGetFocus(TermWidget *)),
             this, SLOT(setCurrentTerminal(TermWidget *)));
-    // backward signals
-    connect(this, SIGNAL(enableCollapse(bool)), w, SLOT(enableCollapse(bool)));
-
-    emit enableCollapse(findChildren<TermWidget *>().count() > 1);
 
     return w;
 }
 
 void TermWidgetHolder::setCurrentTerminal(TermWidget *term)
 {
-    qDebug() << "set current term:" << term;
     m_currentTerm = term;
 }
 

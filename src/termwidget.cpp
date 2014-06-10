@@ -4,9 +4,7 @@
 #include "preferences.h"
 
 #include <QDebug>
-#include <QMenu>
 #include <QPainter>
-#include <QSettings>
 #include <QVBoxLayout>
 
 static int TermWidgetCount = 0;
@@ -43,122 +41,7 @@ TermWidgetImpl::TermWidgetImpl(const QString &wdir, const QString &shell, QWidge
 
     setMotionAfterPasting(Preferences::instance()->m_motionAfterPaste);
 
-    actionMap[COPY_SELECTION]
-            = new QAction(QIcon(":/icons/edit-copy.png"), tr(COPY_SELECTION), this);
-    connect(actionMap[COPY_SELECTION], SIGNAL(triggered()), this, SLOT(copyClipboard()));
-    addAction(actionMap[COPY_SELECTION]);
-
-    actionMap[PASTE_CLIPBOARD] = new QAction(QIcon(":/icons/edit-paste.png"), tr(
-                                                 PASTE_CLIPBOARD), this);
-    connect(actionMap[PASTE_CLIPBOARD], SIGNAL(triggered()), this, SLOT(pasteClipboard()));
-    addAction(actionMap[PASTE_CLIPBOARD]);
-
-    actionMap[PASTE_SELECTION] = new QAction(QIcon(":/icons/edit-paste.png"), tr(
-                                                 PASTE_SELECTION), this);
-    connect(actionMap[PASTE_SELECTION], SIGNAL(triggered()), this, SLOT(pasteSelection()));
-    addAction(actionMap[PASTE_SELECTION]);
-
-    actionMap[ZOOM_IN] = new QAction(QIcon(":/icons/zoom-in.png"), tr(ZOOM_IN), this);
-    connect(actionMap[ZOOM_IN], SIGNAL(triggered()), this, SLOT(zoomIn()));
-    addAction(actionMap[ZOOM_IN]);
-
-    actionMap[ZOOM_OUT] = new QAction(QIcon(":/icons/zoom-out.png"), tr(ZOOM_OUT), this);
-    connect(actionMap[ZOOM_OUT], SIGNAL(triggered()), this, SLOT(zoomOut()));
-    addAction(actionMap[ZOOM_OUT]);
-
-    actionMap[ZOOM_RESET] = new QAction(QIcon(":/icons/zoom-out.png"), tr(ZOOM_RESET), this);
-    connect(actionMap[ZOOM_RESET], SIGNAL(triggered()), this, SLOT(zoomReset()));
-    addAction(actionMap[ZOOM_RESET]);
-
-    QAction *act = new QAction(this);
-    act->setSeparator(true);
-    addAction(act);
-
-    actionMap[CLEAR_TERMINAL] = new QAction(tr(CLEAR_TERMINAL), this);
-    connect(actionMap[CLEAR_TERMINAL], SIGNAL(triggered()), this, SLOT(clear()));
-    addAction(actionMap[CLEAR_TERMINAL]);
-
-    actionMap[SPLIT_HORIZONTAL] = new QAction(tr(SPLIT_HORIZONTAL), this);
-    connect(actionMap[SPLIT_HORIZONTAL], SIGNAL(triggered()), this, SLOT(act_splitHorizontal()));
-    addAction(actionMap[SPLIT_HORIZONTAL]);
-
-    actionMap[SPLIT_VERTICAL] = new QAction(tr(SPLIT_VERTICAL), this);
-    connect(actionMap[SPLIT_VERTICAL], SIGNAL(triggered()), this, SLOT(act_splitVertical()));
-    addAction(actionMap[SPLIT_VERTICAL]);
-
-    actionMap[SUB_COLLAPSE] = new QAction(tr(SUB_COLLAPSE), this);
-    connect(actionMap[SUB_COLLAPSE], SIGNAL(triggered()), this, SLOT(act_splitCollapse()));
-    addAction(actionMap[SUB_COLLAPSE]);
-
-    // act = new QAction(this);
-    // act->setSeparator(true);
-    // addAction(act);
-    //
-    // act = new QAction(tr("&Rename session..."), this);
-    // act->setShortcut(Preferences::instance()->shortcuts[RENAME_SESSION]);
-    // connect(act, SIGNAL(triggered()), this, SIGNAL(renameSession()));
-    // addAction(act);
-
-    setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(customContextMenuCall(const QPoint &)));
-
-    updateShortcuts();
-
-    // setKeyBindings("linux");
     startShellProgram();
-}
-
-void TermWidgetImpl::updateShortcuts()
-{
-    QSettings settings;
-    settings.beginGroup("Shortcuts");
-
-    QKeySequence seq;
-
-    if (actionMap.contains(COPY_SELECTION) && settings.contains(COPY_SELECTION)) {
-        seq = QKeySequence::fromString(settings.value(COPY_SELECTION,
-                                                      QKeySequence::Copy).toString());
-        actionMap[COPY_SELECTION]->setShortcut(seq);
-    }
-    if (actionMap.contains(PASTE_CLIPBOARD) && settings.contains(PASTE_CLIPBOARD)) {
-        seq = QKeySequence::fromString(settings.value(PASTE_CLIPBOARD,
-                                                      QKeySequence::Paste).toString());
-        actionMap[PASTE_CLIPBOARD]->setShortcut(seq);
-    }
-    if (actionMap.contains(PASTE_SELECTION) && settings.contains(PASTE_SELECTION)) {
-        seq = QKeySequence::fromString(settings.value(PASTE_SELECTION,
-                                                      QKeySequence::Paste).toString());
-        actionMap[PASTE_SELECTION]->setShortcut(seq);
-    }
-
-    if (actionMap.contains(ZOOM_IN) && settings.contains(ZOOM_IN)) {
-        seq = QKeySequence::fromString(settings.value(ZOOM_IN, QKeySequence::ZoomIn).toString());
-        actionMap[ZOOM_IN]->setShortcut(seq);
-    }
-    if (actionMap.contains(ZOOM_OUT) && settings.contains(ZOOM_OUT)) {
-        seq = QKeySequence::fromString(settings.value(ZOOM_OUT, QKeySequence::ZoomOut).toString());
-        actionMap[ZOOM_OUT]->setShortcut(seq);
-    }
-    if (actionMap.contains(ZOOM_RESET) && settings.contains(ZOOM_RESET)) {
-        seq = QKeySequence::fromString(settings.value(ZOOM_RESET).toString());
-        actionMap[ZOOM_RESET]->setShortcut(seq);
-    }
-
-    if (actionMap.contains(SPLIT_HORIZONTAL) && settings.contains(SPLIT_HORIZONTAL)) {
-        seq = QKeySequence::fromString(settings.value(SPLIT_HORIZONTAL).toString());
-        actionMap[SPLIT_HORIZONTAL]->setShortcut(seq);
-    }
-    if (actionMap.contains(SPLIT_VERTICAL) && settings.contains(SPLIT_VERTICAL)) {
-        seq = QKeySequence::fromString(settings.value(SPLIT_VERTICAL).toString());
-        actionMap[SPLIT_VERTICAL]->setShortcut(seq);
-    }
-    if (actionMap.contains(SUB_COLLAPSE) && settings.contains(SUB_COLLAPSE)) {
-        seq = QKeySequence::fromString(settings.value(SUB_COLLAPSE).toString());
-        actionMap[SUB_COLLAPSE]->setShortcut(seq);
-    }
-
-    settings.endGroup();
 }
 
 void TermWidgetImpl::propertiesChanged()
@@ -193,23 +76,7 @@ void TermWidgetImpl::propertiesChanged()
         break;
     }
 
-    updateShortcuts();
-
     update();
-}
-
-void TermWidgetImpl::customContextMenuCall(const QPoint &pos)
-{
-    QMenu menu;
-    menu.addActions(actions());
-    /*
-    menu.addSeparator();
-    menu.addAction(QIcon(":/icons/close.png"),
-        tr("Close session"), this,
-        SIGNAL(removeCurrentSession()),
-        Preferences::instance()->shortcuts[CLOSE_TAB]);
-*/
-    menu.exec(mapToGlobal(pos));
 }
 
 void TermWidgetImpl::act_splitVertical()
@@ -227,30 +94,9 @@ void TermWidgetImpl::act_splitCollapse()
     emit splitCollapse();
 }
 
-void TermWidgetImpl::zoomIn()
-{
-    emit QTermWidget::zoomIn();
-    Preferences::instance()->font = getTerminalFont();
-    Preferences::instance()->save();
-}
-
-void TermWidgetImpl::zoomOut()
-{
-    emit QTermWidget::zoomOut();
-    Preferences::instance()->font = getTerminalFont();
-    Preferences::instance()->save();
-}
-
 void TermWidgetImpl::zoomReset()
 {
-    Preferences::instance()->font = Preferences::instance()->defaultFont();
     setTerminalFont(Preferences::instance()->font);
-    Preferences::instance()->save();
-}
-
-void TermWidgetImpl::enableCollapse(bool enable)
-{
-    actionMap[SUB_COLLAPSE]->setEnabled(enable);
 }
 
 TermWidget::TermWidget(const QString &wdir, const QString &shell, QWidget *parent) :
@@ -288,11 +134,6 @@ void TermWidget::propertiesChanged()
 TermWidgetImpl *TermWidget::impl() const
 {
     return m_term;
-}
-
-void TermWidget::enableCollapse(bool enable)
-{
-    m_term->enableCollapse(enable);
 }
 
 void TermWidget::term_splitHorizontal()

@@ -12,14 +12,17 @@ class Application : public QObject
     Q_OBJECT
 public:
     explicit Application(QObject *parent = nullptr);
+    ~Application() override;
 
 signals:
 
 public slots:
     void createWindow();
+    void quit();
 
 private slots:
     void preferencesChanged();
+    void windowDeleted(QObject *object);
 
 private:
     void parseOptions();

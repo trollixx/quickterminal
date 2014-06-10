@@ -6,6 +6,7 @@
 #include <QMap>
 
 class QAction;
+class QMenu;
 
 class TermWidgetImpl : public QTermWidget
 {
@@ -23,20 +24,12 @@ signals:
     void splitCollapse();
 
 public slots:
-    void enableCollapse(bool enable);
-    void updateShortcuts();
+    void zoomReset();
 
 private slots:
-    void customContextMenuCall(const QPoint &pos);
     void act_splitVertical();
     void act_splitHorizontal();
     void act_splitCollapse();
-    void zoomIn();
-    void zoomOut();
-    void zoomReset();
-
-private:
-    QMap<QString, QAction *> actionMap;
 };
 
 class TermWidget : public QWidget
@@ -58,9 +51,6 @@ signals:
     void splitVertical(TermWidget *self);
     void splitCollapse(TermWidget *self);
     void termGetFocus(TermWidget *self);
-
-public slots:
-    void enableCollapse(bool enable);
 
 protected:
     void paintEvent(QPaintEvent *event);

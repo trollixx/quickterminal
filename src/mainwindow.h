@@ -27,51 +27,65 @@
 
 class QToolButton;
 
-class MainWindow : public QMainWindow, private Ui::mainWindow
+class ActionManager;
+class TermWidget;
+
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
-
 public:
     explicit MainWindow(const QString &work_dir, const QString &command, bool dropMode,
                         QWidget *parent = nullptr, Qt::WindowFlags f = 0);
+    ~MainWindow();
 
-    bool dropMode() const;
-
-protected slots:
-    void on_consoleTabulator_currentChanged(int);
-    void preferencesChanged();
-    void actAbout_triggered();
-    void actPreferences_triggered();
-    void updateActionGroup(QAction *);
-
-    void toggleBorderless();
-    void toggleTabBar();
-    void toggleMenu();
-
-    void showHide();
-    void setKeepOpen(bool value);
-    void find();
-
-    void newTerminalWindow();
-    void bookmarksWidget_callCommand(const QString &);
-    void bookmarksDock_visibilityChanged(bool visible);
+signals:
+    void newWindow();
+    void quit();
 
 protected:
     void closeEvent(QCloseEvent *event) override;
     bool event(QEvent *event);
 
+private slots:
+    void preferencesChanged();
+    void showAboutMessageBox();
+    void showPreferencesDialog();
+    void updateActionGroup(QAction *);
+
+    void toggleBorderless();
+    void toggleTabBar();
+    void toggleMenuBar();
+
+    void showHide();
+    void setKeepOpen(bool value);
+
+    void newTerminalWindow();
+    void bookmarksWidget_callCommand(const QString &);
+    void bookmarksDock_visibilityChanged(bool visible);
+
 private:
-    void setup_FileMenu_Actions();
-    void setup_ActionsMenu_Actions();
-    void setup_ViewMenu_Actions();
+    inline TermWidget *currentTerminal() const;
+
+    void setupFileMenu();
+    void setupEditMenu();
+    void setupViewMenu();
+    void setupHelpMenu();
+    void setupContextMenu();
+    void setupWindowActions();
 
     void enableDropMode();
     void realign();
 
+    Ui::MainWindow *m_ui = nullptr;
+
+    ActionManager *m_actionManager = nullptr;
+
+    QMenu *m_contextMenu = nullptr;
+
     QActionGroup *tabPosition, *scrollBarPosition;
     QMenu *tabPosMenu, *scrollPosMenu;
 
-    QAction *toggleBorder, *toggleTabbar, *renameSession;
+    QAction *toggleBorder, *renameSession;
 
     QString m_initShell;
     QString m_initWorkDir;
