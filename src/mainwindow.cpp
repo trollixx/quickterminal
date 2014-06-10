@@ -26,6 +26,7 @@
 #include "preferences.h"
 #include "preferencesdialog.h"
 
+#include <QCloseEvent>
 #include <QDesktopWidget>
 #include <QMessageBox>
 #include <QToolButton>
