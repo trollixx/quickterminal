@@ -52,7 +52,6 @@ private slots:
     void showPreferencesDialog();
     void updateActionGroup(QAction *);
 
-    void toggleBorderless();
     void toggleTabBar();
     void toggleMenuBar();
 
@@ -81,7 +80,7 @@ private:
     QActionGroup *tabPosition, *scrollBarPosition;
     QMenu *tabPosMenu, *scrollPosMenu;
 
-    QAction *toggleBorder, *renameSession;
+    QAction *renameSession;
 
     QString m_initShell;
     QString m_initWorkDir;

@@ -77,7 +77,6 @@ void Preferences::load()
     m_motionAfterPaste = m_settings->value("MotionAfterPaste", 0).toInt();
 
     /* toggles */
-    borderless = m_settings->value("Borderless", false).toBool();
     tabBarless = m_settings->value("TabBarless", false).toBool();
     menuVisible = m_settings->value("MenuVisible", true).toBool();
     askOnExit = m_settings->value("AskOnExit", true).toBool();
@@ -131,7 +130,6 @@ void Preferences::save()
     m_settings->setValue("TabsPosition", tabsPos);
     m_settings->setValue("AlwaysShowTabs", alwaysShowTabs);
     m_settings->setValue("MotionAfterPaste", m_motionAfterPaste);
-    m_settings->setValue("Borderless", borderless);
     m_settings->setValue("TabBarless", tabBarless);
     m_settings->setValue("MenuVisible", menuVisible);
     m_settings->setValue("AskOnExit", askOnExit);

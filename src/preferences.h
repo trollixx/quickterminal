@@ -47,7 +47,6 @@ public:
     bool alwaysShowTabs;
     int m_motionAfterPaste;
 
-    bool borderless;
     bool tabBarless;
     bool menuVisible;
 
