@@ -30,8 +30,6 @@
 #include <QMessageBox>
 #include <QToolButton>
 
-#include <QDebug>
-
 MainWindow::MainWindow(const QString &work_dir, const QString &command, bool dropMode,
                        QWidget *parent, Qt::WindowFlags f) :
     QMainWindow(parent, f),
@@ -549,7 +547,6 @@ bool MainWindow::event(QEvent *event)
             && m_dropMode
             && !Preferences::instance()->dropKeepOpen
             && qApp->activeWindow() == nullptr) {
-        qDebug() << "!!!";
         hide();
     }
     return QMainWindow::event(event);

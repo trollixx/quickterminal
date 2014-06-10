@@ -6,7 +6,6 @@
 
 #include <QAction>
 #include <QCommandLineParser>
-#include <QDebug>
 #include <QDir>
 
 #include <qxtglobalshortcut.h>

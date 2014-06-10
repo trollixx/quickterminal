@@ -2,12 +2,9 @@
 
 #include "preferences.h"
 
-#include <QDebug>
 #include <QGridLayout>
 #include <QInputDialog>
 #include <QSplitter>
-
-#include <assert.h>
 
 TermWidgetHolder::TermWidgetHolder(const QString &wdir, const QString &shell, QWidget *parent) :
     QWidget(parent),
@@ -85,7 +82,6 @@ void TermWidgetHolder::saveSession(const QString &name)
             dump += ',' + num.arg(i);
     }
     Preferences::instance()->sessions[name] = dump;
-    qDebug() << "dump" << dump;
 }
 
 TermWidget *TermWidgetHolder::currentTerminal() const
@@ -156,7 +152,7 @@ void TermWidgetHolder::splitVertical(TermWidget *term)
 void TermWidgetHolder::splitCollapse(TermWidget *term)
 {
     QSplitter *parent = qobject_cast<QSplitter *>(term->parent());
-    assert(parent);
+    Q_ASSERT(parent);
     term->setParent(0);
     delete term;
 
@@ -181,7 +177,7 @@ void TermWidgetHolder::splitCollapse(TermWidget *term)
 void TermWidgetHolder::split(TermWidget *term, Qt::Orientation orientation)
 {
     QSplitter *parent = qobject_cast<QSplitter *>(term->parent());
-    assert(parent);
+    Q_ASSERT(parent);
 
     int ix = parent->indexOf(term);
     QList<int> parentSizes = parent->sizes();
@@ -250,9 +246,6 @@ void TermWidgetHolder::setCurrentTerminal(TermWidget *term)
 void TermWidgetHolder::handle_finished()
 {
     TermWidget *w = qobject_cast<TermWidget *>(sender());
-    if (!w) {
-        qDebug() << "TermWidgetHolder::handle_finished: Unknown object to handle" << w;
-        assert(0);
-    }
+    Q_ASSERT(w);
     splitCollapse(w);
 }

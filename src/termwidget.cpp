@@ -59,8 +59,6 @@ void TermWidgetImpl::propertiesChanged()
         setHistorySize(-1);
     }
 
-    qDebug() << "TermWidgetImpl::propertiesChanged" << this << "emulation:"
-             << Preferences::instance()->emulation;
     setKeyBindings(Preferences::instance()->emulation);
     setTerminalOpacity(Preferences::instance()->termOpacity/100.0);
 
