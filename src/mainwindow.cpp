@@ -129,7 +129,8 @@ void MainWindow::setupFileMenu()
     m_ui->fileMenu->addSeparator();
 
     action = m_actionManager->addAction(ActionId::Quit, tr("&Quit QTerminal"),
-                                        m_preferences->shortcut(ActionId::Quit),
+                                        m_preferences->shortcut(ActionId::Quit,
+                                                                QStringLiteral("Ctrl+Shift+X")),
                                         QIcon::fromTheme(QStringLiteral("application-exit")));
     connect(action, &QAction::triggered, this, &MainWindow::quit);
     addAction(action);
@@ -173,7 +174,7 @@ void MainWindow::setupEditMenu()
 
     action = m_actionManager->addAction(ActionId::Clear, tr("C&lear"),
                                         m_preferences->shortcut(ActionId::Clear,
-                                                              QStringLiteral("Ctrl+Shift+X")),
+                                                                QStringLiteral("Ctrl+Shift+C")),
                                         QIcon::fromTheme(QStringLiteral("edit-clear")));
     connect(action, &QAction::triggered, [this]() {
         currentTerminal()->impl()->clear();
@@ -362,7 +363,7 @@ void MainWindow::setupContextMenu()
 
     action = m_actionManager->addAction(ActionId::CloseTerminal, tr("Close"),
                                         m_preferences->shortcut(ActionId::CloseTerminal,
-                                                              QStringLiteral("Ctrl+Shift+C")),
+                                                                QStringLiteral("Ctrl+Shift+D")),
                                         QIcon::fromTheme(QStringLiteral("window-close")));
     connect(action, &QAction::triggered, m_ui->consoleTabulator, &TabWidget::splitCollapse);
     addAction(action);
