@@ -83,8 +83,6 @@ private:
     QActionGroup *scrollBarPosition = nullptr;
     QMenu *tabPosMenu, *scrollPosMenu;
 
-    QAction *renameSession;
-
     QToolButton *m_dropLockButton = nullptr;
     bool m_dropMode;
 };

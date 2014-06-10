@@ -23,9 +23,10 @@
 #include "preferences.h"
 #include "termwidgetholder.h"
 
-#include <QContextMenuEvent>
+#include <QActionGroup>
+#include <QEvent>
 #include <QInputDialog>
-#include <QMenu>
+#include <QMouseEvent>
 #include <QTabBar>
 
 #define TAB_INDEX_PROPERTY "tab_index"
@@ -137,15 +138,6 @@ void TabWidget::renameTabsAfterRemove()
         setTabText(i, QString(tr("Shell No. %1")).arg(i+1));
 
 #endif
-}
-
-void TabWidget::contextMenuEvent(QContextMenuEvent *event)
-{
-    QMenu menu(this);
-    menu.addAction(QIcon(":/icons/document-close.png"), tr("Close session"),
-                   this, SLOT(removeCurrentTab()));
-    menu.addAction(tr("Rename session"), this, SLOT(renameSession()));
-    menu.exec(event->globalPos());
 }
 
 bool TabWidget::eventFilter(QObject *obj, QEvent *event)
