@@ -26,9 +26,4 @@
 
 #define DEFAULT_FONT                   "Monospace"
 
-// XON/XOFF features:
-
-#define FLOW_CONTROL_ENABLED		false
-#define FLOW_CONTROL_WARNING_ENABLED	false
-
 #endif // CONFIG_H

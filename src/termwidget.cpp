@@ -7,6 +7,9 @@
 #include <QPainter>
 #include <QVBoxLayout>
 
+#define FLOW_CONTROL_ENABLED false
+#define FLOW_CONTROL_WARNING_ENABLED false
+
 static int TermWidgetCount = 0;
 
 TermWidgetImpl::TermWidgetImpl(const QString &wdir, const QString &shell, QWidget *parent) :
