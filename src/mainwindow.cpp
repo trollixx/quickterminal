@@ -226,46 +226,37 @@ void MainWindow::setupViewMenu()
 
     m_ui->viewMenu->addSeparator();
 
-    /* tabs position */
-    tabPosition = new QActionGroup(this);
-    QAction *tabBottom = new QAction(tr("Bottom"), this);
-    QAction *tabTop = new QAction(tr("Top"), this);
-    QAction *tabRight = new QAction(tr("Right"), this);
-    QAction *tabLeft = new QAction(tr("Left"), this);
-    tabPosition->addAction(tabTop);
-    tabPosition->addAction(tabBottom);
-    tabPosition->addAction(tabLeft);
-    tabPosition->addAction(tabRight);
+    // TabBar position
+    tabBarPosition = new QActionGroup(this);
+    tabBarPosition->addAction(tr("Top"));
+    tabBarPosition->addAction(tr("Bottom"));
+    tabBarPosition->addAction(tr("Left"));
+    tabBarPosition->addAction(tr("Right"));
 
-    foreach (QAction *action, tabPosition->actions())
+    foreach (QAction *action, tabBarPosition->actions())
         action->setCheckable(true);
 
-    if (tabPosition->actions().count() > m_preferences->tabsPos)
-        tabPosition->actions().at(m_preferences->tabsPos)->setChecked(true);
+    if (tabBarPosition->actions().count() > m_preferences->tabsPos)
+        tabBarPosition->actions().at(m_preferences->tabsPos)->setChecked(true);
 
-    connect(tabPosition, SIGNAL(triggered(QAction *)),
-            m_ui->consoleTabulator, SLOT(changeTabPosition(QAction *)));
+    connect(tabBarPosition, &QActionGroup::triggered,
+            m_ui->consoleTabulator, &TabWidget::changeTabPosition);
 
     tabPosMenu = new QMenu(tr("Tabs Layout"), m_ui->viewMenu);
     tabPosMenu->setObjectName("tabPosMenu");
 
-    foreach (QAction *action, tabPosition->actions())
+    foreach (QAction *action, tabBarPosition->actions())
         tabPosMenu->addAction(action);
 
-    connect(m_ui->viewMenu, SIGNAL(hovered(QAction *)),
-            this, SLOT(updateActionGroup(QAction *)));
+    connect(m_ui->viewMenu, &QMenu::hovered, this, &MainWindow::updateActionGroup);
     m_ui->viewMenu->addMenu(tabPosMenu);
 
-    /* Scrollbar */
+    // Scrollbar position
     scrollBarPosition = new QActionGroup(this);
-    QAction *scrollNone = new QAction(tr("None"), this);
-    QAction *scrollRight = new QAction(tr("Right"), this);
-    QAction *scrollLeft = new QAction(tr("Left"), this);
-
-    /* order of insertion is dep. on QTermWidget::ScrollBarPosition enum */
-    scrollBarPosition->addAction(scrollNone);
-    scrollBarPosition->addAction(scrollLeft);
-    scrollBarPosition->addAction(scrollRight);
+    // Order is based on QTermWidget::ScrollBarPosition enum
+    scrollBarPosition->addAction(tr("None"));
+    scrollBarPosition->addAction(tr("Left"));
+    scrollBarPosition->addAction(tr("Rigth"));
 
     foreach (QAction *action, scrollBarPosition->actions())
         action->setCheckable(true);
@@ -273,8 +264,8 @@ void MainWindow::setupViewMenu()
     if (m_preferences->scrollBarPos < scrollBarPosition->actions().size())
         scrollBarPosition->actions().at(m_preferences->scrollBarPos)->setChecked(true);
 
-    connect(scrollBarPosition, SIGNAL(triggered(QAction *)),
-            m_ui->consoleTabulator, SLOT(changeScrollPosition(QAction *)));
+    connect(scrollBarPosition, &QActionGroup::triggered,
+            m_ui->consoleTabulator, &TabWidget::changeScrollPosition);
 
     scrollPosMenu = new QMenu(tr("Scrollbar Layout"), m_ui->viewMenu);
     scrollPosMenu->setObjectName("scrollPosMenu");
@@ -456,7 +447,7 @@ void MainWindow::realign()
 void MainWindow::updateActionGroup(QAction *a)
 {
     if (a->parent()->objectName() == tabPosMenu->objectName())
-        tabPosition->actions().at(m_preferences->tabsPos)->setChecked(true);
+        tabBarPosition->actions().at(m_preferences->tabsPos)->setChecked(true);
 }
 
 void MainWindow::showHide()

@@ -79,7 +79,8 @@ private:
 
     QMenu *m_contextMenu = nullptr;
 
-    QActionGroup *tabPosition, *scrollBarPosition;
+    QActionGroup *tabBarPosition = nullptr;
+    QActionGroup *scrollBarPosition = nullptr;
     QMenu *tabPosMenu, *scrollPosMenu;
 
     QAction *renameSession;
