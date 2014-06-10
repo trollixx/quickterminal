@@ -27,9 +27,7 @@
 #include "preferencesdialog.h"
 
 #include <QDesktopWidget>
-#include <QDockWidget>
 #include <QMessageBox>
-#include <QSettings>
 #include <QToolButton>
 
 #include <QDebug>
