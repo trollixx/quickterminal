@@ -24,6 +24,4 @@
 #define TOGGLE_BOOKMARKS "Toggle Bookmarks"
 #define TOGGLE_BOOKMARKS_SHORTCUT       "Ctrl+Shift+B"
 
-#define DEFAULT_FONT                   "Monospace"
-
 #endif // CONFIG_H

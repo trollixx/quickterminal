@@ -7,6 +7,8 @@
 #include <QFileInfo>
 #include <QSettings>
 
+#define DEFAULT_FONT "Monospace"
+
 Preferences *Preferences::m_instance = nullptr;
 
 Preferences *Preferences::instance()
