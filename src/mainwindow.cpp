@@ -578,12 +578,6 @@ bool MainWindow::event(QEvent *event)
     return QMainWindow::event(event);
 }
 
-void MainWindow::newTerminalWindow()
-{
-    MainWindow *w = new MainWindow(m_initWorkDir, m_initShell, false);
-    w->show();
-}
-
 TermWidget *MainWindow::currentTerminal() const
 {
     return m_ui->consoleTabulator->terminalHolder()->currentTerminal();

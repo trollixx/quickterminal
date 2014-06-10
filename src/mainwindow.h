@@ -59,8 +59,6 @@ private slots:
     void showHide();
     void setKeepOpen(bool value);
 
-    void newTerminalWindow();
-
 private:
     inline TermWidget *currentTerminal() const;
 
