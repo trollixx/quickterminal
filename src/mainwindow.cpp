@@ -95,7 +95,7 @@ void MainWindow::setupFileMenu()
     QAction *action;
     action = m_actionManager->addAction(ActionId::NewTab, tr("New &Tab..."),
                                         m_preferences->shortcut(ActionId::NewTab,
-                                                              QStringLiteral("Ctrl+Shift+T")),
+                                                                QStringLiteral("Ctrl+Shift+T")),
                                         QIcon::fromTheme(QStringLiteral("tab-new")));
     connect(action, SIGNAL(triggered()), m_ui->consoleTabulator, SLOT(addNewTab()));
     addAction(action);
@@ -103,7 +103,7 @@ void MainWindow::setupFileMenu()
 
     action = m_actionManager->addAction(ActionId::CloseTab, tr("Close Tab"),
                                         m_preferences->shortcut(ActionId::CloseTab,
-                                                              QStringLiteral("Ctrl+Shift+W")));
+                                                                QStringLiteral("Ctrl+Shift+W")));
     connect(action, SIGNAL(triggered()), m_ui->consoleTabulator, SLOT(removeCurrentTab()));
     addAction(action);
     m_ui->fileMenu->addAction(action);
@@ -112,7 +112,7 @@ void MainWindow::setupFileMenu()
 
     action = m_actionManager->addAction(ActionId::NewWindow, tr("New &Window..."),
                                         m_preferences->shortcut(ActionId::NewWindow,
-                                                              QStringLiteral("Ctrl+Shift+N")),
+                                                                QStringLiteral("Ctrl+Shift+N")),
                                         QIcon::fromTheme(QStringLiteral("window-new")));
     connect(action, &QAction::triggered, this, &MainWindow::newWindow);
     addAction(action);
@@ -120,7 +120,7 @@ void MainWindow::setupFileMenu()
 
     action = m_actionManager->addAction(ActionId::CloseWindow, tr("Close Window..."),
                                         m_preferences->shortcut(ActionId::CloseWindow,
-                                                              QStringLiteral("Ctrl+Shift+Q")),
+                                                                QStringLiteral("Ctrl+Shift+Q")),
                                         QIcon::fromTheme(QStringLiteral("window-close")));
     connect(action, &QAction::triggered, this, &MainWindow::close);
     addAction(action);
@@ -142,7 +142,7 @@ void MainWindow::setupEditMenu()
     QAction *action;
     action = m_actionManager->addAction(ActionId::Copy, tr("&Copy"),
                                         m_preferences->shortcut(ActionId::Copy,
-                                                              QStringLiteral("Ctrl+Ins")),
+                                                                QStringLiteral("Ctrl+Ins")),
                                         QIcon::fromTheme(QStringLiteral("edit-copy")));
     connect(action, &QAction::triggered, [this]() {
         currentTerminal()->impl()->copyClipboard();
@@ -152,7 +152,7 @@ void MainWindow::setupEditMenu()
 
     action = m_actionManager->addAction(ActionId::Paste, tr("&Paste"),
                                         m_preferences->shortcut(ActionId::Paste,
-                                                              QStringLiteral("Shift+Ins")),
+                                                                QStringLiteral("Shift+Ins")),
                                         QIcon::fromTheme(QStringLiteral("edit-paste")));
     connect(action, &QAction::triggered, [this]() {
         currentTerminal()->impl()->pasteClipboard();
@@ -162,7 +162,7 @@ void MainWindow::setupEditMenu()
 
     action = m_actionManager->addAction(ActionId::PasteSelection, tr("Paste &Selection"),
                                         m_preferences->shortcut(ActionId::PasteSelection,
-                                                              QStringLiteral("Ctrl+Shift+Ins")),
+                                                                QStringLiteral("Ctrl+Shift+Ins")),
                                         QIcon::fromTheme(QStringLiteral("edit-paste")));
     connect(action, &QAction::triggered, [this]() {
         currentTerminal()->impl()->pasteSelection();
@@ -186,7 +186,7 @@ void MainWindow::setupEditMenu()
 
     action = m_actionManager->addAction(ActionId::Find, tr("&Find"),
                                         m_preferences->shortcut(ActionId::Find,
-                                                              QStringLiteral("Ctrl+Shift+F")),
+                                                                QStringLiteral("Ctrl+Shift+F")),
                                         QIcon::fromTheme(QStringLiteral("edit-find")));
     connect(action, &QAction::triggered, [this]() {
         currentTerminal()->impl()->toggleShowSearchBar();
@@ -198,7 +198,7 @@ void MainWindow::setupEditMenu()
 
     action = m_actionManager->addAction(ActionId::Preferences, tr("Preferences"),
                                         m_preferences->shortcut(ActionId::Preferences,
-                                                              QStringLiteral("Ctrl+Shift+P")),
+                                                                QStringLiteral("Ctrl+Shift+P")),
                                         QIcon::fromTheme(QStringLiteral("preferences-desktop")));
     connect(action, SIGNAL(triggered()), SLOT(showPreferencesDialog()));
     addAction(action);
@@ -210,7 +210,7 @@ void MainWindow::setupViewMenu()
     QAction *action;
     action = m_actionManager->addAction(ActionId::ShowMenu, tr("Show &Menu"),
                                         m_preferences->shortcut(ActionId::ShowMenu,
-                                                              QStringLiteral("Ctrl+Shift+M")));
+                                                                QStringLiteral("Ctrl+Shift+M")));
     action->setCheckable(true);
     action->setChecked(m_preferences->menuVisible);
     connect(action, &QAction::triggered, this, &MainWindow::toggleMenuBar);
@@ -311,7 +311,7 @@ void MainWindow::setupContextMenu()
     QAction *action;
     action = m_actionManager->addAction(ActionId::ZoomIn, tr("Zoom &In"),
                                         m_preferences->shortcut(ActionId::ZoomIn,
-                                                              QStringLiteral("Ctrl+Shift++")),
+                                                                QStringLiteral("Ctrl+Shift++")),
                                         QIcon::fromTheme(QStringLiteral("zoom-in")));
     connect(action, &QAction::triggered, [this]() {
         currentTerminal()->impl()->zoomIn();
@@ -321,7 +321,7 @@ void MainWindow::setupContextMenu()
 
     action = m_actionManager->addAction(ActionId::ZoomOut, tr("Zoom &Out"),
                                         m_preferences->shortcut(ActionId::ZoomOut,
-                                                              QStringLiteral("Ctrl+Shift+-")),
+                                                                QStringLiteral("Ctrl+Shift+-")),
                                         QIcon::fromTheme(QStringLiteral("zoom-out")));
     connect(action, &QAction::triggered, [this]() {
         currentTerminal()->impl()->zoomOut();
@@ -333,7 +333,7 @@ void MainWindow::setupContextMenu()
 
     action = m_actionManager->addAction(ActionId::ZoomReset, tr("&Reset Zoom"),
                                         m_preferences->shortcut(ActionId::ZoomReset,
-                                                              QStringLiteral("Ctrl+Shift+0")),
+                                                                QStringLiteral("Ctrl+Shift+0")),
                                         QIcon::fromTheme(QStringLiteral("zoom-original")));
     connect(action, &QAction::triggered, [this]() {
         currentTerminal()->impl()->zoomReset();
@@ -347,14 +347,14 @@ void MainWindow::setupContextMenu()
 
     action = m_actionManager->addAction(ActionId::SplitHorizontally, tr("Split &Horizontally"),
                                         m_preferences->shortcut(ActionId::SplitHorizontally,
-                                                              QStringLiteral("Ctrl+Shift+H")));
+                                                                QStringLiteral("Ctrl+Shift+H")));
     connect(action, &QAction::triggered, m_ui->consoleTabulator, &TabWidget::splitHorizontally);
     addAction(action);
     m_contextMenu->addAction(action);
 
     action = m_actionManager->addAction(ActionId::SplitVertically, tr("Split &Vertically"),
                                         m_preferences->shortcut(ActionId::SplitVertically,
-                                                              QStringLiteral("Ctrl+Shift+V")));
+                                                                QStringLiteral("Ctrl+Shift+V")));
     connect(action, &QAction::triggered, m_ui->consoleTabulator, &TabWidget::splitVertically);
     addAction(action);
     m_contextMenu->addAction(action);
@@ -381,13 +381,13 @@ void MainWindow::setupWindowActions()
     QAction *action;
     action = m_actionManager->addAction(ActionId::NextTab, tr("Next Tab"),
                                         m_preferences->shortcut(ActionId::NextTab,
-                                                              QStringLiteral("Ctrl+Shift+Tab")));
+                                                                QStringLiteral("Ctrl+Shift+Tab")));
     connect(action, &QAction::triggered, m_ui->consoleTabulator, &TabWidget::switchToRight);
     addAction(action);
 
     action = m_actionManager->addAction(ActionId::PreviousTab, tr("Previous Tab"),
                                         m_preferences->shortcut(ActionId::PreviousTab,
-                                                              QStringLiteral("Ctrl+Shift+Alt+Tab")));
+                                                                QStringLiteral("Ctrl+Shift+Alt+Tab")));
     connect(action, &QAction::triggered, m_ui->consoleTabulator, &TabWidget::switchToLeft);
     addAction(action);
 }
