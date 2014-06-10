@@ -55,10 +55,6 @@ public:
 
     bool useCWD;
 
-    bool useBookmarks;
-    bool bookmarksVisible;
-    QString bookmarksFile;
-
     QKeySequence dropShortCut;
     bool dropKeepOpen;
     bool dropShowOnStart;

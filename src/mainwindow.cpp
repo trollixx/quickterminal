@@ -22,11 +22,9 @@
 
 #include "actionmanager.h"
 #include "termwidgetholder.h"
-#include "config.h"
 #include "constants.h"
 #include "preferences.h"
 #include "preferencesdialog.h"
-#include "bookmarkswidget.h"
 
 #include <QDesktopWidget>
 #include <QDockWidget>
@@ -52,17 +50,6 @@ MainWindow::MainWindow(const QString &work_dir, const QString &command, bool dro
     setAttribute(Qt::WA_DeleteOnClose);
 
     m_ui->setupUi(this);
-
-    m_bookmarksDock = new QDockWidget(tr("Bookmarks"), this);
-    m_bookmarksDock->setObjectName("bookmarksDock");
-    BookmarksWidget *bookmarksWidget = new BookmarksWidget(m_bookmarksDock);
-    m_bookmarksDock->setWidget(bookmarksWidget);
-    addDockWidget(Qt::LeftDockWidgetArea, m_bookmarksDock);
-    connect(bookmarksWidget, SIGNAL(callCommand(QString)),
-            this, SLOT(bookmarksWidget_callCommand(QString)));
-
-    connect(m_bookmarksDock, SIGNAL(visibilityChanged(bool)),
-            this, SLOT(bookmarksDock_visibilityChanged(bool)));
 
     connect(Preferences::instance(), &Preferences::changed,
             this, &MainWindow::preferencesChanged);
@@ -273,17 +260,6 @@ void MainWindow::setupViewMenu()
     connect(action, &QAction::triggered, this, &MainWindow::toggleTabBar);
     addAction(action);
     m_ui->viewMenu->addAction(action);
-
-    QSettings settings;
-    settings.beginGroup("Shortcuts");
-    Preferences::instance()->actions[TOGGLE_BOOKMARKS] = m_bookmarksDock->toggleViewAction();
-    QKeySequence seq
-            = QKeySequence::fromString(settings.value(TOGGLE_BOOKMARKS,
-                                                      TOGGLE_BOOKMARKS_SHORTCUT).toString());
-    Preferences::instance()->actions[TOGGLE_BOOKMARKS]->setShortcut(seq);
-    m_ui->viewMenu->addAction(Preferences::instance()->actions[TOGGLE_BOOKMARKS]);
-    addAction(Preferences::instance()->actions[TOGGLE_BOOKMARKS]);
-    settings.endGroup();
 
     m_ui->viewMenu->addSeparator();
 
@@ -517,12 +493,6 @@ void MainWindow::preferencesChanged()
     m_ui->consoleTabulator->preferencesChanged();
 
     m_ui->menuBar->setVisible(Preferences::instance()->menuVisible);
-    m_bookmarksDock->setVisible(Preferences::instance()->useBookmarks
-                                && Preferences::instance()->bookmarksVisible);
-    m_bookmarksDock->toggleViewAction()->setVisible(Preferences::instance()->useBookmarks);
-
-    if (Preferences::instance()->useBookmarks)
-        qobject_cast<BookmarksWidget *>(m_bookmarksDock->widget())->setup();
 
     Preferences::instance()->save();
     realign();
@@ -616,17 +586,6 @@ void MainWindow::newTerminalWindow()
 {
     MainWindow *w = new MainWindow(m_initWorkDir, m_initShell, false);
     w->show();
-}
-
-void MainWindow::bookmarksWidget_callCommand(const QString &cmd)
-{
-    currentTerminal()->impl()->sendText(cmd);
-    currentTerminal()->setFocus();
-}
-
-void MainWindow::bookmarksDock_visibilityChanged(bool visible)
-{
-    Preferences::instance()->bookmarksVisible = visible;
 }
 
 TermWidget *MainWindow::currentTerminal() const

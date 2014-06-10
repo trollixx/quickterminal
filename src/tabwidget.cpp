@@ -20,7 +20,6 @@
 
 #include "tabwidget.h"
 
-#include "config.h"
 #include "preferences.h"
 #include "termwidgetholder.h"
 

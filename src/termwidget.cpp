@@ -1,6 +1,5 @@
 #include "termwidget.h"
 
-#include "config.h"
 #include "preferences.h"
 
 #include <QDebug>

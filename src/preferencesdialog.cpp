@@ -91,11 +91,6 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     dropHeightSpinBox->setValue(preferences->dropHeight);
     dropWidthSpinBox->setValue(preferences->dropWidht);
     dropShortCutEdit->setText(preferences->dropShortCut.toString());
-
-    useBookmarksCheckBox->setChecked(preferences->useBookmarks);
-    bookmarksLineEdit->setText(preferences->bookmarksFile);
-    openBookmarksFile(preferences->bookmarksFile);
-    connect(bookmarksButton, SIGNAL(clicked()), SLOT(bookmarksButton_clicked()));
 }
 
 void PreferencesDialog::accept()
@@ -141,10 +136,6 @@ void PreferencesDialog::apply()
     preferences->dropHeight = dropHeightSpinBox->value();
     preferences->dropWidht = dropWidthSpinBox->value();
     preferences->dropShortCut = QKeySequence(dropShortCutEdit->text());
-
-    preferences->useBookmarks = useBookmarksCheckBox->isChecked();
-    preferences->bookmarksFile = bookmarksLineEdit->text();
-    saveBookmarksFile(preferences->bookmarksFile);
 
     preferences->emitChanged();
 }

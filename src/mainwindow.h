@@ -60,8 +60,6 @@ private slots:
     void setKeepOpen(bool value);
 
     void newTerminalWindow();
-    void bookmarksWidget_callCommand(const QString &);
-    void bookmarksDock_visibilityChanged(bool visible);
 
 private:
     inline TermWidget *currentTerminal() const;
@@ -89,8 +87,6 @@ private:
 
     QString m_initShell;
     QString m_initWorkDir;
-
-    QDockWidget *m_bookmarksDock;
 
     QToolButton *m_dropLockButton = nullptr;
     bool m_dropMode;

@@ -1,7 +1,5 @@
 #include "preferences.h"
 
-#include "config.h"
-
 #include <QAction>
 #include <QApplication>
 #include <QFileInfo>
@@ -85,13 +83,6 @@ void Preferences::load()
     askOnExit = m_settings->value("AskOnExit", true).toBool();
     useCWD = m_settings->value("UseCWD", false).toBool();
 
-    // bookmarks
-    useBookmarks = m_settings->value("UseBookmarks", false).toBool();
-    bookmarksVisible = m_settings->value("BookmarksVisible", true).toBool();
-    bookmarksFile = m_settings->value("BookmarksFile", QFileInfo(
-                                          m_settings->fileName()).canonicalPath()
-                                      +"/qterminal_bookmarks.xml").toString();
-
     m_settings->beginGroup("DropMode");
     dropShortCut = QKeySequence(m_settings->value("ShortCut", "F12").toString());
     dropKeepOpen = m_settings->value("KeepOpen", false).toBool();
@@ -145,11 +136,6 @@ void Preferences::save()
     m_settings->setValue("MenuVisible", menuVisible);
     m_settings->setValue("AskOnExit", askOnExit);
     m_settings->setValue("UseCWD", useCWD);
-
-    // bookmarks
-    m_settings->setValue("UseBookmarks", useBookmarks);
-    m_settings->setValue("BookmarksVisible", bookmarksVisible);
-    m_settings->setValue("BookmarksFile", bookmarksFile);
 
     m_settings->beginGroup("DropMode");
     m_settings->setValue("ShortCut", dropShortCut.toString());
