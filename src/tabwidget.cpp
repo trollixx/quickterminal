@@ -130,16 +130,6 @@ void TabWidget::renameSession()
         setTabText(currentIndex(), text);
 }
 
-void TabWidget::renameTabsAfterRemove()
-{
-    // it breaks custom names - it replaces original/custom title with shell no #
-#if 0
-    for (int i = 0; i < count(); i++)
-        setTabText(i, QString(tr("Shell No. %1")).arg(i+1));
-
-#endif
-}
-
 bool TabWidget::eventFilter(QObject *obj, QEvent *event)
 {
     if (event->type() == QEvent::MouseButtonDblClick) {
@@ -186,7 +176,6 @@ void TabWidget::removeTab(int index)
     if (count() == 0)
         emit closeTabNotification();
 
-    renameTabsAfterRemove();
     showHideTabBar();
 }
 
