@@ -153,6 +153,11 @@ QFont Preferences::defaultFont() const
     return font;
 }
 
+bool Preferences::hasShortcut(const QString &actionId) const
+{
+    return m_shortcuts.contains(actionId);
+}
+
 QKeySequence Preferences::shortcut(const QString &actionId, const QKeySequence &fallback) const
 {
     return m_shortcuts.value(actionId, fallback);
@@ -161,6 +166,16 @@ QKeySequence Preferences::shortcut(const QString &actionId, const QKeySequence &
 void Preferences::setShortcut(const QString &actionId, const QKeySequence &shortcut)
 {
     m_shortcuts.insert(actionId, shortcut);
+}
+
+void Preferences::deleteShortcut(const QString &actionId)
+{
+    m_shortcuts.remove(actionId);
+}
+
+QStringList Preferences::shortcutActions() const
+{
+    return m_shortcuts.keys();
 }
 
 void Preferences::emitChanged()

@@ -6,7 +6,7 @@ namespace ActionId {
 const char About[] = "QTerminal.Application.About";
 const char AboutQt[] = "QTerminal.Application.AboutQt";
 const char Preferences[] = "QTerminal.Application.Preferences";
-const char Quit[] = "QTerminal.Application.Quit";
+const char Exit[] = "QTerminal.Application.Exit";
 
 // Window
 const char NewWindow[] = "QTerminal.Window.New";

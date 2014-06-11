@@ -4,41 +4,37 @@
 
 #include <QAction>
 
+QHash<QString, ActionInfo> ActionManager::m_actionRegistry;
 QList<ActionManager *> ActionManager::m_instances;
 
 ActionManager::ActionManager(QWidget *parent) :
     QObject(parent)
 {
+    auto it = m_actionRegistry.cbegin();
+    while (it != m_actionRegistry.cend()) {
+        const ActionInfo actionInfo = it.value();
+        QAction *action = new QAction(actionInfo.icon, actionInfo.text, this);
+        if (actionInfo.shortcut.isEmpty())
+            action->setShortcut(actionInfo.defaultShortcut);
+        else
+            action->setShortcut(actionInfo.shortcut);
+        m_actions.insert(it.key(), action);
+        ++it;
+    }
+
     m_instances.append(this);
 }
 
 ActionManager::~ActionManager()
 {
+    qDeleteAll(m_actions);
     m_instances.removeAll(this);
-}
-
-void ActionManager::addAction(const QString &id, QAction *action)
-{
-    Q_ASSERT(!m_actions.contains(id));
-    action->setParent(this);
-    m_actions.insert(id, action);
-}
-
-QAction *ActionManager::addAction(const QString &id, const QString &text,
-                                  const QKeySequence &shortcut, const QIcon &icon)
-{
-    QAction *action = new QAction(icon, text, this);
-    action->setShortcut(shortcut);
-    addAction(id, action);
-    return action;
 }
 
 QAction *ActionManager::action(const QString &id) const
 {
-    if (!m_actions.contains(id)) {
-        qWarning("Action '%s' not found!", qPrintable(id));
+    if (!m_actions.contains(id))
         return nullptr;
-    }
 
     return m_actions.value(id);
 }
@@ -56,8 +52,51 @@ ActionManager *ActionManager::instance(QWidget *widget)
     return nullptr;
 }
 
+QList<ActionInfo> ActionManager::registry()
+{
+    return m_actionRegistry.values();
+}
+
+bool ActionManager::registerAction(const QString &id, const ActionInfo &info)
+{
+    if (m_actionRegistry.contains(id)) {
+        qWarning("Action '%s' has been already registered.", qPrintable(id));
+        return false;
+    }
+    m_actionRegistry.insert(id, info);
+    return true;
+}
+
+bool ActionManager::registerAction(const QString &id, const QString &text,
+                                   const QKeySequence &defaultShortcut, const QIcon &icon)
+{
+    ActionInfo actionInfo;
+    actionInfo.text = text;
+    actionInfo.defaultShortcut = defaultShortcut;
+    actionInfo.icon = icon;
+    return registerAction(id, actionInfo);
+}
+
+bool ActionManager::registerAction(const QString &id, const QString &text, const QIcon &icon)
+{
+    return registerAction(id, text, QKeySequence(), icon);
+}
+
 void ActionManager::updateShortcut(const QString &id, const QKeySequence &shortcut)
 {
+    if (!m_actionRegistry.contains(id))
+        return;
+
+    ActionInfo actionInfo = m_actionRegistry.value(id);
+
+    if (shortcut == actionInfo.shortcut)
+        return;
+
+    if (shortcut == actionInfo.defaultShortcut) {
+        actionInfo.shortcut = QKeySequence();
+        m_actionRegistry.insert(id, actionInfo);
+    }
+
     foreach (ActionManager *am, m_instances) {
         if (!am->m_actions.contains(id)) {
             // This should never happen
@@ -66,4 +105,11 @@ void ActionManager::updateShortcut(const QString &id, const QKeySequence &shortc
         }
         am->m_actions.value(id)->setShortcut(shortcut);
     }
+}
+
+QString ActionManager::clearActionText(const QString &text)
+{
+    QString str(text);
+    /// TODO: Handle multiple ampersands
+    return str.remove(QStringLiteral("&"));
 }

@@ -1,5 +1,6 @@
 #include "application.h"
 
+#include "actionmanager.h"
 #include "constants.h"
 #include "mainwindow.h"
 #include "preferences.h"
@@ -11,12 +12,15 @@
 #include <qxtglobalshortcut.h>
 
 Application::Application(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    m_preferences(Preferences::instance())
 {
     connect(Preferences::instance(), &Preferences::changed,
             this, &Application::preferencesChanged);
 
     parseOptions();
+    setupActions();
+    loadUserShortcuts();
     createWindow();
 }
 
@@ -60,6 +64,7 @@ void Application::quit()
 
 void Application::preferencesChanged()
 {
+    loadUserShortcuts();
     setDropShortcut(Preferences::instance()->dropShortCut);
 }
 
@@ -100,6 +105,78 @@ void Application::parseOptions()
     m_workingDir = parser.value(workingDirectoryOption);
 }
 
+void Application::setupActions()
+{
+    // Application
+    ActionManager::registerAction(ActionId::About, tr("About QTerminal"),
+                                  QIcon::fromTheme(QStringLiteral("help-about")));
+    ActionManager::registerAction(ActionId::AboutQt, tr("About Qt"));
+    ActionManager::registerAction(ActionId::Preferences, tr("Preferences"),
+                                  QKeySequence(QStringLiteral("Ctrl+Shift+P")),
+                                  QIcon::fromTheme(QStringLiteral("preferences-desktop")));
+    ActionManager::registerAction(ActionId::Exit, tr("E&xit"),
+                                  QKeySequence(QStringLiteral("Ctrl+Shift+X")),
+                                  QIcon::fromTheme(QStringLiteral("application-exit")));
+
+    // Window
+    ActionManager::registerAction(ActionId::NewWindow, tr("New &Window..."),
+                                  QKeySequence(QStringLiteral("Ctrl+Shift+N")),
+                                  QIcon::fromTheme(QStringLiteral("window-new")));
+    ActionManager::registerAction(ActionId::CloseWindow, tr("Close Window..."),
+                                  QKeySequence(QStringLiteral("Ctrl+Shift+Q")),
+                                  QIcon::fromTheme(QStringLiteral("window-close")));
+    ActionManager::registerAction(ActionId::ShowMenu, tr("Show &Menu"),
+                                  QKeySequence(QStringLiteral("Ctrl+Shift+M")));
+    ActionManager::registerAction(ActionId::ShowTabs, tr("Show &Tabs"));
+
+    // Tab
+    ActionManager::registerAction(ActionId::NewTab, tr("New &Tab..."),
+                                  QKeySequence(QStringLiteral("Ctrl+Shift+T")),
+                                  QIcon::fromTheme(QStringLiteral("tab-new")));
+    ActionManager::registerAction(ActionId::CloseTab, tr("Close Tab"),
+                                  QKeySequence(QStringLiteral("Ctrl+Shift+W")));
+    ActionManager::registerAction(ActionId::NextTab, tr("Next Tab"),
+                                  QKeySequence(QStringLiteral("Ctrl+Shift+Tab")));
+    ActionManager::registerAction(ActionId::PreviousTab, tr("Previous Tab"),
+                                  QKeySequence(QStringLiteral("Ctrl+Shift+Alt+Tab")));
+
+    // Terminal
+    ActionManager::registerAction(ActionId::SplitHorizontally, tr("Split &Horizontally"),
+                                  QKeySequence(QStringLiteral("Ctrl+Shift+H")));
+    ActionManager::registerAction(ActionId::SplitVertically, tr("Split &Vertically"),
+                                  QKeySequence(QStringLiteral("Ctrl+Shift+V")));
+    ActionManager::registerAction(ActionId::CloseTerminal, tr("Close"),
+                                  QKeySequence(QStringLiteral("Ctrl+Shift+D")),
+                                  QIcon::fromTheme(QStringLiteral("window-close")));
+    ActionManager::registerAction(ActionId::Copy, tr("&Copy"),
+                                  QKeySequence(QStringLiteral("Ctrl+Ins")),
+                                  QIcon::fromTheme(QStringLiteral("edit-copy")));
+    ActionManager::registerAction(ActionId::Paste, tr("&Paste"),
+                                  QKeySequence(QStringLiteral("Shift+Ins")),
+                                  QIcon::fromTheme(QStringLiteral("edit-paste")));
+    ActionManager::registerAction(ActionId::PasteSelection, tr("Paste &Selection"),
+                                  QKeySequence(QStringLiteral("Ctrl+Shift+Ins")),
+                                  QIcon::fromTheme(QStringLiteral("edit-paste")));
+    ActionManager::registerAction(ActionId::Clear, tr("C&lear"),
+                                  QKeySequence(QStringLiteral("Ctrl+Shift+C")),
+                                  QIcon::fromTheme(QStringLiteral("edit-clear")));
+    ActionManager::registerAction(ActionId::SelectAll, tr("Select &All"),
+                                  QKeySequence(QStringLiteral("Ctrl+Shift+A")),
+                                  QIcon::fromTheme(QStringLiteral("edit-select-all")));
+    ActionManager::registerAction(ActionId::Find, tr("&Find"),
+                                  QKeySequence(QStringLiteral("Ctrl+Shift+F")),
+                                  QIcon::fromTheme(QStringLiteral("edit-find")));
+    ActionManager::registerAction(ActionId::ZoomIn, tr("Zoom &In"),
+                                  QKeySequence(QStringLiteral("Ctrl+Shift++")),
+                                  QIcon::fromTheme(QStringLiteral("zoom-in")));
+    ActionManager::registerAction(ActionId::ZoomOut, tr("Zoom &Out"),
+                                  QKeySequence(QStringLiteral("Ctrl+Shift+-")),
+                                  QIcon::fromTheme(QStringLiteral("zoom-out")));
+    ActionManager::registerAction(ActionId::ZoomReset, tr("&Reset Zoom"),
+                                  QKeySequence(QStringLiteral("Ctrl+Shift+0")),
+                                  QIcon::fromTheme(QStringLiteral("zoom-original")));
+}
+
 void Application::setDropShortcut(const QKeySequence &shortcut)
 {
     if (!m_dropMode || m_dropShortcut->shortcut() == shortcut)
@@ -107,4 +184,10 @@ void Application::setDropShortcut(const QKeySequence &shortcut)
 
     m_dropShortcut->setShortcut(shortcut);
     qWarning("Press \"%s\" to see the terminal.", qPrintable(shortcut.toString()));
+}
+
+void Application::loadUserShortcuts()
+{
+    foreach (const QString &id, m_preferences->shortcutActions())
+        ActionManager::updateShortcut(id, m_preferences->shortcut(id));
 }

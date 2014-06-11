@@ -20,8 +20,12 @@ public:
 
     QFont defaultFont() const;
 
-    QKeySequence shortcut(const QString &actionId, const QKeySequence &fallback = QKeySequence()) const;
+    bool hasShortcut(const QString &actionId) const;
+    QKeySequence shortcut(const QString &actionId,
+                          const QKeySequence &fallback = QKeySequence()) const;
     void setShortcut(const QString &actionId, const QKeySequence &shortcut);
+    void deleteShortcut(const QString &actionId);
+    QStringList shortcutActions() const;
 
     QByteArray mainWindowGeometry;
     QByteArray mainWindowState;
