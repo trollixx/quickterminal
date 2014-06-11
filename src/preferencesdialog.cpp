@@ -1,5 +1,6 @@
 #include "preferencesdialog.h"
 
+#include "actionmanager.h"
 #include "preferences.h"
 
 #include <qtermwidget.h>
@@ -88,6 +89,25 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     dropHeightSpinBox->setValue(preferences->dropHeight);
     dropWidthSpinBox->setValue(preferences->dropWidht);
     dropShortCutEdit->setText(preferences->dropShortCut.toString());
+
+
+    actionTreeWidget->sortByColumn(0, Qt::AscendingOrder);
+
+    QFont userEditedShortcutFont;
+    userEditedShortcutFont.setBold(true);
+    userEditedShortcutFont.setItalic(true);
+
+    // Populate shortcuts
+    foreach (const ActionInfo &actionInfo, ActionManager::registry()) {
+        QTreeWidgetItem *item = new QTreeWidgetItem(actionTreeWidget);
+        item->setText(0, ActionManager::clearActionText(actionInfo.text));
+        if (actionInfo.shortcut.isEmpty()) {
+            item->setText(1, actionInfo.defaultShortcut.toString());
+        } else {
+            item->setFont(1, userEditedShortcutFont);
+            item->setText(1, actionInfo.shortcut.toString());
+        }
+    }
 }
 
 void PreferencesDialog::accept()
@@ -127,12 +147,12 @@ void PreferencesDialog::apply()
 
     saveShortcuts();
 
-    preferences->save();
-
     preferences->dropShowOnStart = dropShowOnStartCheckBox->isChecked();
     preferences->dropHeight = dropHeightSpinBox->value();
     preferences->dropWidht = dropWidthSpinBox->value();
     preferences->dropShortCut = QKeySequence(dropShortCutEdit->text());
+
+    preferences->save();
 
     preferences->emitChanged();
 }
@@ -158,68 +178,3 @@ void PreferencesDialog::saveShortcuts()
 {
     /// TODO: ActionManager support
 }
-
-void PreferencesDialog::recordAction(int row, int column)
-{
-    oldAccelText = shortcutsWidget->item(row, column)->text();
-}
-
-void PreferencesDialog::validateAction(int row, int column)
-{
-    QTableWidgetItem *item = shortcutsWidget->item(row, column);
-    QString accelText = QKeySequence(item->text()).toString();
-
-    if (accelText.isEmpty() && !item->text().isEmpty())
-        item->setText(oldAccelText);
-    else
-        item->setText(accelText);
-}
-
-/*
-void PreferencesDialog::setupShortcuts()
-{
-    QList<QString> shortcutKeys = Preferences::instance()->shortcuts.keys();
-    int shortcutCount = shortcutKeys.count();
-
-    shortcutsWidget->setRowCount( shortcutCount );
-
-    for( int x=0; x < shortcutCount; x++ )
-    {
-        QString keyValue = shortcutKeys.at(x);
-
-        QLabel *lblShortcut = new QLabel( keyValue, this );
-        QPushButton *btnLaunch = new QPushButton( Preferences::instance()->shortcuts.value( keyValue ), this );
-
-        btnLaunch->setObjectName(keyValue);
-        connect( btnLaunch, SIGNAL(clicked()), this, SLOT(shortcutPrompt()) );
-
-        shortcutsWidget->setCellWidget( x, 0, lblShortcut );
-        shortcutsWidget->setCellWidget( x, 1, btnLaunch );
-    }
-}
-
-void PreferencesDialog::shortcutPrompt()
-{
-    QObject *objectSender = sender();
-
-    if( !objectSender )
-        return;
-
-    QString name = objectSender->objectName();
-    qDebug() << "shortcutPrompt(" << name << ")";
-
-    DialogShortcut *dlgShortcut = new DialogShortcut(this);
-    dlgShortcut->setTitle( tr("Select a key sequence for %1").arg(name) );
-
-    QString sequenceString = Preferences::instance()->shortcuts[name];
-    dlgShortcut->setKey(sequenceString);
-
-    int result = dlgShortcut->exec();
-    if( result == QDialog::Accepted )
-    {
-        sequenceString = dlgShortcut->getKey();
-        Preferences::instance()->shortcuts[name] = sequenceString;
-        Preferences::instance()->saveSettings();
-    }
-}
-*/

@@ -9,12 +9,8 @@ class PreferencesDialog : public QDialog, public Ui::PreferencesDialog
 public:
     explicit PreferencesDialog(QWidget *parent = nullptr);
 
-protected:
-    void saveShortcuts();
-    void recordAction(int row, int column);
-    void validateAction(int row, int column);
-
 private slots:
+    void saveShortcuts();
     void apply();
     void accept() override;
 
@@ -22,8 +18,6 @@ private slots:
 
 private:
     void setFontSample(const QFont &f);
-
-    QString oldAccelText; // Placeholder when editing shortcut
 };
 
 #endif // PREFERENCESDIALOG_H
