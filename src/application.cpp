@@ -92,7 +92,7 @@ void Application::parseOptions()
     QCommandLineOption workingDirectoryOption(
     {QStringLiteral("w"), QStringLiteral("working-directory")},
                 QStringLiteral("Set the working directory"),
-                QStringLiteral("DIR"), QDir::homePath());
+                QStringLiteral("DIR"), QDir::currentPath());
     parser.addOption(workingDirectoryOption);
 
     parser.addHelpOption();
