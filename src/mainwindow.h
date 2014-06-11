@@ -35,9 +35,11 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit MainWindow(const QString &workingDir, const QString &command, bool dropMode,
+    explicit MainWindow(const QString &workingDir, const QString &command,
                         QWidget *parent = nullptr, Qt::WindowFlags f = 0);
     ~MainWindow();
+
+    void enableDropMode();
 
 signals:
     void newWindow();
@@ -69,7 +71,6 @@ private:
     void setupContextMenu();
     void setupWindowActions();
 
-    void enableDropMode();
     void realign();
 
     Ui::MainWindow *m_ui = nullptr;

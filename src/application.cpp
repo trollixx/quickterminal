@@ -32,7 +32,7 @@ Application::~Application()
 
 void Application::createWindow()
 {
-    MainWindow *window = new MainWindow(m_workingDir, m_command, m_dropMode);
+    MainWindow *window = new MainWindow(m_workingDir, m_command);
 
     connect(window, &MainWindow::newWindow, this, &Application::createWindow);
     connect(window, &MainWindow::quit, this, &Application::quit);
@@ -50,6 +50,7 @@ void Application::createWindow()
             else
                 window->show();
         });
+        window->enableDropMode();
         if (!Preferences::instance()->dropShowOnStart)
             return;
     }

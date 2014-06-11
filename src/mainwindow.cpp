@@ -31,13 +31,12 @@
 #include <QMessageBox>
 #include <QToolButton>
 
-MainWindow::MainWindow(const QString &workingDir, const QString &command, bool dropMode,
-                       QWidget *parent, Qt::WindowFlags f) :
+MainWindow::MainWindow(const QString &workingDir, const QString &command, QWidget *parent,
+                       Qt::WindowFlags f) :
     QMainWindow(parent, f),
     m_ui(new Ui::MainWindow),
     m_preferences(Preferences::instance()),
-    m_actionManager(new ActionManager(this)),
-    m_dropMode(dropMode)
+    m_actionManager(new ActionManager(this))
 {
     /// TODO: Check why it is not set by default
     setAttribute(Qt::WA_DeleteOnClose);
@@ -47,12 +46,8 @@ MainWindow::MainWindow(const QString &workingDir, const QString &command, bool d
     connect(m_preferences, &Preferences::changed, this, &MainWindow::preferencesChanged);
 
     setContentsMargins(0, 0, 0, 0);
-    if (m_dropMode) {
-        enableDropMode();
-    } else {
-        restoreGeometry(m_preferences->mainWindowGeometry);
-        restoreState(m_preferences->mainWindowState);
-    }
+    restoreGeometry(m_preferences->mainWindowGeometry);
+    restoreState(m_preferences->mainWindowState);
 
     connect(m_ui->consoleTabulator, SIGNAL(closeTabNotification()), SLOT(close()));
     m_ui->consoleTabulator->setWorkDirectory(workingDir);
@@ -78,6 +73,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::enableDropMode()
 {
+    m_dropMode = true;
     setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint | Qt::CustomizeWindowHint);
     setStyleSheet(QStringLiteral("MainWindow {border: 1px solid rgba(0, 0, 0, 50%);}\n"));
 
