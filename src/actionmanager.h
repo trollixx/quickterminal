@@ -29,6 +29,7 @@ public:
     static ActionManager *instance(QWidget *widget);
 
     static QList<ActionInfo> registry();
+    static ActionInfo actionInfo(const QString &id);
     static bool registerAction(const QString &id, const ActionInfo &info);
     static bool registerAction(const QString &id, const QString &text,
                                const QKeySequence &defaultShortcut = QKeySequence(),

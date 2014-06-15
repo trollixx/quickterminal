@@ -54,6 +54,11 @@ QList<ActionInfo> ActionManager::registry()
     return m_actionRegistry.values();
 }
 
+ActionInfo ActionManager::actionInfo(const QString &id)
+{
+    return m_actionRegistry.value(id);
+}
+
 bool ActionManager::registerAction(const QString &id, const ActionInfo &info)
 {
     if (m_actionRegistry.contains(id)) {
@@ -61,6 +66,7 @@ bool ActionManager::registerAction(const QString &id, const ActionInfo &info)
         return false;
     }
     m_actionRegistry.insert(id, info);
+    /// TODO: Add actions to all instances
     return true;
 }
 
