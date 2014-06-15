@@ -14,10 +14,7 @@ ActionManager::ActionManager(QWidget *parent) :
     while (it != m_actionRegistry.cend()) {
         const ActionInfo actionInfo = it.value();
         QAction *action = new QAction(actionInfo.icon, actionInfo.text, this);
-        if (actionInfo.shortcut.isEmpty())
-            action->setShortcut(actionInfo.defaultShortcut);
-        else
-            action->setShortcut(actionInfo.shortcut);
+        action->setShortcut(actionInfo.shortcut);
         m_actions.insert(it.key(), action);
         ++it;
     }
@@ -72,7 +69,7 @@ bool ActionManager::registerAction(const QString &id, const QString &text,
 {
     ActionInfo actionInfo;
     actionInfo.text = text;
-    actionInfo.defaultShortcut = defaultShortcut;
+    actionInfo.defaultShortcut = actionInfo.shortcut = defaultShortcut;
     actionInfo.icon = icon;
     return registerAction(id, actionInfo);
 }
@@ -92,10 +89,8 @@ void ActionManager::updateShortcut(const QString &id, const QKeySequence &shortc
     if (shortcut == actionInfo.shortcut)
         return;
 
-    if (shortcut == actionInfo.defaultShortcut) {
-        actionInfo.shortcut = QKeySequence();
-        m_actionRegistry.insert(id, actionInfo);
-    }
+    actionInfo.shortcut = shortcut;
+    m_actionRegistry.insert(id, actionInfo);
 
     foreach (ActionManager *am, m_instances) {
         if (!am->m_actions.contains(id)) {
