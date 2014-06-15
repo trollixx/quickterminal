@@ -5,7 +5,6 @@
 #include "mainwindow.h"
 #include "preferences.h"
 
-#include <QAction>
 #include <QCommandLineParser>
 #include <QDir>
 
