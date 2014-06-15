@@ -10,6 +10,7 @@ class QAction;
 class QWidget;
 
 struct ActionInfo {
+    QString id;
     QString text;
     QKeySequence defaultShortcut;
     QKeySequence shortcut;

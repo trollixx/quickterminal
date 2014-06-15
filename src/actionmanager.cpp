@@ -68,6 +68,7 @@ bool ActionManager::registerAction(const QString &id, const QString &text,
                                    const QKeySequence &defaultShortcut, const QIcon &icon)
 {
     ActionInfo actionInfo;
+    actionInfo.id = id;
     actionInfo.text = text;
     actionInfo.defaultShortcut = actionInfo.shortcut = defaultShortcut;
     actionInfo.icon = icon;
