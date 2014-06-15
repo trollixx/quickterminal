@@ -10,15 +10,6 @@ QList<ActionManager *> ActionManager::m_instances;
 ActionManager::ActionManager(QWidget *parent) :
     QObject(parent)
 {
-    auto it = m_actionRegistry.cbegin();
-    while (it != m_actionRegistry.cend()) {
-        const ActionInfo actionInfo = it.value();
-        QAction *action = new QAction(actionInfo.icon, actionInfo.text, this);
-        action->setShortcut(actionInfo.shortcut);
-        m_actions.insert(it.key(), action);
-        ++it;
-    }
-
     m_instances.append(this);
 }
 
@@ -30,8 +21,17 @@ ActionManager::~ActionManager()
 
 QAction *ActionManager::action(const QString &id) const
 {
-    if (!m_actions.contains(id))
+    if (!m_actionRegistry.contains(id))
         return nullptr;
+
+    if (!m_actions.contains(id)) {
+        /// TODO: Find a less hacky solution, should it really be a const method?
+        ActionManager *self = const_cast<ActionManager *>(this);
+        const ActionInfo actionInfo = m_actionRegistry.value(id);
+        QAction *action = new QAction(actionInfo.icon, actionInfo.text, self);
+        action->setShortcut(actionInfo.shortcut);
+        self->m_actions.insert(id, action);
+    }
 
     return m_actions.value(id);
 }
@@ -66,7 +66,6 @@ bool ActionManager::registerAction(const QString &id, const ActionInfo &info)
         return false;
     }
     m_actionRegistry.insert(id, info);
-    /// TODO: Add actions to all instances
     return true;
 }
 
