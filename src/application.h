@@ -28,7 +28,6 @@ private slots:
 private:
     void parseOptions();
     void setupActions();
-    void setDropShortcut(const QKeySequence &shortcut);
     void loadUserShortcuts();
 
     Preferences * const m_preferences = nullptr;

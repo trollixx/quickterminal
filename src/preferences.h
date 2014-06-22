@@ -58,7 +58,6 @@ public:
 
     bool useCWD;
 
-    QKeySequence dropShortCut;
     bool dropKeepOpen;
     bool dropShowOnStart;
     int dropWidht;

@@ -41,7 +41,7 @@ void Application::createWindow()
 
     if (m_dropMode && m_windows.size() == 1) {
         m_dropShortcut = new QxtGlobalShortcut(this);
-        setDropShortcut(Preferences::instance()->dropShortCut);
+        m_dropShortcut->setShortcut(ActionManager::actionInfo(ActionId::ToggleVisibility).shortcut);
         connect(m_dropShortcut, &QxtGlobalShortcut::activated,
                 [window]() {
             if (window->isVisible())
@@ -65,7 +65,6 @@ void Application::quit()
 void Application::preferencesChanged()
 {
     loadUserShortcuts();
-    setDropShortcut(Preferences::instance()->dropShortCut);
 }
 
 void Application::windowDeleted(QObject *object)
@@ -128,6 +127,8 @@ void Application::setupActions()
     ActionManager::registerAction(ActionId::ShowMenu, tr("Show &Menu"),
                                   QKeySequence(QStringLiteral("Ctrl+Shift+M")));
     ActionManager::registerAction(ActionId::ShowTabs, tr("Show &Tabs"));
+    ActionManager::registerAction(ActionId::ToggleVisibility, tr("Toggle Visibility"),
+                                  QKeySequence(QStringLiteral("F12")));
 
     // Tab
     ActionManager::registerAction(ActionId::NewTab, tr("New &Tab..."),
@@ -177,17 +178,10 @@ void Application::setupActions()
                                   QIcon::fromTheme(QStringLiteral("zoom-original")));
 }
 
-void Application::setDropShortcut(const QKeySequence &shortcut)
-{
-    if (!m_dropMode || m_dropShortcut->shortcut() == shortcut)
-        return;
-
-    m_dropShortcut->setShortcut(shortcut);
-    qWarning("Press \"%s\" to see the terminal.", qPrintable(shortcut.toString()));
-}
-
 void Application::loadUserShortcuts()
 {
     foreach (const QString &id, m_preferences->shortcutActions())
         ActionManager::updateShortcut(id, m_preferences->shortcut(id));
+    if (m_dropMode)
+        m_dropShortcut->setShortcut(ActionManager::actionInfo(ActionId::ToggleVisibility).shortcut);
 }

@@ -89,7 +89,6 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     dropShowOnStartCheckBox->setChecked(preferences->dropShowOnStart);
     dropHeightSpinBox->setValue(preferences->dropHeight);
     dropWidthSpinBox->setValue(preferences->dropWidht);
-    dropShortCutEdit->setText(preferences->dropShortCut.toString());
 
     /// Shortcuts Page
     m_keyNum = m_key[0] = m_key[1] = m_key[2] = m_key[3] = 0;
@@ -156,7 +155,6 @@ void PreferencesDialog::apply()
     preferences->dropShowOnStart = dropShowOnStartCheckBox->isChecked();
     preferences->dropHeight = dropHeightSpinBox->value();
     preferences->dropWidht = dropWidthSpinBox->value();
-    preferences->dropShortCut = QKeySequence(dropShortCutEdit->text());
 
     preferences->save();
 

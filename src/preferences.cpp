@@ -83,7 +83,6 @@ void Preferences::load()
     useCWD = m_settings->value("UseCWD", false).toBool();
 
     m_settings->beginGroup("DropMode");
-    dropShortCut = QKeySequence(m_settings->value("ShortCut", "F12").toString());
     dropKeepOpen = m_settings->value("KeepOpen", false).toBool();
     dropShowOnStart = m_settings->value("ShowOnStart", true).toBool();
     dropWidht = m_settings->value("Width", 70).toInt();
@@ -136,7 +135,6 @@ void Preferences::save()
     m_settings->setValue("UseCWD", useCWD);
 
     m_settings->beginGroup("DropMode");
-    m_settings->setValue("ShortCut", dropShortCut.toString());
     m_settings->setValue("KeepOpen", dropKeepOpen);
     m_settings->setValue("ShowOnStart", dropShowOnStart);
     m_settings->setValue("Width", dropWidht);

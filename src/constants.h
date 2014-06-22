@@ -13,6 +13,7 @@ const char NewWindow[] = "QTerminal.Window.New";
 const char CloseWindow[] = "QTerminal.Window.Close";
 const char ShowMenu[] = "QTerminal.Window.ShowMenu";
 const char ShowTabs[] = "QTerminal.Window.ShowTabs";
+const char ToggleVisibility[] = "QTerminal.Window.ToggleVisibility"; // DropDown Mode
 
 // Tab
 const char NewTab[] = "QTerminal.Tab.New";
