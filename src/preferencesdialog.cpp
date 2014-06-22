@@ -36,15 +36,11 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     emulationComboBox->setCurrentIndex(eix != -1 ? eix : 0);
 
     /* scrollbar position */
-    QStringList scrollBarPosList;
-    scrollBarPosList << "No scrollbar" << "Left" << "Right";
-    scrollBarPos_comboBox->addItems(scrollBarPosList);
+    scrollBarPos_comboBox->addItems({ tr("No scrollbar"), tr("Left"), tr("Right") });
     scrollBarPos_comboBox->setCurrentIndex(m_preferences->scrollBarPos);
 
     /* tabs position */
-    QStringList tabsPosList;
-    tabsPosList << "Top" << "Bottom" << "Left" << "Right";
-    tabsPos_comboBox->addItems(tabsPosList);
+    tabsPos_comboBox->addItems({ tr("Top"), tr("Bottom"), tr("Left"), tr("Right") });
     tabsPos_comboBox->setCurrentIndex(m_preferences->tabsPos);
 
     alwaysShowTabsCheckBox->setChecked(m_preferences->alwaysShowTabs);
@@ -53,10 +49,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     showMenuCheckBox->setChecked(m_preferences->menuVisible);
 
     /* actions by motion after paste */
-
-    QStringList motionAfter;
-    motionAfter << "No move" << "Move start" << "Move end";
-    motionAfterPasting_comboBox->addItems(motionAfter);
+    motionAfterPasting_comboBox->addItems({ tr("No move"), tr("Move start"), tr("Move end") });
     motionAfterPasting_comboBox->setCurrentIndex(m_preferences->m_motionAfterPaste);
 
     // Setting windows style actions
@@ -289,6 +282,6 @@ void PreferencesDialog::changeFontButton_clicked()
 void PreferencesDialog::setFontSample(const QFont &f)
 {
     fontSampleLabel->setFont(f);
-    QString sample("%1 %2 pt");
+    QString sample(QStringLiteral("%1 %2 pt"));
     fontSampleLabel->setText(sample.arg(f.family()).arg(f.pointSize()));
 }
