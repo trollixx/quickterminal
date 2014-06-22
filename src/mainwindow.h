@@ -85,6 +85,6 @@ private:
     QMenu *tabPosMenu, *scrollPosMenu;
 
     QToolButton *m_dropLockButton = nullptr;
-    bool m_dropMode;
+    bool m_dropMode = false;
 };
 #endif // MAINWINDOW_H
