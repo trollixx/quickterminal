@@ -225,11 +225,8 @@ void PreferencesDialog::applyShortcuts()
 void PreferencesDialog::handleKeyEvent(QKeyEvent *event)
 {
     int nextKey = event->key();
-    if (m_keyNum > 3 ||
-            nextKey == Qt::Key_Control ||
-            nextKey == Qt::Key_Shift ||
-            nextKey == Qt::Key_Meta ||
-            nextKey == Qt::Key_Alt)
+    if (m_keyNum > 3 || nextKey == Qt::Key_Control || nextKey == Qt::Key_Shift
+            || nextKey == Qt::Key_Meta || nextKey == Qt::Key_Alt)
         return;
 
     nextKey |= translateModifiers(event->modifiers(), event->text());

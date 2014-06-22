@@ -168,7 +168,7 @@ void Preferences::setShortcut(const QString &actionId, const QKeySequence &short
     m_shortcuts.insert(actionId, shortcut);
 }
 
-void Preferences::deleteShortcut(const QString &actionId)
+void Preferences::removeShortcut(const QString &actionId)
 {
     m_shortcuts.remove(actionId);
 }

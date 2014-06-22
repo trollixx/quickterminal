@@ -24,7 +24,7 @@ public:
     QKeySequence shortcut(const QString &actionId,
                           const QKeySequence &fallback = QKeySequence()) const;
     void setShortcut(const QString &actionId, const QKeySequence &shortcut);
-    void deleteShortcut(const QString &actionId);
+    void removeShortcut(const QString &actionId);
     QStringList shortcutActions() const;
 
     QByteArray mainWindowGeometry;
@@ -77,8 +77,6 @@ private:
     Preferences(QObject *parent = nullptr);
     Q_DISABLE_COPY(Preferences)
     ~Preferences() override;
-
-    void migrate();
 
     QSettings *m_settings = nullptr;
     QMap<QString, QKeySequence> m_shortcuts;

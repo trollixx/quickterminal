@@ -1,7 +1,5 @@
 #include "actionmanager.h"
 
-#include "preferences.h"
-
 #include <QAction>
 
 QHash<QString, ActionInfo> ActionManager::m_actionRegistry;
