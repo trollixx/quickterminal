@@ -142,6 +142,8 @@ void Preferences::save()
     m_settings->setValue("Width", dropWidht);
     m_settings->setValue("Height", dropHeight);
     m_settings->endGroup();
+
+    m_settings->sync();
 }
 
 QFont Preferences::defaultFont() const
