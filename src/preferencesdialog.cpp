@@ -248,11 +248,11 @@ int PreferencesDialog::translateModifiers(Qt::KeyboardModifiers state, const QSt
     int result = 0;
     // The shift modifier only counts when it is not used to type a symbol
     // that is only reachable using the shift key anyway
-    if ((state & Qt::ShiftModifier) && (text.size() == 0
-                                        || !text.at(0).isPrint()
-                                        || text.at(0).isLetterOrNumber()
-                                        || text.at(0).isSpace()))
+    if ((state & Qt::ShiftModifier)
+            && (text.size() == 0 || !text.at(0).isPrint()
+                || text.at(0).isLetterOrNumber() || text.at(0).isSpace())) {
         result |= Qt::SHIFT;
+    }
     if (state & Qt::ControlModifier)
         result |= Qt::CTRL;
     if (state & Qt::MetaModifier)
