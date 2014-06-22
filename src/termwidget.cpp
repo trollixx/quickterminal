@@ -3,6 +3,7 @@
 #include "preferences.h"
 
 #include <QDebug>
+#include <QDesktopServices>
 #include <QPainter>
 #include <QVBoxLayout>
 
@@ -119,6 +120,9 @@ TermWidget::TermWidget(const QString &wdir, const QString &shell, QWidget *paren
     connect(m_term, SIGNAL(splitCollapse()), this, SLOT(term_splitCollapse()));
     connect(m_term, SIGNAL(termGetFocus()), this, SLOT(term_termGetFocus()));
     connect(m_term, SIGNAL(termLostFocus()), this, SLOT(term_termLostFocus()));
+    connect(m_term, &QTermWidget::urlActivated, [](const QUrl &url) {
+        QDesktopServices::openUrl(url);
+    });
 }
 
 void TermWidget::propertiesChanged()
