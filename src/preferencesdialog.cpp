@@ -218,7 +218,9 @@ void PreferencesDialog::applyShortcuts()
     for (int i = 0; i < actionTreeWidget->topLevelItemCount(); ++i) {
         QTreeWidgetItem *item = actionTreeWidget->topLevelItem(i);
         const QString actionId = item->data(0, Qt::UserRole).toString();
-        ActionManager::updateShortcut(actionId, QKeySequence(item->text(1)));
+        const QKeySequence ks(item->text(1));
+        ActionManager::updateShortcut(actionId, ks);
+        Preferences::instance()->setShortcut(actionId, ks);
     }
 }
 
