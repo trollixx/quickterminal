@@ -26,7 +26,7 @@ Application::Application(QObject *parent) :
 Application::~Application()
 {
     qDeleteAll(m_windows);
-    Preferences::instance()->deleteLater();
+    Preferences::instance()->save();
 }
 
 void Application::createWindow()
