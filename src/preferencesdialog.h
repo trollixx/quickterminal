@@ -6,6 +6,8 @@
 class QKeyEvent;
 class QTreeWidgetItem;
 
+class Preferences;
+
 class PreferencesDialog : public QDialog, public Ui::PreferencesDialog
 {
     Q_OBJECT
@@ -32,6 +34,7 @@ private:
     void changeFontButton_clicked();
     void setFontSample(const QFont &f);
 
+    Preferences * const m_preferences = nullptr;
     int m_key[4];
     int m_keyNum;
 };

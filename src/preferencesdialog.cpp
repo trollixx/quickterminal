@@ -11,7 +11,8 @@
 #include <QStyleFactory>
 
 PreferencesDialog::PreferencesDialog(QWidget *parent) :
-    QDialog(parent)
+    QDialog(parent),
+    m_preferences(Preferences::instance())
 {
     setupUi(this);
 
@@ -23,72 +24,70 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     QStringList emulations = QTermWidget::availableKeyBindings();
     QStringList colorSchemes = QTermWidget::availableColorSchemes();
 
-    const Preferences * const preferences = Preferences::instance();
-
     listWidget->setCurrentRow(0);
 
     colorSchemaCombo->addItems(colorSchemes);
-    int csix = colorSchemaCombo->findText(preferences->colorScheme);
+    int csix = colorSchemaCombo->findText(m_preferences->colorScheme);
     if (csix != -1)
         colorSchemaCombo->setCurrentIndex(csix);
 
     emulationComboBox->addItems(emulations);
-    int eix = emulationComboBox->findText(preferences->emulation);
+    int eix = emulationComboBox->findText(m_preferences->emulation);
     emulationComboBox->setCurrentIndex(eix != -1 ? eix : 0);
 
     /* scrollbar position */
     QStringList scrollBarPosList;
     scrollBarPosList << "No scrollbar" << "Left" << "Right";
     scrollBarPos_comboBox->addItems(scrollBarPosList);
-    scrollBarPos_comboBox->setCurrentIndex(preferences->scrollBarPos);
+    scrollBarPos_comboBox->setCurrentIndex(m_preferences->scrollBarPos);
 
     /* tabs position */
     QStringList tabsPosList;
     tabsPosList << "Top" << "Bottom" << "Left" << "Right";
     tabsPos_comboBox->addItems(tabsPosList);
-    tabsPos_comboBox->setCurrentIndex(preferences->tabsPos);
+    tabsPos_comboBox->setCurrentIndex(m_preferences->tabsPos);
 
-    alwaysShowTabsCheckBox->setChecked(preferences->alwaysShowTabs);
+    alwaysShowTabsCheckBox->setChecked(m_preferences->alwaysShowTabs);
 
     // show main menu bar
-    showMenuCheckBox->setChecked(preferences->menuVisible);
+    showMenuCheckBox->setChecked(m_preferences->menuVisible);
 
     /* actions by motion after paste */
 
     QStringList motionAfter;
     motionAfter << "No move" << "Move start" << "Move end";
     motionAfterPasting_comboBox->addItems(motionAfter);
-    motionAfterPasting_comboBox->setCurrentIndex(preferences->m_motionAfterPaste);
+    motionAfterPasting_comboBox->setCurrentIndex(m_preferences->m_motionAfterPaste);
 
     // Setting windows style actions
     styleComboBox->addItem(tr("System Default"));
     styleComboBox->addItems(QStyleFactory::keys());
 
-    int ix = styleComboBox->findText(preferences->guiStyle);
+    int ix = styleComboBox->findText(m_preferences->guiStyle);
     if (ix != -1)
         styleComboBox->setCurrentIndex(ix);
 
-    setFontSample(preferences->font);
+    setFontSample(m_preferences->font);
 
-    appOpacityBox->setValue(preferences->appOpacity);
+    appOpacityBox->setValue(m_preferences->appOpacity);
     // connect(appOpacityBox, SIGNAL(valueChanged(int)), this, SLOT(apply()));
 
-    termOpacityBox->setValue(preferences->termOpacity);
+    termOpacityBox->setValue(m_preferences->termOpacity);
     // connect(termOpacityBox, SIGNAL(valueChanged(int)), this, SLOT(apply()));
 
-    highlightCurrentCheckBox->setChecked(preferences->highlightCurrentTerminal);
+    highlightCurrentCheckBox->setChecked(m_preferences->highlightCurrentTerminal);
 
-    askOnExitCheckBox->setChecked(preferences->askOnExit);
+    askOnExitCheckBox->setChecked(m_preferences->askOnExit);
 
-    useCwdCheckBox->setChecked(preferences->useCWD);
+    useCwdCheckBox->setChecked(m_preferences->useCWD);
 
-    historyLimited->setChecked(preferences->historyLimited);
-    historyUnlimited->setChecked(!preferences->historyLimited);
-    historyLimitedTo->setValue(preferences->historyLimitedTo);
+    historyLimited->setChecked(m_preferences->historyLimited);
+    historyUnlimited->setChecked(!m_preferences->historyLimited);
+    historyLimitedTo->setValue(m_preferences->historyLimitedTo);
 
-    dropShowOnStartCheckBox->setChecked(preferences->dropShowOnStart);
-    dropHeightSpinBox->setValue(preferences->dropHeight);
-    dropWidthSpinBox->setValue(preferences->dropWidht);
+    dropShowOnStartCheckBox->setChecked(m_preferences->dropShowOnStart);
+    dropHeightSpinBox->setValue(m_preferences->dropHeight);
+    dropWidthSpinBox->setValue(m_preferences->dropWidht);
 
     /// Shortcuts Page
     m_keyNum = m_key[0] = m_key[1] = m_key[2] = m_key[3] = 0;
@@ -123,42 +122,41 @@ void PreferencesDialog::accept()
 
 void PreferencesDialog::apply()
 {
-    Preferences * const preferences = Preferences::instance();
-    preferences->colorScheme = colorSchemaCombo->currentText();
-    preferences->font = fontSampleLabel->font(); // fontComboBox->currentFont();
-    preferences->guiStyle = (styleComboBox->currentText() == tr("System Default"))
+    m_preferences->colorScheme = colorSchemaCombo->currentText();
+    m_preferences->font = fontSampleLabel->font(); // fontComboBox->currentFont();
+    m_preferences->guiStyle = (styleComboBox->currentText() == tr("System Default"))
             ? QString() : styleComboBox->currentText();
 
-    preferences->emulation = emulationComboBox->currentText();
+    m_preferences->emulation = emulationComboBox->currentText();
 
     /* do not allow to go above 99 or we lose transparency option */
-    preferences->appOpacity = qMin(appOpacityBox->value(), 99);
+    m_preferences->appOpacity = qMin(appOpacityBox->value(), 99);
 
-    preferences->termOpacity = termOpacityBox->value();
-    preferences->highlightCurrentTerminal = highlightCurrentCheckBox->isChecked();
+    m_preferences->termOpacity = termOpacityBox->value();
+    m_preferences->highlightCurrentTerminal = highlightCurrentCheckBox->isChecked();
 
-    preferences->askOnExit = askOnExitCheckBox->isChecked();
+    m_preferences->askOnExit = askOnExitCheckBox->isChecked();
 
-    preferences->useCWD = useCwdCheckBox->isChecked();
+    m_preferences->useCWD = useCwdCheckBox->isChecked();
 
-    preferences->scrollBarPos = scrollBarPos_comboBox->currentIndex();
-    preferences->tabsPos = tabsPos_comboBox->currentIndex();
-    preferences->alwaysShowTabs = alwaysShowTabsCheckBox->isChecked();
-    preferences->menuVisible = showMenuCheckBox->isChecked();
-    preferences->m_motionAfterPaste = motionAfterPasting_comboBox->currentIndex();
+    m_preferences->scrollBarPos = scrollBarPos_comboBox->currentIndex();
+    m_preferences->tabsPos = tabsPos_comboBox->currentIndex();
+    m_preferences->alwaysShowTabs = alwaysShowTabsCheckBox->isChecked();
+    m_preferences->menuVisible = showMenuCheckBox->isChecked();
+    m_preferences->m_motionAfterPaste = motionAfterPasting_comboBox->currentIndex();
 
-    preferences->historyLimited = historyLimited->isChecked();
-    preferences->historyLimitedTo = historyLimitedTo->value();
+    m_preferences->historyLimited = historyLimited->isChecked();
+    m_preferences->historyLimitedTo = historyLimitedTo->value();
 
     applyShortcuts();
 
-    preferences->dropShowOnStart = dropShowOnStartCheckBox->isChecked();
-    preferences->dropHeight = dropHeightSpinBox->value();
-    preferences->dropWidht = dropWidthSpinBox->value();
+    m_preferences->dropShowOnStart = dropShowOnStartCheckBox->isChecked();
+    m_preferences->dropHeight = dropHeightSpinBox->value();
+    m_preferences->dropWidht = dropWidthSpinBox->value();
 
-    preferences->save();
+    m_preferences->save();
 
-    preferences->emitChanged();
+    m_preferences->emitChanged();
 }
 
 bool PreferencesDialog::eventFilter(QObject *object, QEvent *event)
@@ -171,7 +169,7 @@ bool PreferencesDialog::eventFilter(QObject *object, QEvent *event)
         return true;
     }
 
-    if (event->type() == QEvent::Shortcut || event->type() == QEvent::KeyRelease )
+    if (event->type() == QEvent::Shortcut || event->type() == QEvent::KeyRelease)
         return true;
 
     if (event->type() == QEvent::ShortcutOverride) {
@@ -218,7 +216,7 @@ void PreferencesDialog::applyShortcuts()
         const QString actionId = item->data(0, Qt::UserRole).toString();
         const QKeySequence ks(item->text(1));
         ActionManager::updateShortcut(actionId, ks);
-        Preferences::instance()->setShortcut(actionId, ks);
+        m_preferences->setShortcut(actionId, ks);
     }
 }
 
