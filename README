@@ -1,13 +1,11 @@
-Howto Build
-
-standard cmake based build
-
-cmake; make; make install
-
+Dependencies
+================================================================================
+Qt 5.2+
+QTermWidget For Qt5 - https://github.com/qterminal/qtermwidget
 
 
-New translation: just edit src/CMakeLists.txt to add a new ts file.
-
-make lupdate updates ts files to be translated. lrelease is called automatically in make
-
-
+Build Instructions
+================================================================================
+qmake
+make
+make install
