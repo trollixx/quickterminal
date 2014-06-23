@@ -182,6 +182,6 @@ void Application::loadUserShortcuts()
 {
     foreach (const QString &id, m_preferences->shortcutActions())
         ActionManager::updateShortcut(id, m_preferences->shortcut(id));
-    if (m_dropDownMode)
+    if (m_dropDownShortcut)
         m_dropDownShortcut->setShortcut(ActionManager::actionInfo(ActionId::ToggleVisibility).shortcut);
 }
