@@ -84,7 +84,7 @@ private:
     QActionGroup *scrollBarPosition = nullptr;
     QMenu *tabPosMenu, *scrollPosMenu;
 
-    QToolButton *m_dropLockButton = nullptr;
-    bool m_dropMode = false;
+    QToolButton *m_dropDownLockButton = nullptr;
+    bool m_dropDownMode = false;
 };
 #endif // MAINWINDOW_H

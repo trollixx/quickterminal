@@ -35,10 +35,10 @@ private:
 
     // Command line options
     QString m_command;
-    bool m_dropMode = false;
+    bool m_dropDownMode = false;
     QString m_workingDir;
 
-    QxtGlobalShortcut *m_dropShortcut = nullptr;
+    QxtGlobalShortcut *m_dropDownShortcut = nullptr;
 };
 
 #endif // APPLICATION_H

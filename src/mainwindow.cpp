@@ -73,16 +73,16 @@ MainWindow::~MainWindow()
 
 void MainWindow::enableDropMode()
 {
-    m_dropMode = true;
+    m_dropDownMode = true;
     setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint | Qt::CustomizeWindowHint);
     setStyleSheet(QStringLiteral("MainWindow {border: 1px solid rgba(0, 0, 0, 50%);}\n"));
 
-    m_dropLockButton = new QToolButton(this);
-    m_ui->consoleTabulator->setCornerWidget(m_dropLockButton, Qt::BottomRightCorner);
-    m_dropLockButton->setCheckable(true);
-    m_dropLockButton->connect(m_dropLockButton, SIGNAL(clicked(bool)), SLOT(setKeepOpen(bool)));
+    m_dropDownLockButton = new QToolButton(this);
+    m_ui->consoleTabulator->setCornerWidget(m_dropDownLockButton, Qt::BottomRightCorner);
+    m_dropDownLockButton->setCheckable(true);
+    connect(m_dropDownLockButton, SIGNAL(clicked(bool)), SLOT(setKeepOpen(bool)));
     setKeepOpen(m_preferences->dropKeepOpen);
-    m_dropLockButton->setAutoRaise(true);
+    m_dropDownLockButton->setAutoRaise(true);
     realign();
 }
 
@@ -371,7 +371,7 @@ void MainWindow::preferencesChanged()
 
 void MainWindow::realign()
 {
-    if (!m_dropMode)
+    if (!m_dropDownMode)
         return;
     QRect desktop = QApplication::desktop()->availableGeometry(this);
     QRect geometry = QRect(0, 0,
@@ -403,15 +403,15 @@ void MainWindow::showHide()
 void MainWindow::setKeepOpen(bool value)
 {
     m_preferences->dropKeepOpen = value;
-    if (!m_dropLockButton)
+    if (!m_dropDownLockButton)
         return;
 
     if (value)
-        m_dropLockButton->setIcon(QIcon(":/icons/locked.png"));
+        m_dropDownLockButton->setIcon(QIcon(":/icons/locked.png"));
     else
-        m_dropLockButton->setIcon(QIcon(":/icons/notlocked.png"));
+        m_dropDownLockButton->setIcon(QIcon(":/icons/notlocked.png"));
 
-    m_dropLockButton->setChecked(value);
+    m_dropDownLockButton->setChecked(value);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -444,7 +444,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 bool MainWindow::event(QEvent *event)
 {
     if (event->type() == QEvent::WindowDeactivate
-            && m_dropMode
+            && m_dropDownMode
             && !m_preferences->dropKeepOpen
             && qApp->activeWindow() == nullptr) {
         hide();

@@ -39,10 +39,10 @@ void Application::createWindow()
 
     m_windows.append(window);
 
-    if (m_dropMode && m_windows.size() == 1) {
-        m_dropShortcut = new QxtGlobalShortcut(this);
-        m_dropShortcut->setShortcut(ActionManager::actionInfo(ActionId::ToggleVisibility).shortcut);
-        connect(m_dropShortcut, &QxtGlobalShortcut::activated,
+    if (m_dropDownMode && m_windows.size() == 1) {
+        m_dropDownShortcut = new QxtGlobalShortcut(this);
+        m_dropDownShortcut->setShortcut(ActionManager::actionInfo(ActionId::ToggleVisibility).shortcut);
+        connect(m_dropDownShortcut, &QxtGlobalShortcut::activated,
                 [window]() {
             if (window->isVisible())
                 window->hide();
@@ -77,10 +77,10 @@ void Application::parseOptions()
 {
     QCommandLineParser parser;
 
-    QCommandLineOption dropdownOption(
+    QCommandLineOption dropDownOption(
     {QStringLiteral("d"), QStringLiteral("dropdown")},
                 QStringLiteral("Run in 'dropdown mode' (like Yakuake or Tilda)"));
-    parser.addOption(dropdownOption);
+    parser.addOption(dropDownOption);
 
     QCommandLineOption commandOption(
     {QStringLiteral("e"), QStringLiteral("command")},
@@ -99,7 +99,7 @@ void Application::parseOptions()
 
     parser.process(qApp->arguments());
 
-    m_dropMode = parser.isSet(dropdownOption);
+    m_dropDownMode = parser.isSet(dropDownOption);
     m_command = parser.value(commandOption);
     m_workingDir = parser.value(workingDirectoryOption);
 }
@@ -182,6 +182,6 @@ void Application::loadUserShortcuts()
 {
     foreach (const QString &id, m_preferences->shortcutActions())
         ActionManager::updateShortcut(id, m_preferences->shortcut(id));
-    if (m_dropMode)
-        m_dropShortcut->setShortcut(ActionManager::actionInfo(ActionId::ToggleVisibility).shortcut);
+    if (m_dropDownMode)
+        m_dropDownShortcut->setShortcut(ActionManager::actionInfo(ActionId::ToggleVisibility).shortcut);
 }
