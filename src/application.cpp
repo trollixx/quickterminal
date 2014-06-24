@@ -71,6 +71,8 @@ void Application::windowDeleted(QObject *object)
 {
     /// FIXME: Cast should be qobject_cast
     m_windows.removeAll(static_cast<MainWindow *>(object));
+    if (m_windows.isEmpty())
+        quit();
 }
 
 void Application::parseOptions()
