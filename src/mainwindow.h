@@ -21,14 +21,14 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "ui_qterminal.h"
-
 #include <QMainWindow>
 
+class QActionGroup;
 class QToolButton;
 
 class ActionManager;
 class Preferences;
+class TabWidget;
 class TermWidget;
 
 class MainWindow : public QMainWindow
@@ -73,13 +73,12 @@ private:
 
     void realign();
 
-    Ui::MainWindow *m_ui = nullptr;
-
     Preferences * const m_preferences = nullptr;
     ActionManager *m_actionManager = nullptr;
 
     QMenu *m_contextMenu = nullptr;
 
+    TabWidget *m_tabWidget = nullptr;
     QActionGroup *tabBarPosition = nullptr;
     QActionGroup *scrollBarPosition = nullptr;
     QMenu *tabPosMenu, *scrollPosMenu;

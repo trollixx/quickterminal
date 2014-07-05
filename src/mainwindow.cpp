@@ -21,39 +21,38 @@
 #include "mainwindow.h"
 
 #include "actionmanager.h"
-#include "termwidgetholder.h"
 #include "constants.h"
 #include "preferences.h"
 #include "preferencesdialog.h"
+#include "termwidgetholder.h"
+#include "tabwidget.h"
 
 #include <QCloseEvent>
 #include <QDesktopWidget>
+#include <QMenu>
+#include <QMenuBar>
 #include <QMessageBox>
 #include <QToolButton>
 
 MainWindow::MainWindow(const QString &workingDir, const QString &command, QWidget *parent,
                        Qt::WindowFlags f) :
     QMainWindow(parent, f),
-    m_ui(new Ui::MainWindow),
     m_preferences(Preferences::instance()),
     m_actionManager(new ActionManager(this))
 {
     /// TODO: Check why it is not set by default
     setAttribute(Qt::WA_DeleteOnClose);
 
-    m_ui->setupUi(this);
-
     connect(m_preferences, &Preferences::changed, this, &MainWindow::preferencesChanged);
 
-    setContentsMargins(0, 0, 0, 0);
-    restoreGeometry(m_preferences->mainWindowGeometry);
-    restoreState(m_preferences->mainWindowState);
+    m_tabWidget = new TabWidget(this);
+    connect(m_tabWidget, &TabWidget::closeTabNotification, this, &MainWindow::close);
 
-    connect(m_ui->consoleTabulator, SIGNAL(closeTabNotification()), SLOT(close()));
-    m_ui->consoleTabulator->setWorkDirectory(workingDir);
-    m_ui->consoleTabulator->setTabPosition((QTabWidget::TabPosition)m_preferences->tabsPos);
-    // ui->consoleTabulator->setShellProgram(command);
-    m_ui->consoleTabulator->addNewTab(command);
+    m_tabWidget->tabBar()->setVisible(!m_preferences->tabBarless);
+    m_tabWidget->setWorkDirectory(workingDir);
+    m_tabWidget->setTabPosition((QTabWidget::TabPosition)m_preferences->tabsPos);
+    m_tabWidget->addNewTab(command);
+    setCentralWidget(m_tabWidget);
 
     setWindowTitle("QTerminal");
     setWindowIcon(QIcon(":/icons/qterminal.png"));
@@ -64,11 +63,14 @@ MainWindow::MainWindow(const QString &workingDir, const QString &command, QWidge
     setupHelpMenu();
     setupContextMenu();
     setupWindowActions();
+
+    setContentsMargins(0, 0, 0, 0);
+    restoreGeometry(m_preferences->mainWindowGeometry);
+    restoreState(m_preferences->mainWindowState);
 }
 
 MainWindow::~MainWindow()
 {
-    delete m_ui;
 }
 
 void MainWindow::enableDropMode()
@@ -78,7 +80,7 @@ void MainWindow::enableDropMode()
     setStyleSheet(QStringLiteral("MainWindow {border: 1px solid rgba(0, 0, 0, 50%);}\n"));
 
     m_dropDownLockButton = new QToolButton(this);
-    m_ui->consoleTabulator->setCornerWidget(m_dropDownLockButton, Qt::BottomRightCorner);
+    m_tabWidget->setCornerWidget(m_dropDownLockButton, Qt::BottomRightCorner);
     m_dropDownLockButton->setCheckable(true);
     connect(m_dropDownLockButton, SIGNAL(clicked(bool)), SLOT(setKeepOpen(bool)));
     setKeepOpen(m_preferences->dropKeepOpen);
@@ -88,105 +90,115 @@ void MainWindow::enableDropMode()
 
 void MainWindow::setupFileMenu()
 {
+    QMenu *menu = new QMenu(tr("&File"), menuBar());
+
     QAction *action;
     action = m_actionManager->action(ActionId::NewTab);
-    connect(action, SIGNAL(triggered()), m_ui->consoleTabulator, SLOT(addNewTab()));
+    connect(action, SIGNAL(triggered()), m_tabWidget, SLOT(addNewTab()));
     addAction(action);
-    m_ui->fileMenu->addAction(action);
+    menu->addAction(action);
 
     action = m_actionManager->action(ActionId::CloseTab);
-    connect(action, SIGNAL(triggered()), m_ui->consoleTabulator, SLOT(removeCurrentTab()));
+    connect(action, SIGNAL(triggered()), m_tabWidget, SLOT(removeCurrentTab()));
     addAction(action);
-    m_ui->fileMenu->addAction(action);
+    menu->addAction(action);
 
-    m_ui->fileMenu->addSeparator();
+    menu->addSeparator();
 
     action = m_actionManager->action(ActionId::NewWindow);
     connect(action, &QAction::triggered, this, &MainWindow::newWindow);
     addAction(action);
-    m_ui->fileMenu->addAction(action);
+    menu->addAction(action);
 
     action = m_actionManager->action(ActionId::CloseWindow);
     connect(action, &QAction::triggered, this, &MainWindow::close);
     addAction(action);
-    m_ui->fileMenu->addAction(action);
+    menu->addAction(action);
 
-    m_ui->fileMenu->addSeparator();
+    menu->addSeparator();
 
     action = m_actionManager->action(ActionId::Exit);
     connect(action, &QAction::triggered, this, &MainWindow::quit);
     addAction(action);
-    m_ui->fileMenu->addAction(action);
+    menu->addAction(action);
+
+    menuBar()->addMenu(menu);
 }
 
 void MainWindow::setupEditMenu()
 {
+    QMenu *menu = new QMenu(tr("&Edit"), menuBar());
+
     QAction *action;
     action = m_actionManager->action(ActionId::Copy);
     connect(action, &QAction::triggered, [this]() {
         currentTerminal()->impl()->copyClipboard();
     });
     addAction(action);
-    m_ui->editMenu->addAction(action);
+    menu->addAction(action);
 
     action = m_actionManager->action(ActionId::Paste);
     connect(action, &QAction::triggered, [this]() {
         currentTerminal()->impl()->pasteClipboard();
     });
     addAction(action);
-    m_ui->editMenu->addAction(action);
+    menu->addAction(action);
 
     action = m_actionManager->action(ActionId::PasteSelection);
     connect(action, &QAction::triggered, [this]() {
         currentTerminal()->impl()->pasteSelection();
     });
     addAction(action);
-    m_ui->editMenu->addAction(action);
+    menu->addAction(action);
 
-    m_ui->editMenu->addSeparator();
+    menu->addSeparator();
 
     action = m_actionManager->action(ActionId::Clear);
     connect(action, &QAction::triggered, [this]() {
         currentTerminal()->impl()->clear();
     });
     addAction(action);
-    m_ui->editMenu->addAction(action);
+    menu->addAction(action);
 
-    m_ui->editMenu->addSeparator();
+    menu->addSeparator();
 
     action = m_actionManager->action(ActionId::Find);
     connect(action, &QAction::triggered, [this]() {
         currentTerminal()->impl()->toggleShowSearchBar();
     });
     addAction(action);
-    m_ui->editMenu->addAction(action);
+    menu->addAction(action);
 
-    m_ui->editMenu->addSeparator();
+    menu->addSeparator();
 
     action = m_actionManager->action(ActionId::Preferences);
     connect(action, SIGNAL(triggered()), SLOT(showPreferencesDialog()));
     addAction(action);
-    m_ui->editMenu->addAction(action);
+    menu->addAction(action);
+
+    menuBar()->addMenu(menu);
 }
 
 void MainWindow::setupViewMenu()
 {
+    QMenu *menu = new QMenu(tr("&View"), menuBar());
+
     QAction *action;
     action = m_actionManager->action(ActionId::ShowMenu);
     action->setCheckable(true);
     action->setChecked(m_preferences->menuVisible);
     connect(action, &QAction::triggered, this, &MainWindow::toggleMenuBar);
     addAction(action);
-    m_ui->viewMenu->addAction(action);
+    menu->addAction(action);
 
     action = m_actionManager->action(ActionId::ShowTabs);
     action->setCheckable(true);
     action->setChecked(!m_preferences->tabBarless);
     connect(action, &QAction::triggered, this, &MainWindow::toggleTabBar);
     addAction(action);
-    m_ui->viewMenu->addAction(action);
+    menu->addAction(action);
 
-    m_ui->viewMenu->addSeparator();
+    menu->addSeparator();
 
     // TabBar position
     tabBarPosition = new QActionGroup(this);
@@ -202,16 +214,16 @@ void MainWindow::setupViewMenu()
         tabBarPosition->actions().at(m_preferences->tabsPos)->setChecked(true);
 
     connect(tabBarPosition, &QActionGroup::triggered,
-            m_ui->consoleTabulator, &TabWidget::changeTabPosition);
+            m_tabWidget, &TabWidget::changeTabPosition);
 
-    tabPosMenu = new QMenu(tr("Tabs Layout"), m_ui->viewMenu);
+    tabPosMenu = new QMenu(tr("Tabs Layout"), menu);
     tabPosMenu->setObjectName("tabPosMenu");
 
     foreach (QAction *action, tabBarPosition->actions())
         tabPosMenu->addAction(action);
 
-    connect(m_ui->viewMenu, &QMenu::hovered, this, &MainWindow::updateActionGroup);
-    m_ui->viewMenu->addMenu(tabPosMenu);
+    connect(menu, &QMenu::hovered, this, &MainWindow::updateActionGroup);
+    menu->addMenu(tabPosMenu);
 
     // Scrollbar position
     scrollBarPosition = new QActionGroup(this);
@@ -227,29 +239,35 @@ void MainWindow::setupViewMenu()
         scrollBarPosition->actions().at(m_preferences->scrollBarPos)->setChecked(true);
 
     connect(scrollBarPosition, &QActionGroup::triggered,
-            m_ui->consoleTabulator, &TabWidget::changeScrollPosition);
+            m_tabWidget, &TabWidget::changeScrollPosition);
 
-    scrollPosMenu = new QMenu(tr("Scrollbar Layout"), m_ui->viewMenu);
+    scrollPosMenu = new QMenu(tr("Scrollbar Layout"), menu);
     scrollPosMenu->setObjectName("scrollPosMenu");
 
     foreach (QAction *action, scrollBarPosition->actions())
         scrollPosMenu->addAction(action);
 
-    m_ui->viewMenu->addMenu(scrollPosMenu);
+    menu->addMenu(scrollPosMenu);
+
+    menuBar()->addMenu(menu);
 }
 
 void MainWindow::setupHelpMenu()
 {
+    QMenu *menu = new QMenu(tr("&Help"), menuBar());
+
     QAction *action;
     action = m_actionManager->action(ActionId::About);
     connect(action, &QAction::triggered, this, &MainWindow::showAboutMessageBox);
     addAction(action);
-    m_ui->helpMenu->addAction(action);
+    menu->addAction(action);
 
     action = m_actionManager->action(ActionId::AboutQt);
     connect(action, &QAction::triggered, qApp, &QApplication::aboutQt);
     addAction(action);
-    m_ui->helpMenu->addAction(action);
+    menu->addAction(action);
+
+    menuBar()->addMenu(menu);
 }
 
 void MainWindow::setupContextMenu()
@@ -295,23 +313,23 @@ void MainWindow::setupContextMenu()
     m_contextMenu->addSeparator();
 
     action = m_actionManager->action(ActionId::SplitHorizontally);
-    connect(action, &QAction::triggered, m_ui->consoleTabulator, &TabWidget::splitHorizontally);
+    connect(action, &QAction::triggered, m_tabWidget, &TabWidget::splitHorizontally);
     addAction(action);
     m_contextMenu->addAction(action);
 
     action = m_actionManager->action(ActionId::SplitVertically);
-    connect(action, &QAction::triggered, m_ui->consoleTabulator, &TabWidget::splitVertically);
+    connect(action, &QAction::triggered, m_tabWidget, &TabWidget::splitVertically);
     addAction(action);
     m_contextMenu->addAction(action);
 
     m_contextMenu->addSeparator();
 
     action = m_actionManager->action(ActionId::CloseTerminal);
-    connect(action, &QAction::triggered, m_ui->consoleTabulator, &TabWidget::splitCollapse);
+    connect(action, &QAction::triggered, m_tabWidget, &TabWidget::splitCollapse);
     addAction(action);
     m_contextMenu->addAction(action);
 
-    connect(m_ui->consoleTabulator->terminalHolder(),
+    connect(m_tabWidget->terminalHolder(),
             &TermWidgetHolder::terminalContextMenuRequested,
             [this] (const QPoint &pos) {
         m_contextMenu->exec(currentTerminal()->mapToGlobal(pos));
@@ -322,25 +340,25 @@ void MainWindow::setupWindowActions()
 {
     QAction *action;
     action = m_actionManager->action(ActionId::NextTab);
-    connect(action, &QAction::triggered, m_ui->consoleTabulator, &TabWidget::switchToRight);
+    connect(action, &QAction::triggered, m_tabWidget, &TabWidget::switchToRight);
     addAction(action);
 
     action = m_actionManager->action(ActionId::PreviousTab);
-    connect(action, &QAction::triggered, m_ui->consoleTabulator, &TabWidget::switchToLeft);
+    connect(action, &QAction::triggered, m_tabWidget, &TabWidget::switchToLeft);
     addAction(action);
 }
 
 void MainWindow::toggleTabBar()
 {
     const bool newVisible = m_actionManager->action(ActionId::ShowTabs)->isChecked();
-    m_ui->consoleTabulator->tabBar()->setVisible(newVisible);
+    m_tabWidget->tabBar()->setVisible(newVisible);
     m_preferences->tabBarless = !newVisible;
 }
 
 void MainWindow::toggleMenuBar()
 {
     const bool newVisible = m_actionManager->action(ActionId::ShowMenu)->isChecked();
-    m_ui->menuBar->setVisible(newVisible);
+    menuBar()->setVisible(newVisible);
     m_preferences->menuVisible = newVisible;
 }
 
@@ -360,10 +378,10 @@ void MainWindow::preferencesChanged()
 {
     QApplication::setStyle(m_preferences->guiStyle);
     setWindowOpacity(m_preferences->appOpacity / 100.0);
-    m_ui->consoleTabulator->setTabPosition((QTabWidget::TabPosition)m_preferences->tabsPos);
-    m_ui->consoleTabulator->preferencesChanged();
+    m_tabWidget->setTabPosition((QTabWidget::TabPosition)m_preferences->tabsPos);
+    m_tabWidget->preferencesChanged();
 
-    m_ui->menuBar->setVisible(m_preferences->menuVisible);
+    menuBar()->setVisible(m_preferences->menuVisible);
 
     m_preferences->save();
     realign();
@@ -416,7 +434,7 @@ void MainWindow::setKeepOpen(bool value)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    if (!m_preferences->askOnExit || !m_ui->consoleTabulator->count()) {
+    if (!m_preferences->askOnExit || !m_tabWidget->count()) {
         m_preferences->mainWindowGeometry = saveGeometry();
         m_preferences->mainWindowState = saveState();
         event->accept();
@@ -454,5 +472,5 @@ bool MainWindow::event(QEvent *event)
 
 TermWidget *MainWindow::currentTerminal() const
 {
-    return m_ui->consoleTabulator->terminalHolder()->currentTerminal();
+    return m_tabWidget->terminalHolder()->currentTerminal();
 }
