@@ -12,89 +12,42 @@
 
 static int TermWidgetCount = 0;
 
-TermWidgetImpl::TermWidgetImpl(const QString &wdir, const QString &shell, QWidget *parent) :
-    QTermWidget(0, parent)
-{
-    TermWidgetCount++;
-    QString name("TermWidget_%1");
-    setObjectName(name.arg(TermWidgetCount));
-
-    setFlowControlEnabled(FLOW_CONTROL_ENABLED);
-    setFlowControlWarningEnabled(FLOW_CONTROL_WARNING_ENABLED);
-
-    propertiesChanged();
-
-    setHistorySize(5000);
-
-    if (!wdir.isNull())
-        setWorkingDirectory(wdir);
-
-    if (shell.isNull()) {
-        if (!Preferences::instance()->shell.isNull())
-            setShellProgram(Preferences::instance()->shell);
-    } else {
-        qDebug() << "Settings custom shell program:" << shell;
-        QStringList parts = shell.split(QRegExp("\\s+"), QString::SkipEmptyParts);
-        qDebug() << parts;
-        setShellProgram(parts.at(0));
-        parts.removeAt(0);
-        if (parts.count())
-            setArgs(parts);
-    }
-
-    setMotionAfterPasting(Preferences::instance()->m_motionAfterPaste);
-
-    startShellProgram();
-}
-
-void TermWidgetImpl::propertiesChanged()
-{
-    setColorScheme(Preferences::instance()->colorScheme);
-    setTerminalFont(Preferences::instance()->font);
-    setMotionAfterPasting(Preferences::instance()->m_motionAfterPaste);
-
-    if (Preferences::instance()->historyLimited) {
-        setHistorySize(Preferences::instance()->historyLimitedTo);
-    } else {
-        // Unlimited history
-        setHistorySize(-1);
-    }
-
-    setKeyBindings(Preferences::instance()->emulation);
-    setTerminalOpacity(Preferences::instance()->termOpacity/100.0);
-
-    /* be consequent with qtermwidget.h here */
-    switch (Preferences::instance()->scrollBarPos) {
-    case 0:
-        setScrollBarPosition(QTermWidget::NoScrollBar);
-        break;
-    case 1:
-        setScrollBarPosition(QTermWidget::ScrollBarLeft);
-        break;
-    case 2:
-    default:
-        setScrollBarPosition(QTermWidget::ScrollBarRight);
-        break;
-    }
-
-    update();
-}
-
-void TermWidgetImpl::zoomReset()
-{
-    setTerminalFont(Preferences::instance()->font);
-}
-
 TermWidget::TermWidget(const QString &wdir, const QString &shell, QWidget *parent) :
     QWidget(parent)
 {
     m_borderColor = palette().color(QPalette::Window);
-    m_term = new TermWidgetImpl(wdir, shell, this);
-    setFocusProxy(m_term);
 
     m_layout = new QVBoxLayout();
     setLayout(m_layout);
 
+    m_term = new QTermWidget(0, this);
+    TermWidgetCount++;
+    QString name("TermWidget_%1");
+    m_term->setObjectName(name.arg(TermWidgetCount));
+
+    m_term->setFlowControlEnabled(FLOW_CONTROL_ENABLED);
+    m_term->setFlowControlWarningEnabled(FLOW_CONTROL_WARNING_ENABLED);
+
+    if (!wdir.isNull())
+        m_term->setWorkingDirectory(wdir);
+
+    if (shell.isNull()) {
+        if (!Preferences::instance()->shell.isNull())
+            m_term->setShellProgram(Preferences::instance()->shell);
+    } else {
+        qDebug() << "Settings custom shell program:" << shell;
+        QStringList parts = shell.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+        qDebug() << parts;
+        m_term->setShellProgram(parts.at(0));
+        parts.removeAt(0);
+        if (parts.count())
+            m_term->setArgs(parts);
+    }
+
+    m_term->setMotionAfterPasting(Preferences::instance()->m_motionAfterPaste);
+    m_term->startShellProgram();
+
+    setFocusProxy(m_term);
     m_layout->addWidget(m_term);
 
     propertiesChanged();
@@ -114,12 +67,45 @@ void TermWidget::propertiesChanged()
     else
         m_layout->setContentsMargins(0, 0, 0, 0);
 
-    m_term->propertiesChanged();
+    m_term->setColorScheme(Preferences::instance()->colorScheme);
+    m_term->setTerminalFont(Preferences::instance()->font);
+    m_term->setMotionAfterPasting(Preferences::instance()->m_motionAfterPaste);
+
+    if (Preferences::instance()->historyLimited) {
+        m_term->setHistorySize(Preferences::instance()->historyLimitedTo);
+    } else {
+        // Unlimited history
+        m_term->setHistorySize(-1);
+    }
+
+    m_term->setKeyBindings(Preferences::instance()->emulation);
+    m_term->setTerminalOpacity(Preferences::instance()->termOpacity/100.0);
+
+    /* be consequent with qtermwidget.h here */
+    switch (Preferences::instance()->scrollBarPos) {
+    case 0:
+        m_term->setScrollBarPosition(QTermWidget::NoScrollBar);
+        break;
+    case 1:
+        m_term->setScrollBarPosition(QTermWidget::ScrollBarLeft);
+        break;
+    case 2:
+    default:
+        m_term->setScrollBarPosition(QTermWidget::ScrollBarRight);
+        break;
+    }
+
+    m_term->update();
 }
 
-TermWidgetImpl *TermWidget::impl() const
+QTermWidget *TermWidget::impl() const
 {
     return m_term;
+}
+
+void TermWidget::zoomReset()
+{
+    m_term->setTerminalFont(Preferences::instance()->font);
 }
 
 void TermWidget::term_termGetFocus()

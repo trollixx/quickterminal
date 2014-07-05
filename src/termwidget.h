@@ -8,18 +8,6 @@
 class QAction;
 class QMenu;
 
-class TermWidgetImpl : public QTermWidget
-{
-    Q_OBJECT
-public:
-    explicit TermWidgetImpl(const QString &wdir, const QString &shell = QString(),
-                   QWidget *parent = nullptr);
-    void propertiesChanged();
-
-public slots:
-    void zoomReset();
-};
-
 class TermWidget : public QWidget
 {
     Q_OBJECT
@@ -29,7 +17,8 @@ public:
 
     void propertiesChanged();
 
-    TermWidgetImpl *impl() const;
+    QTermWidget *impl() const;
+    void zoomReset();
 
 signals:
     void finished();
@@ -45,7 +34,7 @@ private slots:
     void term_termLostFocus();
 
 private:
-    TermWidgetImpl *m_term = nullptr;
+    QTermWidget *m_term = nullptr;
     QVBoxLayout *m_layout = nullptr;
     QColor m_borderColor;
 };

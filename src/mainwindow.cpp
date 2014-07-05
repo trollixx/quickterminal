@@ -303,7 +303,7 @@ void MainWindow::setupContextMenu()
 
     action = m_actionManager->action(ActionId::ZoomReset);
     connect(action, &QAction::triggered, [this]() {
-        currentTerminal()->impl()->zoomReset();
+        currentTerminal()->zoomReset();
     });
     addAction(action);
     zoomMenu->addAction(action);
