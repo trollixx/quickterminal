@@ -21,11 +21,9 @@
 #ifndef TABWIDGET_H
 #define TABWIDGET_H
 
-#include <QMap>
 #include <QTabWidget>
 
 class QAction;
-class QActionGroup;
 
 class TermWidgetHolder;
 
@@ -38,7 +36,7 @@ public:
     TermWidgetHolder *terminalHolder() const;
 
 public slots:
-    int addNewTab(const QString &shell_program = QString());
+    int addNewTab(const QString &command = QString());
     void removeTab(int);
     void removeCurrentTab();
     int switchToRight();

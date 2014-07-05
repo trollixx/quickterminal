@@ -37,7 +37,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(const QString &workingDir, const QString &command,
                         QWidget *parent = nullptr, Qt::WindowFlags f = 0);
-    ~MainWindow();
+    ~MainWindow() override;
 
     void enableDropMode();
 

@@ -61,7 +61,7 @@ void TabWidget::setWorkDirectory(const QString &dir)
     work_dir = dir;
 }
 
-int TabWidget::addNewTab(const QString &shell_program)
+int TabWidget::addNewTab(const QString &command)
 {
     tabNumerator++;
     QString label = QString(tr("Shell No. %1")).arg(tabNumerator);
@@ -74,7 +74,7 @@ int TabWidget::addNewTab(const QString &shell_program)
             cwd = work_dir;
     }
 
-    TermWidgetHolder *console = new TermWidgetHolder(cwd, shell_program, this);
+    TermWidgetHolder *console = new TermWidgetHolder(cwd, command, this);
     connect(console, SIGNAL(finished()), SLOT(removeFinished()));
     // connect(console, SIGNAL(lastTerminalClosed()), this, SLOT(removeCurrentTab()));
     connect(console, SIGNAL(lastTerminalClosed()), this, SLOT(removeFinished()));
