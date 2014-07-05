@@ -39,8 +39,6 @@ public slots:
 signals:
     void terminalContextMenuRequested(const QPoint &pos);
     void finished();
-    void lastTerminalClosed();
-    void renameSession();
 
 private:
     QString m_workingDir;

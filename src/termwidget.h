@@ -17,8 +17,6 @@ public:
 
 signals:
     void finished();
-    void renameSession();
-    void removeCurrentSession();
     void termGetFocus(TermWidget *self);
 
 protected:

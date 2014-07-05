@@ -76,9 +76,6 @@ int TabWidget::addNewTab(const QString &command)
 
     TermWidgetHolder *console = new TermWidgetHolder(cwd, command, this);
     connect(console, SIGNAL(finished()), SLOT(removeFinished()));
-    // connect(console, SIGNAL(lastTerminalClosed()), this, SLOT(removeCurrentTab()));
-    connect(console, SIGNAL(lastTerminalClosed()), this, SLOT(removeFinished()));
-    connect(console, SIGNAL(renameSession()), this, SLOT(renameSession()));
 
     int index = addTab(console, label);
     recountIndexes();
