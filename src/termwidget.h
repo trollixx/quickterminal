@@ -3,16 +3,11 @@
 
 #include <qtermwidget.h>
 
-#include <QMap>
-
-class QAction;
-class QMenu;
-
 class TermWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TermWidget(const QString &wdir, const QString &shell = QString(),
+    explicit TermWidget(const QString &workingDir, const QString &command = QString(),
                         QWidget *parent = nullptr);
 
     void propertiesChanged();

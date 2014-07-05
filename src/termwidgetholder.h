@@ -43,8 +43,8 @@ signals:
     void renameSession();
 
 private:
-    QString m_wdir;
-    QString m_shell;
+    QString m_workingDir;
+    QString m_command;
     TermWidget *m_currentTerm = nullptr;
 
     void split(TermWidget *term, Qt::Orientation orientation);

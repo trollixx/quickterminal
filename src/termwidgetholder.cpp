@@ -8,8 +8,8 @@
 
 TermWidgetHolder::TermWidgetHolder(const QString &wdir, const QString &shell, QWidget *parent) :
     QWidget(parent),
-    m_wdir(wdir),
-    m_shell(shell)
+    m_workingDir(wdir),
+    m_command(shell)
 {
     setFocusPolicy(Qt::NoFocus);
     QGridLayout *lay = new QGridLayout(this);
@@ -40,7 +40,7 @@ TermWidget *TermWidgetHolder::currentTerminal() const
 
 void TermWidgetHolder::setWDir(const QString &wdir)
 {
-    m_wdir = wdir;
+    m_workingDir = wdir;
 }
 
 void TermWidgetHolder::switchNextSubterminal()
@@ -139,11 +139,11 @@ void TermWidgetHolder::split(TermWidget *term, Qt::Orientation orientation)
     s->insertWidget(0, term);
 
     // wdir settings
-    QString wd(m_wdir);
+    QString wd(m_workingDir);
     if (Preferences::instance()->useCWD) {
         wd = term->impl()->workingDirectory();
         if (wd.isEmpty())
-            wd = m_wdir;
+            wd = m_workingDir;
     }
 
     TermWidget *w = newTerm(wd);
@@ -160,11 +160,11 @@ TermWidget *TermWidgetHolder::newTerm(const QString &wdir, const QString &shell)
 {
     QString wd(wdir);
     if (wd.isEmpty())
-        wd = m_wdir;
+        wd = m_workingDir;
 
     QString sh(shell);
     if (shell.isEmpty())
-        sh = m_shell;
+        sh = m_command;
 
     TermWidget *w = new TermWidget(wd, sh, this);
     w->setContextMenuPolicy(Qt::CustomContextMenu);

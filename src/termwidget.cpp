@@ -10,9 +10,7 @@
 #define FLOW_CONTROL_ENABLED false
 #define FLOW_CONTROL_WARNING_ENABLED false
 
-static int TermWidgetCount = 0;
-
-TermWidget::TermWidget(const QString &wdir, const QString &shell, QWidget *parent) :
+TermWidget::TermWidget(const QString &workingDir, const QString &command, QWidget *parent) :
     QWidget(parent)
 {
     m_borderColor = palette().color(QPalette::Window);
@@ -21,22 +19,18 @@ TermWidget::TermWidget(const QString &wdir, const QString &shell, QWidget *paren
     setLayout(m_layout);
 
     m_term = new QTermWidget(0, this);
-    TermWidgetCount++;
-    QString name("TermWidget_%1");
-    m_term->setObjectName(name.arg(TermWidgetCount));
-
     m_term->setFlowControlEnabled(FLOW_CONTROL_ENABLED);
     m_term->setFlowControlWarningEnabled(FLOW_CONTROL_WARNING_ENABLED);
 
-    if (!wdir.isNull())
-        m_term->setWorkingDirectory(wdir);
+    if (!workingDir.isNull())
+        m_term->setWorkingDirectory(workingDir);
 
-    if (shell.isNull()) {
+    if (command.isNull()) {
         if (!Preferences::instance()->shell.isNull())
             m_term->setShellProgram(Preferences::instance()->shell);
     } else {
-        qDebug() << "Settings custom shell program:" << shell;
-        QStringList parts = shell.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+        qDebug() << "Settings custom shell program:" << command;
+        QStringList parts = command.split(QRegExp("\\s+"), QString::SkipEmptyParts);
         qDebug() << parts;
         m_term->setShellProgram(parts.at(0));
         parts.removeAt(0);
