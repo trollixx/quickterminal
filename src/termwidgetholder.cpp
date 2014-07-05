@@ -75,7 +75,7 @@ void TermWidgetHolder::loadSession()
 void TermWidgetHolder::saveSession(const QString &name)
 {
     QString dump;
-    QString num("%1");
+    QString num(QStringLiteral("%1"));
     foreach (QSplitter *w, findChildren<QSplitter *>()) {
         dump += '|' + num.arg(w->orientation());
         foreach (int i, w->sizes())

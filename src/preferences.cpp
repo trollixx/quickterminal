@@ -23,6 +23,7 @@ Preferences::Preferences(QObject *parent) :
     load();
 }
 
+/// TODO: Make it work
 Preferences::~Preferences()
 {
     qDebug("Preferences destructor called");
@@ -32,113 +33,115 @@ Preferences::~Preferences()
 
 void Preferences::load()
 {
-    guiStyle = m_settings->value("guiStyle", QString()).toString();
+    guiStyle = m_settings->value(QStringLiteral("guiStyle"), QString()).toString();
     if (!guiStyle.isNull())
         QApplication::setStyle(guiStyle);
 
-    colorScheme = m_settings->value("colorScheme", "Linux").toString();
+    colorScheme
+            = m_settings->value(QStringLiteral("colorScheme"), QStringLiteral("Linux")).toString();
+    highlightCurrentTerminal
+            = m_settings->value(QStringLiteral("highlightCurrentTerminal"), true).toBool();
 
-    highlightCurrentTerminal = m_settings->value("highlightCurrentTerminal", true).toBool();
+    font = qvariant_cast<QFont>(m_settings->value(QStringLiteral("font"), defaultFont()));
 
-    font = qvariant_cast<QFont>(m_settings->value("font", defaultFont()));
-
-    m_settings->beginGroup("Shortcuts");
+    m_settings->beginGroup(QStringLiteral("Shortcuts"));
     foreach (const QString &key, m_settings->childKeys())
         m_shortcuts.insert(key, m_settings->value(key).toString());
     m_settings->endGroup();
 
-    mainWindowGeometry = m_settings->value("MainWindow/geometry").toByteArray();
-    mainWindowState = m_settings->value("MainWindow/state").toByteArray();
+    mainWindowGeometry = m_settings->value(QStringLiteral("MainWindow/geometry")).toByteArray();
+    mainWindowState = m_settings->value(QStringLiteral("MainWindow/state")).toByteArray();
 
-    historyLimited = m_settings->value("HistoryLimited", true).toBool();
-    historyLimitedTo = m_settings->value("HistoryLimitedTo", 1000).toUInt();
+    historyLimited = m_settings->value(QStringLiteral("HistoryLimited"), true).toBool();
+    historyLimitedTo = m_settings->value(QStringLiteral("HistoryLimitedTo"), 1000).toUInt();
 
-    emulation = m_settings->value("emulation", "default").toString();
+    emulation
+            = m_settings->value(QStringLiteral("emulation"), QStringLiteral("default")).toString();
 
     // sessions
-    int size = m_settings->beginReadArray("Sessions");
+    int size = m_settings->beginReadArray(QStringLiteral("Sessions"));
     for (int i = 0; i < size; ++i) {
         m_settings->setArrayIndex(i);
-        QString name(m_settings->value("name").toString());
+        QString name(m_settings->value(QStringLiteral("name")).toString());
         if (name.isEmpty())
             continue;
-        sessions[name] = m_settings->value("state").toByteArray();
+        sessions[name] = m_settings->value(QStringLiteral("state")).toByteArray();
     }
     m_settings->endArray();
 
-    appOpacity = m_settings->value("MainWindow/appOpacity", 100).toInt();
-    termOpacity = m_settings->value("termOpacity", 100).toInt();
+    appOpacity = m_settings->value(QStringLiteral("MainWindow/appOpacity"), 100).toInt();
+    termOpacity = m_settings->value(QStringLiteral("termOpacity"), 100).toInt();
 
     /* default to Right. see qtermwidget.h */
-    scrollBarPos = m_settings->value("ScrollbarPosition", 2).toInt();
+    scrollBarPos = m_settings->value(QStringLiteral("ScrollbarPosition"), 2).toInt();
     /* default to North. I'd prefer South but North is standard (they say) */
-    tabsPos = m_settings->value("TabsPosition", 0).toInt();
-    alwaysShowTabs = m_settings->value("AlwaysShowTabs", true).toBool();
-    m_motionAfterPaste = m_settings->value("MotionAfterPaste", 0).toInt();
+    tabsPos = m_settings->value(QStringLiteral("TabsPosition"), 0).toInt();
+    alwaysShowTabs = m_settings->value(QStringLiteral("AlwaysShowTabs"), true).toBool();
+    m_motionAfterPaste = m_settings->value(QStringLiteral("MotionAfterPaste"), 0).toInt();
 
     /* toggles */
-    tabBarless = m_settings->value("TabBarless", false).toBool();
-    menuVisible = m_settings->value("MenuVisible", true).toBool();
-    askOnExit = m_settings->value("AskOnExit", true).toBool();
-    useCWD = m_settings->value("UseCWD", false).toBool();
+    tabBarless = m_settings->value(QStringLiteral("TabBarless"), false).toBool();
+    menuVisible = m_settings->value(QStringLiteral("MenuVisible"), true).toBool();
+    askOnExit = m_settings->value(QStringLiteral("AskOnExit"), true).toBool();
+    useCWD = m_settings->value(QStringLiteral("UseCWD"), false).toBool();
 
-    m_settings->beginGroup("DropMode");
-    dropKeepOpen = m_settings->value("KeepOpen", false).toBool();
-    dropShowOnStart = m_settings->value("ShowOnStart", true).toBool();
-    dropWidht = m_settings->value("Width", 70).toInt();
-    dropHeight = m_settings->value("Height", 45).toInt();
+    m_settings->beginGroup(QStringLiteral("DropMode"));
+    dropKeepOpen = m_settings->value(QStringLiteral("KeepOpen"), false).toBool();
+    dropShowOnStart = m_settings->value(QStringLiteral("ShowOnStart"), true).toBool();
+    dropWidht = m_settings->value(QStringLiteral("Width"), 70).toInt();
+    dropHeight = m_settings->value(QStringLiteral("Height"), 45).toInt();
     m_settings->endGroup();
 }
 
 void Preferences::save()
 {
-    m_settings->setValue("guiStyle", guiStyle);
-    m_settings->setValue("colorScheme", colorScheme);
-    m_settings->setValue("highlightCurrentTerminal", highlightCurrentTerminal);
-    m_settings->setValue("font", font);
+    m_settings->setValue(QStringLiteral("guiStyle"), guiStyle);
+    m_settings->setValue(QStringLiteral("colorScheme"), colorScheme);
+    m_settings->setValue(QStringLiteral("highlightCurrentTerminal"), highlightCurrentTerminal);
+    m_settings->setValue(QStringLiteral("font"), font);
 
-    m_settings->beginGroup("Shortcuts");
+    m_settings->beginGroup(QStringLiteral("Shortcuts"));
     for (auto it = m_shortcuts.cbegin(); it != m_shortcuts.cend(); ++it)
         m_settings->setValue(it.key(), it.value());
     m_settings->endGroup();
 
-    m_settings->setValue("MainWindow/geometry", mainWindowGeometry);
-    m_settings->setValue("MainWindow/state", mainWindowState);
+    m_settings->setValue(QStringLiteral("MainWindow/geometry"), mainWindowGeometry);
+    m_settings->setValue(QStringLiteral("MainWindow/state"), mainWindowState);
 
-    m_settings->setValue("HistoryLimited", historyLimited);
-    m_settings->setValue("HistoryLimitedTo", historyLimitedTo);
+    m_settings->setValue(QStringLiteral("HistoryLimited"), historyLimited);
+    m_settings->setValue(QStringLiteral("HistoryLimitedTo"), historyLimitedTo);
 
-    m_settings->setValue("emulation", emulation);
+    m_settings->setValue(QStringLiteral("emulation"), emulation);
 
     // sessions
-    m_settings->beginWriteArray("Sessions");
+    m_settings->beginWriteArray(QStringLiteral("Sessions"));
     int i = 0;
     auto sit = sessions.begin();
     while (sit != sessions.end()) {
         m_settings->setArrayIndex(i);
-        m_settings->setValue("name", sit.key());
-        m_settings->setValue("state", sit.value());
+        m_settings->setValue(QStringLiteral("name"), sit.key());
+        m_settings->setValue(QStringLiteral("state"), sit.value());
         ++sit;
         ++i;
     }
     m_settings->endArray();
 
-    m_settings->setValue("MainWindow/appOpacity", appOpacity);
-    m_settings->setValue("termOpacity", termOpacity);
-    m_settings->setValue("ScrollbarPosition", scrollBarPos);
-    m_settings->setValue("TabsPosition", tabsPos);
-    m_settings->setValue("AlwaysShowTabs", alwaysShowTabs);
-    m_settings->setValue("MotionAfterPaste", m_motionAfterPaste);
-    m_settings->setValue("TabBarless", tabBarless);
-    m_settings->setValue("MenuVisible", menuVisible);
-    m_settings->setValue("AskOnExit", askOnExit);
-    m_settings->setValue("UseCWD", useCWD);
+    m_settings->setValue(QStringLiteral("MainWindow/appOpacity"), appOpacity);
+    m_settings->setValue(QStringLiteral("termOpacity"), termOpacity);
+    m_settings->setValue(QStringLiteral("ScrollbarPosition"), scrollBarPos);
+    m_settings->setValue(QStringLiteral("TabsPosition"), tabsPos);
+    m_settings->setValue(QStringLiteral("AlwaysShowTabs"), alwaysShowTabs);
+    m_settings->setValue(QStringLiteral("MotionAfterPaste"), m_motionAfterPaste);
+    m_settings->setValue(QStringLiteral("TabBarless"), tabBarless);
+    m_settings->setValue(QStringLiteral("MenuVisible"), menuVisible);
+    m_settings->setValue(QStringLiteral("AskOnExit"), askOnExit);
+    m_settings->setValue(QStringLiteral("UseCWD"), useCWD);
 
-    m_settings->beginGroup("DropMode");
-    m_settings->setValue("KeepOpen", dropKeepOpen);
-    m_settings->setValue("ShowOnStart", dropShowOnStart);
-    m_settings->setValue("Width", dropWidht);
-    m_settings->setValue("Height", dropHeight);
+    m_settings->beginGroup(QStringLiteral("DropMode"));
+    m_settings->setValue(QStringLiteral("KeepOpen"), dropKeepOpen);
+    m_settings->setValue(QStringLiteral("ShowOnStart"), dropShowOnStart);
+    m_settings->setValue(QStringLiteral("Width"), dropWidht);
+    m_settings->setValue(QStringLiteral("Height"), dropHeight);
     m_settings->endGroup();
 
     m_settings->sync();

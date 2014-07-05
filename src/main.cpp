@@ -34,9 +34,9 @@ int main(int argc, char *argv[])
     if (qstrcmp(getenv("XDG_CURRENT_DESKTOP"), "LXQt") == 0)
         setenv("XDG_CURRENT_DESKTOP", "GNOME", 1);
 
-    QApplication::setApplicationName("qterminal");
-    QApplication::setApplicationVersion(STR_VERSION);
-    QApplication::setOrganizationDomain("qterminal.org");
+    QApplication::setApplicationName(QStringLiteral("qterminal"));
+    QApplication::setApplicationVersion(QStringLiteral(STR_VERSION));
+    QApplication::setOrganizationDomain(QStringLiteral("qterminal.org"));
     QSettings::setDefaultFormat(QSettings::IniFormat);
 
     QScopedPointer<QApplication> qapp(new QApplication(argc, argv));

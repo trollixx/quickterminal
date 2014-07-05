@@ -54,8 +54,8 @@ MainWindow::MainWindow(const QString &workingDir, const QString &command, QWidge
     m_tabWidget->addNewTab(command);
     setCentralWidget(m_tabWidget);
 
-    setWindowTitle("QTerminal");
-    setWindowIcon(QIcon(":/icons/qterminal.png"));
+    setWindowTitle(QStringLiteral("QTerminal"));
+    setWindowIcon(QIcon(QStringLiteral(":/icons/qterminal.png")));
 
     setupFileMenu();
     setupEditMenu();
@@ -217,7 +217,7 @@ void MainWindow::setupViewMenu()
             m_tabWidget, &TabWidget::changeTabPosition);
 
     tabPosMenu = new QMenu(tr("Tabs Layout"), menu);
-    tabPosMenu->setObjectName("tabPosMenu");
+    tabPosMenu->setObjectName(QStringLiteral("tabPosMenu"));
 
     foreach (QAction *action, tabBarPosition->actions())
         tabPosMenu->addAction(action);
@@ -425,9 +425,9 @@ void MainWindow::setKeepOpen(bool value)
         return;
 
     if (value)
-        m_dropDownLockButton->setIcon(QIcon(":/icons/locked.png"));
+        m_dropDownLockButton->setIcon(QIcon(QStringLiteral(":/icons/locked.png")));
     else
-        m_dropDownLockButton->setIcon(QIcon(":/icons/notlocked.png"));
+        m_dropDownLockButton->setIcon(QIcon(QStringLiteral(":/icons/notlocked.png")));
 
     m_dropDownLockButton->setChecked(value);
 }
