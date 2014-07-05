@@ -16,10 +16,6 @@ public:
                    QWidget *parent = nullptr);
     void propertiesChanged();
 
-signals:
-    void renameSession();
-    void removeCurrentSession();
-
 public slots:
     void zoomReset();
 };
