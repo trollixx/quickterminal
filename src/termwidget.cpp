@@ -80,21 +80,6 @@ void TermWidgetImpl::propertiesChanged()
     update();
 }
 
-void TermWidgetImpl::act_splitVertical()
-{
-    emit splitVertical();
-}
-
-void TermWidgetImpl::act_splitHorizontal()
-{
-    emit splitHorizontal();
-}
-
-void TermWidgetImpl::act_splitCollapse()
-{
-    emit splitCollapse();
-}
-
 void TermWidgetImpl::zoomReset()
 {
     setTerminalFont(Preferences::instance()->font);
@@ -115,9 +100,6 @@ TermWidget::TermWidget(const QString &wdir, const QString &shell, QWidget *paren
     propertiesChanged();
 
     connect(m_term, SIGNAL(finished()), this, SIGNAL(finished()));
-    connect(m_term, SIGNAL(splitHorizontal()), this, SLOT(term_splitHorizontal()));
-    connect(m_term, SIGNAL(splitVertical()), this, SLOT(term_splitVertical()));
-    connect(m_term, SIGNAL(splitCollapse()), this, SLOT(term_splitCollapse()));
     connect(m_term, SIGNAL(termGetFocus()), this, SLOT(term_termGetFocus()));
     connect(m_term, SIGNAL(termLostFocus()), this, SLOT(term_termLostFocus()));
     connect(m_term, &QTermWidget::urlActivated, [](const QUrl &url) {
@@ -138,21 +120,6 @@ void TermWidget::propertiesChanged()
 TermWidgetImpl *TermWidget::impl() const
 {
     return m_term;
-}
-
-void TermWidget::term_splitHorizontal()
-{
-    emit splitHorizontal(this);
-}
-
-void TermWidget::term_splitVertical()
-{
-    emit splitVertical(this);
-}
-
-void TermWidget::term_splitCollapse()
-{
-    emit splitCollapse(this);
 }
 
 void TermWidget::term_termGetFocus()

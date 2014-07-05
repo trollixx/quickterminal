@@ -175,12 +175,6 @@ TermWidget *TermWidgetHolder::newTerm(const QString &wdir, const QString &shell)
     connect(w, SIGNAL(removeCurrentSession()), this, SIGNAL(lastTerminalClosed()));
     connect(w, SIGNAL(finished()), this, SLOT(handle_finished()));
     // consume signals
-    connect(w, SIGNAL(splitHorizontal(TermWidget *)),
-            this, SLOT(splitHorizontal(TermWidget *)));
-    connect(w, SIGNAL(splitVertical(TermWidget *)),
-            this, SLOT(splitVertical(TermWidget *)));
-    connect(w, SIGNAL(splitCollapse(TermWidget *)),
-            this, SLOT(splitCollapse(TermWidget *)));
     connect(w, SIGNAL(termGetFocus(TermWidget *)),
             this, SLOT(setCurrentTerminal(TermWidget *)));
 
