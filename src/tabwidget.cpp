@@ -48,7 +48,7 @@ TabWidget::TabWidget(QWidget *parent) :
 
     tabBar()->installEventFilter(this);
 
-    connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(removeTab(int)));
+    connect(this, &TabWidget::tabCloseRequested, this, &TabWidget::removeTab);
 }
 
 TermWidgetHolder *TabWidget::terminalHolder() const
@@ -75,7 +75,7 @@ int TabWidget::addNewTab(const QString &command)
     }
 
     TermWidgetHolder *console = new TermWidgetHolder(cwd, command, this);
-    connect(console, SIGNAL(finished()), SLOT(removeFinished()));
+    connect(console, &TermWidgetHolder::finished, this, &TabWidget::removeFinished);
 
     int index = addTab(console, label);
     recountIndexes();

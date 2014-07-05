@@ -16,10 +16,10 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
 {
     setupUi(this);
 
-    connect(buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()),
-            this, SLOT(apply()));
-    connect(changeFontButton, SIGNAL(clicked()),
-            this, SLOT(changeFontButton_clicked()));
+    connect(buttonBox->button(QDialogButtonBox::Apply), &QPushButton::clicked,
+            this, &PreferencesDialog::apply);
+    connect(changeFontButton, &QPushButton::clicked,
+            this, &PreferencesDialog::changeFontButton_clicked);
 
     QStringList emulations = QTermWidget::availableKeyBindings();
     QStringList colorSchemes = QTermWidget::availableColorSchemes();
@@ -63,10 +63,8 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     setFontSample(m_preferences->font);
 
     appOpacityBox->setValue(m_preferences->appOpacity);
-    // connect(appOpacityBox, SIGNAL(valueChanged(int)), this, SLOT(apply()));
 
     termOpacityBox->setValue(m_preferences->termOpacity);
-    // connect(termOpacityBox, SIGNAL(valueChanged(int)), this, SLOT(apply()));
 
     highlightCurrentCheckBox->setChecked(m_preferences->highlightCurrentTerminal);
 

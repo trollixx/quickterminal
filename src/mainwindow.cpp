@@ -82,7 +82,7 @@ void MainWindow::enableDropMode()
     m_dropDownLockButton = new QToolButton(this);
     m_tabWidget->setCornerWidget(m_dropDownLockButton, Qt::BottomRightCorner);
     m_dropDownLockButton->setCheckable(true);
-    connect(m_dropDownLockButton, SIGNAL(clicked(bool)), SLOT(setKeepOpen(bool)));
+    connect(m_dropDownLockButton, &QToolButton::clicked, this, &MainWindow::setKeepOpen);
     setKeepOpen(m_preferences->dropKeepOpen);
     m_dropDownLockButton->setAutoRaise(true);
     realign();
@@ -99,7 +99,7 @@ void MainWindow::setupFileMenu()
     menu->addAction(action);
 
     action = m_actionManager->action(ActionId::CloseTab);
-    connect(action, SIGNAL(triggered()), m_tabWidget, SLOT(removeCurrentTab()));
+    connect(action, &QAction::triggered, m_tabWidget, &TabWidget::removeCurrentTab);
     addAction(action);
     menu->addAction(action);
 
@@ -172,7 +172,7 @@ void MainWindow::setupEditMenu()
     menu->addSeparator();
 
     action = m_actionManager->action(ActionId::Preferences);
-    connect(action, SIGNAL(triggered()), SLOT(showPreferencesDialog()));
+    connect(action, &QAction::triggered, this, &MainWindow::showPreferencesDialog);
     addAction(action);
     menu->addAction(action);
 

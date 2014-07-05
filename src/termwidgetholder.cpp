@@ -166,9 +166,9 @@ TermWidget *TermWidgetHolder::newTerm(const QString &wdir, const QString &shell)
     connect(w, &TermWidget::customContextMenuRequested,
             this, &TermWidgetHolder::terminalContextMenuRequested);
     // proxy signals
-    connect(w, SIGNAL(finished()), this, SLOT(handle_finished()));
+    connect(w, &TermWidget::finished, this, &TermWidgetHolder::handle_finished);
     // consume signals
-    connect(w, SIGNAL(termGetFocus(TermWidget *)), this, SLOT(setCurrentTerminal(TermWidget *)));
+    connect(w, &TermWidget::termGetFocus, this, &TermWidgetHolder::setCurrentTerminal);
 
     return w;
 }

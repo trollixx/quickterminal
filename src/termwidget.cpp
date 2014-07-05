@@ -46,9 +46,9 @@ TermWidget::TermWidget(const QString &workingDir, const QString &command, QWidge
 
     propertiesChanged();
 
-    connect(m_term, SIGNAL(finished()), this, SIGNAL(finished()));
-    connect(m_term, SIGNAL(termGetFocus()), this, SLOT(term_termGetFocus()));
-    connect(m_term, SIGNAL(termLostFocus()), this, SLOT(term_termLostFocus()));
+    connect(m_term, &QTermWidget::finished, this, &TermWidget::finished);
+    connect(m_term, &QTermWidget::termGetFocus, this, &TermWidget::term_termGetFocus);
+    connect(m_term, &QTermWidget::termLostFocus, this, &TermWidget::term_termLostFocus);
     connect(m_term, &QTermWidget::urlActivated, [](const QUrl &url) {
         QDesktopServices::openUrl(url);
     });
