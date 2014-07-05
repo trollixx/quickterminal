@@ -293,17 +293,6 @@ void TabWidget::preferencesChanged()
     showHideTabBar();
 }
 
-void TabWidget::saveSession()
-{
-    int ix = currentIndex();
-    reinterpret_cast<TermWidgetHolder *>(widget(ix))->saveSession(tabText(ix));
-}
-
-void TabWidget::loadSession()
-{
-    reinterpret_cast<TermWidgetHolder *>(widget(currentIndex()))->loadSession();
-}
-
 void TabWidget::showHideTabBar()
 {
     tabBar()->setVisible(Preferences::instance()->alwaysShowTabs || count() > 1);

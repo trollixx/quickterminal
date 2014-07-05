@@ -58,17 +58,6 @@ void Preferences::load()
     emulation
             = m_settings->value(QStringLiteral("emulation"), QStringLiteral("default")).toString();
 
-    // sessions
-    int size = m_settings->beginReadArray(QStringLiteral("Sessions"));
-    for (int i = 0; i < size; ++i) {
-        m_settings->setArrayIndex(i);
-        QString name(m_settings->value(QStringLiteral("name")).toString());
-        if (name.isEmpty())
-            continue;
-        sessions[name] = m_settings->value(QStringLiteral("state")).toByteArray();
-    }
-    m_settings->endArray();
-
     appOpacity = m_settings->value(QStringLiteral("MainWindow/appOpacity"), 100).toInt();
     termOpacity = m_settings->value(QStringLiteral("termOpacity"), 100).toInt();
 
@@ -112,19 +101,6 @@ void Preferences::save()
     m_settings->setValue(QStringLiteral("HistoryLimitedTo"), historyLimitedTo);
 
     m_settings->setValue(QStringLiteral("emulation"), emulation);
-
-    // sessions
-    m_settings->beginWriteArray(QStringLiteral("Sessions"));
-    int i = 0;
-    auto sit = sessions.begin();
-    while (sit != sessions.end()) {
-        m_settings->setArrayIndex(i);
-        m_settings->setValue(QStringLiteral("name"), sit.key());
-        m_settings->setValue(QStringLiteral("state"), sit.value());
-        ++sit;
-        ++i;
-    }
-    m_settings->endArray();
 
     m_settings->setValue(QStringLiteral("MainWindow/appOpacity"), appOpacity);
     m_settings->setValue(QStringLiteral("termOpacity"), termOpacity);

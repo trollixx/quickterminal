@@ -33,57 +33,6 @@ void TermWidgetHolder::setInitialFocus()
     list.first()->setFocus(Qt::OtherFocusReason);
 }
 
-void TermWidgetHolder::loadSession()
-{
-    bool ok;
-    QString name = QInputDialog::getItem(this, tr("Load Session"),
-                                         tr("List of saved sessions:"),
-                                         Preferences::instance()->sessions.keys(),
-                                         0, false, &ok);
-    if (!ok || name.isEmpty())
-        return;
-#if 0
-    foreach (QWidget *w, findChildren<QWidget *>()) {
-        if (w) {
-            delete w;
-            w = 0;
-        }
-    }
-
-    qDebug() << "load" << name << QString(Preferences::instance()->sessions[name]);
-    QStringList splitters = QString(Preferences::instance()->sessions[name]).split("|",
-                                                                                  QString::SkipEmptyParts);
-    foreach (const QString &splitter, splitters) {
-        QStringList components = splitter.split(",");
-        qDebug() << "comp" << components;
-        // orientation
-        Qt::Orientation orientation;
-        if (components.size() > 0)
-            orientation = components.takeAt(0).toInt();
-        // sizes
-        QList<int> sizes;
-        QList<TermWidget *> widgets;
-        foreach (const QString &s, components) {
-            sizes << s.toInt();
-            widgets << newTerm();
-        }
-        // new terms
-    }
-#endif
-}
-
-void TermWidgetHolder::saveSession(const QString &name)
-{
-    QString dump;
-    QString num(QStringLiteral("%1"));
-    foreach (QSplitter *w, findChildren<QSplitter *>()) {
-        dump += '|' + num.arg(w->orientation());
-        foreach (int i, w->sizes())
-            dump += ',' + num.arg(i);
-    }
-    Preferences::instance()->sessions[name] = dump;
-}
-
 TermWidget *TermWidgetHolder::currentTerminal() const
 {
     return m_currentTerm;

@@ -41,8 +41,6 @@ public:
 
     QString emulation;
 
-    QMap<QString, QString> sessions;
-
     int appOpacity;
     int termOpacity;
 

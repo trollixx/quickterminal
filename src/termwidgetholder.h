@@ -26,9 +26,6 @@ public:
     void propertiesChanged();
     void setInitialFocus();
 
-    void loadSession();
-    void saveSession(const QString &name);
-
     TermWidget *currentTerminal() const;
 
 public slots:

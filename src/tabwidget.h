@@ -57,9 +57,6 @@ public slots:
     void changeScrollPosition(QAction *);
     void preferencesChanged();
 
-    void saveSession();
-    void loadSession();
-
 signals:
     void closeTabNotification();
 
