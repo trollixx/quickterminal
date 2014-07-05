@@ -2,16 +2,18 @@
 
 #include "preferences.h"
 
-#include <QDebug>
 #include <QDesktopServices>
 #include <QPainter>
 #include <QVBoxLayout>
 
-#define FLOW_CONTROL_ENABLED false
-#define FLOW_CONTROL_WARNING_ENABLED false
+namespace {
+const bool FlowControlEnabled = false;
+const bool FlowControlWarningEnabled = false;
+}
 
 TermWidget::TermWidget(const QString &workingDir, const QString &command, QWidget *parent) :
-    QWidget(parent)
+    QWidget(parent),
+    m_preferences(Preferences::instance())
 {
     m_borderColor = palette().color(QPalette::Window);
 
@@ -19,26 +21,24 @@ TermWidget::TermWidget(const QString &workingDir, const QString &command, QWidge
     setLayout(m_layout);
 
     m_term = new QTermWidget(0, this);
-    m_term->setFlowControlEnabled(FLOW_CONTROL_ENABLED);
-    m_term->setFlowControlWarningEnabled(FLOW_CONTROL_WARNING_ENABLED);
+    m_term->setFlowControlEnabled(FlowControlEnabled);
+    m_term->setFlowControlWarningEnabled(FlowControlWarningEnabled);
 
     if (!workingDir.isNull())
         m_term->setWorkingDirectory(workingDir);
 
     if (command.isNull()) {
-        if (!Preferences::instance()->shell.isNull())
-            m_term->setShellProgram(Preferences::instance()->shell);
+        if (!m_preferences->shell.isNull())
+            m_term->setShellProgram(m_preferences->shell);
     } else {
-        qDebug() << "Settings custom shell program:" << command;
         QStringList parts = command.split(QRegExp("\\s+"), QString::SkipEmptyParts);
-        qDebug() << parts;
-        m_term->setShellProgram(parts.at(0));
-        parts.removeAt(0);
+        m_term->setShellProgram(parts.first());
+        parts.removeFirst();
         if (parts.count())
             m_term->setArgs(parts);
     }
 
-    m_term->setMotionAfterPasting(Preferences::instance()->m_motionAfterPaste);
+    m_term->setMotionAfterPasting(m_preferences->m_motionAfterPaste);
     m_term->startShellProgram();
 
     setFocusProxy(m_term);
@@ -56,39 +56,19 @@ TermWidget::TermWidget(const QString &workingDir, const QString &command, QWidge
 
 void TermWidget::propertiesChanged()
 {
-    if (Preferences::instance()->highlightCurrentTerminal)
+    if (m_preferences->highlightCurrentTerminal)
         m_layout->setContentsMargins(2, 2, 2, 2);
     else
         m_layout->setContentsMargins(0, 0, 0, 0);
 
-    m_term->setColorScheme(Preferences::instance()->colorScheme);
-    m_term->setTerminalFont(Preferences::instance()->font);
-    m_term->setMotionAfterPasting(Preferences::instance()->m_motionAfterPaste);
-
-    if (Preferences::instance()->historyLimited) {
-        m_term->setHistorySize(Preferences::instance()->historyLimitedTo);
-    } else {
-        // Unlimited history
-        m_term->setHistorySize(-1);
-    }
-
-    m_term->setKeyBindings(Preferences::instance()->emulation);
-    m_term->setTerminalOpacity(Preferences::instance()->termOpacity/100.0);
-
-    /* be consequent with qtermwidget.h here */
-    switch (Preferences::instance()->scrollBarPos) {
-    case 0:
-        m_term->setScrollBarPosition(QTermWidget::NoScrollBar);
-        break;
-    case 1:
-        m_term->setScrollBarPosition(QTermWidget::ScrollBarLeft);
-        break;
-    case 2:
-    default:
-        m_term->setScrollBarPosition(QTermWidget::ScrollBarRight);
-        break;
-    }
-
+    m_term->setColorScheme(m_preferences->colorScheme);
+    m_term->setTerminalFont(m_preferences->font);
+    m_term->setMotionAfterPasting(m_preferences->m_motionAfterPaste);
+    m_term->setHistorySize(m_preferences->historyLimited ? m_preferences->historyLimitedTo : -1);
+    m_term->setKeyBindings(m_preferences->emulation);
+    m_term->setTerminalOpacity(m_preferences->termOpacity / 100.0);
+    m_term->setScrollBarPosition(
+                static_cast<QTermWidget::ScrollBarPosition>(m_preferences->scrollBarPos));
     m_term->update();
 }
 
@@ -99,7 +79,7 @@ QTermWidget *TermWidget::impl() const
 
 void TermWidget::zoomReset()
 {
-    m_term->setTerminalFont(Preferences::instance()->font);
+    m_term->setTerminalFont(m_preferences->font);
 }
 
 void TermWidget::term_termGetFocus()

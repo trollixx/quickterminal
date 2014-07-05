@@ -3,6 +3,8 @@
 
 #include <qtermwidget.h>
 
+class Preferences;
+
 class TermWidget : public QWidget
 {
     Q_OBJECT
@@ -27,6 +29,8 @@ private slots:
     void term_termLostFocus();
 
 private:
+    Preferences * const m_preferences = nullptr;
+
     QTermWidget *m_term = nullptr;
     QVBoxLayout *m_layout = nullptr;
     QColor m_borderColor;

@@ -32,7 +32,6 @@ public slots:
     void splitHorizontal(TermWidget *term);
     void splitVertical(TermWidget *term);
     void splitCollapse(TermWidget *term);
-    void setWDir(const QString &wdir);
     void switchNextSubterminal();
     void switchPrevSubterminal();
 

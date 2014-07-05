@@ -38,11 +38,6 @@ TermWidget *TermWidgetHolder::currentTerminal() const
     return m_currentTerm;
 }
 
-void TermWidgetHolder::setWDir(const QString &wdir)
-{
-    m_workingDir = wdir;
-}
-
 void TermWidgetHolder::switchNextSubterminal()
 {
     // TODO/FIXME: merge switchPrevSubterminal with switchNextSubterminal
