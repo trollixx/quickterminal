@@ -30,10 +30,6 @@ int main(int argc, char *argv[])
 {
     setenv("TERM", "xterm", 1); // TODO/FIXME: why?
 
-    /// TODO: Remove this temporary fix intended to make icon theme work on LXQt
-    if (qstrcmp(getenv("XDG_CURRENT_DESKTOP"), "LXQt") == 0)
-        setenv("XDG_CURRENT_DESKTOP", "GNOME", 1);
-
     QApplication::setApplicationName(QStringLiteral("qterminal"));
     QApplication::setApplicationVersion(QStringLiteral(STR_VERSION));
     QApplication::setOrganizationDomain(QStringLiteral("qterminal.org"));
