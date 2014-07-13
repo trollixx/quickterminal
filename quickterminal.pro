@@ -18,7 +18,7 @@ INCLUDEPATH += src src/3rdparty
 RESOURCES += src/icons.qrc
 FORMS += $$files(src/forms/*.ui)
 
-OTHER_FILES += $$files(desktop/*)
+OTHER_FILES += $$files(desktop/*) AUTHORS COPYING README
 
 unix {
     isEmpty(PREFIX) {
