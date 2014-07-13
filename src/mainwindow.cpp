@@ -65,7 +65,8 @@ MainWindow::MainWindow(const QString &workingDir, const QString &command, QWidge
     setupWindowActions();
 
     setContentsMargins(0, 0, 0, 0);
-    restoreGeometry(m_preferences->mainWindowGeometry);
+    if (!restoreGeometry(m_preferences->mainWindowGeometry))
+        resize(800, 600);
     restoreState(m_preferences->mainWindowState);
 }
 
