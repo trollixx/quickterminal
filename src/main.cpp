@@ -24,7 +24,6 @@
 
 #include <QApplication>
 #include <QSettings>
-#include <QTranslator>
 
 int main(int argc, char *argv[])
 {
@@ -36,24 +35,6 @@ int main(int argc, char *argv[])
     QSettings::setDefaultFormat(QSettings::IniFormat);
 
     QScopedPointer<QApplication> qapp(new QApplication(argc, argv));
-
-    // translations
-    QString fname = QString("qterminal_%1.qm").arg(QLocale::system().name().left(2));
-    QTranslator translator;
-#ifdef TRANSLATIONS_DIR
-    qDebug() << "TRANSLATIONS_DIR: Loading translation file" << fname << "from dir"
-             << TRANSLATIONS_DIR;
-    qDebug() << "load success:" << translator.load(fname, TRANSLATIONS_DIR, "_");
-#endif
-#ifdef APPLE_BUNDLE
-    qDebug() << "APPLE_BUNDLE: Loading translator file" << fname << "from dir"
-             << QApplication::applicationDirPath()+"../translations";
-    qDebug() << "load success:" << translator.load(fname,
-                                                   QApplication::applicationDirPath()+"../translations",
-                                                   "_");
-#endif
-    qapp->installTranslator(&translator);
-
     QScopedPointer<Application> app(new Application());
 
     return qapp->exec();
