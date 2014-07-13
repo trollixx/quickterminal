@@ -24,13 +24,12 @@ unix {
     isEmpty(PREFIX) {
         PREFIX = /usr/local
     }
-    BINDIR = $$PREFIX/bin
+
+    target.path = $$PREFIX/bin
+
+    shortcut.path = $$PREFIX/share/applications
+    shortcut.files = desktop/quickterminal.desktop
 
     INSTALLS += target shortcut
-    target.path = $$BINDIR
-
-    DATADIR = $$PREFIX/share
-    shortcut.path = $$DATADIR/applications
-    shortcut.files = desktop/quickterminal.desktop
 }
 
