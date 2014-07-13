@@ -3,42 +3,42 @@
 
 namespace ActionId {
 // Application
-const char About[] = "QTerminal.Application.About";
-const char AboutQt[] = "QTerminal.Application.AboutQt";
-const char Preferences[] = "QTerminal.Application.Preferences";
-const char Exit[] = "QTerminal.Application.Exit";
+const char About[] = "QuickTerminal.Application.About";
+const char AboutQt[] = "QuickTerminal.Application.AboutQt";
+const char Preferences[] = "QuickTerminal.Application.Preferences";
+const char Exit[] = "QuickTerminal.Application.Exit";
 
 // Window
-const char NewWindow[] = "QTerminal.Window.New";
-const char CloseWindow[] = "QTerminal.Window.Close";
-const char ShowMenu[] = "QTerminal.Window.ShowMenu";
-const char ShowTabs[] = "QTerminal.Window.ShowTabs";
-const char ToggleVisibility[] = "QTerminal.Window.ToggleVisibility"; // DropDown Mode
+const char NewWindow[] = "QuickTerminal.Window.New";
+const char CloseWindow[] = "QuickTerminal.Window.Close";
+const char ShowMenu[] = "QuickTerminal.Window.ShowMenu";
+const char ShowTabs[] = "QuickTerminal.Window.ShowTabs";
+const char ToggleVisibility[] = "QuickTerminal.Window.ToggleVisibility"; // DropDown Mode
 
 // Tab
-const char NewTab[] = "QTerminal.Tab.New";
-const char CloseTab[] = "QTerminal.Tab.Close";
-const char NextTab[] = "QTerminal.Tab.Next";
-const char PreviousTab[] = "QTerminal.Tab.Previous";
+const char NewTab[] = "QuickTerminal.Tab.New";
+const char CloseTab[] = "QuickTerminal.Tab.Close";
+const char NextTab[] = "QuickTerminal.Tab.Next";
+const char PreviousTab[] = "QuickTerminal.Tab.Previous";
 
 // Terminal
-const char SplitHorizontally[] = "QTerminal.Terminal.SplitHorizontally";
-const char SplitVertically[] = "QTerminal.Terminal.SplitVertically";
-const char CloseTerminal[] = "QTerminal.Terminal.Close";
-const char Copy[] = "QTerminal.Terminal.Copy";
-const char Paste[] = "QTerminal.Terminal.Paste";
-const char PasteSelection[] = "QTerminal.Terminal.PasteSelection";
-const char Clear[] = "QTerminal.Terminal.Clear";
-const char SelectAll[] = "QTerminal.Terminal.SelectAll"; /// TODO: Select All action
-const char Find[] = "QTerminal.Terminal.Find";
-const char ZoomIn[] = "QTerminal.Terminal.ZoomIn";
-const char ZoomOut[] = "QTerminal.Terminal.ZoomOut";
-const char ZoomReset[] = "QTerminal.Terminal.ZoomReset";
+const char SplitHorizontally[] = "QuickTerminal.Terminal.SplitHorizontally";
+const char SplitVertically[] = "QuickTerminal.Terminal.SplitVertically";
+const char CloseTerminal[] = "QuickTerminal.Terminal.Close";
+const char Copy[] = "QuickTerminal.Terminal.Copy";
+const char Paste[] = "QuickTerminal.Terminal.Paste";
+const char PasteSelection[] = "QuickTerminal.Terminal.PasteSelection";
+const char Clear[] = "QuickTerminal.Terminal.Clear";
+const char SelectAll[] = "QuickTerminal.Terminal.SelectAll"; /// TODO: Select All action
+const char Find[] = "QuickTerminal.Terminal.Find";
+const char ZoomIn[] = "QuickTerminal.Terminal.ZoomIn";
+const char ZoomOut[] = "QuickTerminal.Terminal.ZoomOut";
+const char ZoomReset[] = "QuickTerminal.Terminal.ZoomReset";
 }
 
 // Fallback icons
 namespace Icon {
-const char Application[] = ":/icons/qterminal.png";
+const char Application[] = ":/icons/application-icon.png";
 const char ApplicationExit[] = ":/icons/application-exit.png";
 }
 

@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=QTerminal
+Name=QuickTerminal
 Type=Application
 GenericName=Terminal emulator
 
@@ -8,15 +8,15 @@ Comment[ru_RU]=Эмулятор терминала
 Comment[fr]=Terminal
 
 Icon=utilities-terminal
-Exec=qterminal
+Exec=qt
 Terminal=false
 Categories=Qt;System;TerminalEmulator;
 Actions=Dropdown;
 
 [Desktop Action Dropdown]
 Name=Drop-down terminal
-Icon=qterminal
-Exec=qterminal --drop
+Icon=utilities-terminal
+Exec=qt --dropdown
 
 Name[en_GB]=Drop-down Terminal
 Name[bg]=Падащ терминал

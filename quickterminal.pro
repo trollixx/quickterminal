@@ -2,7 +2,7 @@ QT += gui gui-private widgets
 CONFIG += c++11 link_pkgconfig
 PKGCONFIG += qtermwidget5 x11
 
-TARGET = qterminal
+TARGET = qt
 
 DEFINES += STR_VERSION=\\\"1.0\\\"
 
@@ -18,6 +18,8 @@ INCLUDEPATH += src src/3rdparty
 RESOURCES += src/icons.qrc
 FORMS += $$files(src/forms/*.ui)
 
+OTHER_FILES += $$files(desktop/*)
+
 unix {
     isEmpty(PREFIX) {
         PREFIX = /usr/local
@@ -29,6 +31,6 @@ unix {
 
     DATADIR = $$PREFIX/share
     shortcut.path = $$DATADIR/applications
-    shortcut.files = qterminal.desktop
+    shortcut.files = desktop/quickterminal.desktop
 }
 

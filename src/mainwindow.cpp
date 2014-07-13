@@ -54,7 +54,7 @@ MainWindow::MainWindow(const QString &workingDir, const QString &command, QWidge
     m_tabWidget->addNewTab(command);
     setCentralWidget(m_tabWidget);
 
-    setWindowTitle(QStringLiteral("QTerminal"));
+    setWindowTitle(qApp->applicationName());
     setWindowIcon(QIcon::fromTheme(QStringLiteral("utilities-terminal"), QIcon(Icon::Application)));
 
     setupFileMenu();
@@ -218,6 +218,7 @@ void MainWindow::setupViewMenu()
             m_tabWidget, &TabWidget::changeTabPosition);
 
     tabPosMenu = new QMenu(tr("Tabs Layout"), menu);
+    // TODO: Remove
     tabPosMenu->setObjectName(QStringLiteral("tabPosMenu"));
 
     foreach (QAction *action, tabBarPosition->actions())
@@ -365,7 +366,7 @@ void MainWindow::toggleMenuBar()
 
 void MainWindow::showAboutMessageBox()
 {
-    QMessageBox::about(this, QString("QTerminal %1").arg(qApp->applicationVersion()),
+    QMessageBox::about(this, QString("QuickTerminal %1").arg(qApp->applicationVersion()),
                        tr("A lightweight multiplatform terminal emulator"));
 }
 
@@ -443,7 +444,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     }
 
     QScopedPointer<QMessageBox> mb(new QMessageBox(this));
-    mb->setWindowTitle(tr("Exit QTerminal"));
+    mb->setWindowTitle(tr("Exit QuickTerminal"));
     mb->setText(tr("Are you sure you want to exit?"));
     mb->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 

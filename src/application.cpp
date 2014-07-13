@@ -109,9 +109,9 @@ void Application::parseOptions()
 void Application::setupActions()
 {
     // Application
-    ActionManager::registerAction(ActionId::About, tr("About QTerminal"),
+    ActionManager::registerAction(ActionId::About, tr("&About QuickTerminal"),
                                   QIcon::fromTheme(QStringLiteral("help-about")));
-    ActionManager::registerAction(ActionId::AboutQt, tr("About Qt"));
+    ActionManager::registerAction(ActionId::AboutQt, tr("About &Qt"));
     ActionManager::registerAction(ActionId::Preferences, tr("Preferences"),
                                   QKeySequence(QStringLiteral("Ctrl+Shift+P")),
                                   QIcon::fromTheme(QStringLiteral("preferences-desktop")));

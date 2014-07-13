@@ -28,9 +28,9 @@ int main(int argc, char *argv[])
 {
     setenv("TERM", "xterm", 1); // TODO/FIXME: why?
 
-    QApplication::setApplicationName(QStringLiteral("qterminal"));
+    QApplication::setApplicationName(QStringLiteral("QuickTerminal"));
     QApplication::setApplicationVersion(QStringLiteral(STR_VERSION));
-    QApplication::setOrganizationDomain(QStringLiteral("qterminal.org"));
+    QApplication::setOrganizationName(QStringLiteral("QuickTerminal"));
 
     QScopedPointer<QApplication> qapp(new QApplication(argc, argv));
     QScopedPointer<Application> app(new Application());
