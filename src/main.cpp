@@ -23,7 +23,6 @@
 #include "preferences.h"
 
 #include <QApplication>
-#include <QSettings>
 
 int main(int argc, char *argv[])
 {
@@ -32,7 +31,6 @@ int main(int argc, char *argv[])
     QApplication::setApplicationName(QStringLiteral("qterminal"));
     QApplication::setApplicationVersion(QStringLiteral(STR_VERSION));
     QApplication::setOrganizationDomain(QStringLiteral("qterminal.org"));
-    QSettings::setDefaultFormat(QSettings::IniFormat);
 
     QScopedPointer<QApplication> qapp(new QApplication(argc, argv));
     QScopedPointer<Application> app(new Application());
