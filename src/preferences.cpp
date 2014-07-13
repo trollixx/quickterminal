@@ -1,11 +1,8 @@
 #include "preferences.h"
 
 #include <QApplication>
+#include <QFontDatabase>
 #include <QSettings>
-
-namespace {
-const char DefaultFont[] = "Monospace";
-}
 
 Preferences *Preferences::m_instance = nullptr;
 
@@ -42,7 +39,10 @@ void Preferences::load()
     highlightCurrentTerminal
             = m_settings->value(QStringLiteral("highlightCurrentTerminal"), true).toBool();
 
-    font = qvariant_cast<QFont>(m_settings->value(QStringLiteral("font"), defaultFont()));
+    if (m_settings->contains(QStringLiteral("font")))
+        font = qvariant_cast<QFont>(m_settings->value(QStringLiteral("font")));
+    else
+        font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
 
     m_settings->beginGroup(QStringLiteral("Shortcuts"));
     foreach (const QString &key, m_settings->childKeys())
@@ -121,15 +121,6 @@ void Preferences::save()
     m_settings->endGroup();
 
     m_settings->sync();
-}
-
-QFont Preferences::defaultFont() const
-{
-    QFont font = QApplication::font();
-    font.setFamily(QLatin1String(DefaultFont));
-    font.setPointSize(12);
-    font.setStyleHint(QFont::TypeWriter);
-    return font;
 }
 
 bool Preferences::hasShortcut(const QString &actionId) const

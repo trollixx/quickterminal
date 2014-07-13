@@ -18,8 +18,6 @@ public:
     void load();
     void save();
 
-    QFont defaultFont() const;
-
     bool hasShortcut(const QString &actionId) const;
     QKeySequence shortcut(const QString &actionId,
                           const QKeySequence &fallback = QKeySequence()) const;
