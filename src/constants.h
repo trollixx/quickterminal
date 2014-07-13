@@ -37,7 +37,8 @@ const char ZoomReset[] = "QTerminal.Terminal.ZoomReset";
 }
 
 // Fallback icons
-namespace ActionIcon {
+namespace Icon {
+const char Application[] = ":/icons/qterminal.png";
 const char ApplicationExit[] = ":/icons/application-exit.png";
 }
 

@@ -55,7 +55,7 @@ MainWindow::MainWindow(const QString &workingDir, const QString &command, QWidge
     setCentralWidget(m_tabWidget);
 
     setWindowTitle(QStringLiteral("QTerminal"));
-    setWindowIcon(QIcon(QStringLiteral(":/icons/qterminal.png")));
+    setWindowIcon(QIcon::fromTheme(QStringLiteral("utilities-terminal"), QIcon(Icon::Application)));
 
     setupFileMenu();
     setupEditMenu();
