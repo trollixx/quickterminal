@@ -37,10 +37,7 @@ TabWidget::TabWidget(QWidget *parent) :
 {
     setFocusPolicy(Qt::NoFocus);
 
-    /* On Mac OS X this will look similar to
-     * the tabs in Safari or Leopard's Terminal.app .
-     * I love this!
-     */
+    // On Mac OS X this will look similar to the tabs in Safari or Leopard's Terminal.app.
     setDocumentMode(true);
 
     setTabsClosable(true);
@@ -59,20 +56,19 @@ TermWidgetHolder *TabWidget::terminalHolder() const
 
 void TabWidget::setWorkDirectory(const QString &dir)
 {
-    work_dir = dir;
+    m_workingDir = dir;
 }
 
 int TabWidget::addNewTab(const QString &command)
 {
-    tabNumerator++;
-    QString label = QString(tr("Shell No. %1")).arg(tabNumerator);
+    const QString label = QString(tr("Shell No. %1")).arg(++m_tabNumerator);
 
     TermWidgetHolder *ch = terminalHolder();
-    QString cwd(work_dir);
+    QString cwd(m_workingDir);
     if (Preferences::instance()->useCWD && ch) {
         cwd = ch->currentTerminal()->impl()->workingDirectory();
         if (cwd.isEmpty())
-            cwd = work_dir;
+            cwd = m_workingDir;
     }
 
     TermWidgetHolder *console = new TermWidgetHolder(cwd, command, this);
@@ -119,7 +115,7 @@ void TabWidget::recountIndexes()
         widget(i)->setProperty(TAB_INDEX_PROPERTY, i);
 }
 
-void TabWidget::renameSession()
+void TabWidget::renameTab()
 {
     bool ok = false;
     QString text = QInputDialog::getText(this, tr("Tab name"), tr("New tab name:"),
@@ -132,12 +128,10 @@ bool TabWidget::eventFilter(QObject *obj, QEvent *event)
 {
     if (event->type() == QEvent::MouseButtonDblClick) {
         QMouseEvent *e = reinterpret_cast<QMouseEvent *>(event);
-        // if user doubleclicks on tab button - rename it. If user
-        // clicks on free space - open new tab
         if (tabBar()->tabAt(e->pos()) == -1)
             addNewTab();
         else
-            renameSession();
+            renameTab();
         return true;
     }
     return QTabWidget::eventFilter(obj, event);
@@ -172,23 +166,18 @@ void TabWidget::removeTab(int index)
     setUpdatesEnabled(true);
 
     if (count() == 0)
-        emit closeTabNotification();
+        emit lastTabClosed();
 
     showHideTabBar();
 }
 
 void TabWidget::removeCurrentTab()
 {
-    // question disabled due user requests. Yes I agree it was anoying.
-    // if (QMessageBox::question(this,
-    // tr("Close current session"),
-    // tr("Are you sure you want to close current sesstion?"),
-    // QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes)
-    // {
+    /// TODO: Add message box which can be disabled?
     if (count() > 1)
         removeTab(currentIndex());
     else
-        emit closeTabNotification();
+        emit lastTabClosed();
 }
 
 int TabWidget::switchToRight()
@@ -209,50 +198,6 @@ int TabWidget::switchToLeft()
     else
         setCurrentIndex(previous_pos);
     return currentIndex();
-}
-
-void TabWidget::move(Direction dir)
-{
-    if (count() == 0)
-        return;
-
-    int index = currentIndex();
-    QWidget *child = widget(index);
-    QString label = tabText(index);
-    QString toolTip = tabToolTip(index);
-    QIcon icon = tabIcon(index);
-
-    int newIndex = 0;
-    if (dir == Left) {
-        if (index == 0)
-            newIndex = count() - 1;
-        else
-            newIndex = index - 1;
-    } else if (index == count() - 1) {
-        newIndex = 0;
-    } else {
-        newIndex = index + 1;
-    }
-
-    setUpdatesEnabled(false);
-    QTabWidget::removeTab(index);
-    newIndex = insertTab(newIndex, child, label);
-    setTabToolTip(newIndex, toolTip);
-    setTabIcon(newIndex, icon);
-    setUpdatesEnabled(true);
-    setCurrentIndex(newIndex);
-    child->setFocus();
-    recountIndexes();
-}
-
-void TabWidget::moveLeft()
-{
-    move(Left);
-}
-
-void TabWidget::moveRight()
-{
-    move(Right);
 }
 
 void TabWidget::changeScrollPosition(QAction *triggered)

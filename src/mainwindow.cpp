@@ -47,7 +47,7 @@ MainWindow::MainWindow(const QString &workingDir, const QString &command, QWidge
     connect(m_preferences, &Preferences::changed, this, &MainWindow::preferencesChanged);
 
     m_tabWidget = new TabWidget(this);
-    connect(m_tabWidget, &TabWidget::closeTabNotification, this, &MainWindow::close);
+    connect(m_tabWidget, &TabWidget::lastTabClosed, this, &MainWindow::close);
 
     m_tabWidget->tabBar()->setVisible(!m_preferences->tabBarless);
     m_tabWidget->setWorkDirectory(workingDir);

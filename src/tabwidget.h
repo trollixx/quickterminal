@@ -43,9 +43,7 @@ public slots:
     int switchToRight();
     int switchToLeft();
     void removeFinished();
-    void moveLeft();
-    void moveRight();
-    void renameSession();
+    void renameTab();
     void setWorkDirectory(const QString &);
 
     void switchNextSubterminal();
@@ -59,26 +57,17 @@ public slots:
     void preferencesChanged();
 
 signals:
-    void closeTabNotification();
+    void lastTabClosed();
 
 protected:
-    enum Direction {
-        Left = 1, Right
-    };
-
     void recountIndexes();
-    void move(Direction);
-    /*! Event filter for TabWidget's QTabBar. It's installed on tabBar()
-        in the constructor.
-        It's purpose is to handle doubleclicks on QTabBar for session
-        renaming or new tab opening
-     */
     bool eventFilter(QObject *obj, QEvent *event);
 
 private:
-    int tabNumerator = 0;
-    QString work_dir;
     void showHideTabBar();
+
+    int m_tabNumerator = 0;
+    QString m_workingDir;
 };
 
 #endif // TABWIDGET_H
