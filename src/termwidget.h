@@ -52,7 +52,6 @@ private:
     Preferences * const m_preferences = nullptr;
 
     QTermWidget *m_term = nullptr;
-    QVBoxLayout *m_layout = nullptr;
     QColor m_borderColor;
 };
 

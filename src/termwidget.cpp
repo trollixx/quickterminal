@@ -37,8 +37,8 @@ TermWidget::TermWidget(const QString &workingDir, const QString &command, QWidge
 {
     m_borderColor = palette().color(QPalette::Window);
 
-    m_layout = new QVBoxLayout();
-    setLayout(m_layout);
+    QVBoxLayout *layout = new QVBoxLayout();
+    setLayout(layout);
 
     m_term = new QTermWidget(0, this);
     m_term->setFlowControlEnabled(FlowControlEnabled);
@@ -62,7 +62,7 @@ TermWidget::TermWidget(const QString &workingDir, const QString &command, QWidge
     m_term->startShellProgram();
 
     setFocusProxy(m_term);
-    m_layout->addWidget(m_term);
+    layout->addWidget(m_term);
 
     propertiesChanged();
 
@@ -77,9 +77,9 @@ TermWidget::TermWidget(const QString &workingDir, const QString &command, QWidge
 void TermWidget::propertiesChanged()
 {
     if (m_preferences->highlightCurrentTerminal)
-        m_layout->setContentsMargins(2, 2, 2, 2);
+        layout()->setContentsMargins(2, 2, 2, 2);
     else
-        m_layout->setContentsMargins(0, 0, 0, 0);
+        layout()->setContentsMargins(0, 0, 0, 0);
 
     m_term->setColorScheme(m_preferences->colorScheme);
     m_term->setTerminalFont(m_preferences->font);
