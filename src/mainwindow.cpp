@@ -380,7 +380,6 @@ void MainWindow::showPreferencesDialog()
 void MainWindow::preferencesChanged()
 {
     QApplication::setStyle(m_preferences->guiStyle);
-    setWindowOpacity(m_preferences->appOpacity / 100.0);
     m_tabWidget->setTabPosition((QTabWidget::TabPosition)m_preferences->tabsPos);
     m_tabWidget->preferencesChanged();
 

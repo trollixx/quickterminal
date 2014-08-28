@@ -59,7 +59,6 @@ public:
 
     QString emulation;
 
-    int appOpacity;
     int termOpacity;
 
     int scrollBarPos;

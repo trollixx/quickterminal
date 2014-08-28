@@ -78,7 +78,6 @@ void Preferences::load()
     emulation
             = m_settings->value(QStringLiteral("emulation"), QStringLiteral("default")).toString();
 
-    appOpacity = m_settings->value(QStringLiteral("MainWindow/appOpacity"), 100).toInt();
     termOpacity = m_settings->value(QStringLiteral("termOpacity"), 100).toInt();
 
     /* default to Right. see qtermwidget.h */
@@ -122,7 +121,6 @@ void Preferences::save()
 
     m_settings->setValue(QStringLiteral("emulation"), emulation);
 
-    m_settings->setValue(QStringLiteral("MainWindow/appOpacity"), appOpacity);
     m_settings->setValue(QStringLiteral("termOpacity"), termOpacity);
     m_settings->setValue(QStringLiteral("ScrollbarPosition"), scrollBarPos);
     m_settings->setValue(QStringLiteral("TabsPosition"), tabsPos);

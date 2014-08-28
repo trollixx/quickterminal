@@ -82,8 +82,6 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
 
     setFontSample(m_preferences->font);
 
-    appOpacityBox->setValue(m_preferences->appOpacity);
-
     termOpacityBox->setValue(m_preferences->termOpacity);
 
     highlightCurrentCheckBox->setChecked(m_preferences->highlightCurrentTerminal);
@@ -139,9 +137,6 @@ void PreferencesDialog::apply()
             ? QString() : styleComboBox->currentText();
 
     m_preferences->emulation = emulationComboBox->currentText();
-
-    /* do not allow to go above 99 or we lose transparency option */
-    m_preferences->appOpacity = qMin(appOpacityBox->value(), 99);
 
     m_preferences->termOpacity = termOpacityBox->value();
     m_preferences->highlightCurrentTerminal = highlightCurrentCheckBox->isChecked();
