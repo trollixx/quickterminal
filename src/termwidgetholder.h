@@ -21,7 +21,7 @@
 #ifndef TERMWIDGETHOLDER_H
 #define TERMWIDGETHOLDER_H
 
-#include "termwidget.h"
+#include "terminalwidget.h"
 
 #include <QWidget>
 
@@ -46,12 +46,12 @@ public:
     void propertiesChanged();
     void setInitialFocus();
 
-    TermWidget *currentTerminal() const;
+    TerminalWidget *currentTerminal() const;
 
 public slots:
-    void splitHorizontal(TermWidget *term);
-    void splitVertical(TermWidget *term);
-    void splitCollapse(TermWidget *term);
+    void splitHorizontal(TerminalWidget *term);
+    void splitVertical(TerminalWidget *term);
+    void splitCollapse(TerminalWidget *term);
     void switchNextSubterminal();
     void switchPrevSubterminal();
 
@@ -62,13 +62,13 @@ signals:
 private:
     QString m_workingDir;
     QString m_command;
-    TermWidget *m_currentTerm = nullptr;
+    TerminalWidget *m_currentTerm = nullptr;
 
-    void split(TermWidget *term, Qt::Orientation orientation);
-    TermWidget *newTerm(const QString &wdir = QString(), const QString &shell = QString());
+    void split(TerminalWidget *term, Qt::Orientation orientation);
+    TerminalWidget *newTerm(const QString &wdir = QString(), const QString &shell = QString());
 
 private slots:
-    void setCurrentTerminal(TermWidget *term);
+    void setCurrentTerminal(TerminalWidget *term);
     void handle_finished();
 };
 

@@ -22,7 +22,7 @@
 
 #include "preferences.h"
 
-#include <QGridLayout>
+#include <QVBoxLayout>
 #include <QInputDialog>
 #include <QSplitter>
 
@@ -32,28 +32,30 @@ TermWidgetHolder::TermWidgetHolder(const QString &wdir, const QString &shell, QW
     m_command(shell)
 {
     setFocusPolicy(Qt::NoFocus);
-    QGridLayout *lay = new QGridLayout(this);
-    lay->setSpacing(0);
-    lay->setContentsMargins(0, 0, 0, 0);
 
-    QSplitter *s = new QSplitter(this);
-    s->setFocusPolicy(Qt::NoFocus);
-    TermWidget *w = newTerm();
-    s->addWidget(w);
-    lay->addWidget(s);
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->setSpacing(0);
+    layout->setContentsMargins(0, 0, 0, 0);
 
-    setLayout(lay);
+    TerminalWidget *terminal = newTerm();
+
+    QSplitter *splitter = new QSplitter(this);
+    splitter->setFocusPolicy(Qt::NoFocus);
+    splitter->addWidget(terminal);
+
+    layout->addWidget(splitter);
+    setLayout(layout);
 }
 
 void TermWidgetHolder::setInitialFocus()
 {
-    QList<TermWidget *> list = findChildren<TermWidget *>();
+    QList<TerminalWidget *> list = findChildren<TerminalWidget *>();
     if (list.isEmpty())
         return;
     list.first()->setFocus(Qt::OtherFocusReason);
 }
 
-TermWidget *TermWidgetHolder::currentTerminal() const
+TerminalWidget *TermWidgetHolder::currentTerminal() const
 {
     return m_currentTerm;
 }
@@ -61,72 +63,72 @@ TermWidget *TermWidgetHolder::currentTerminal() const
 void TermWidgetHolder::switchNextSubterminal()
 {
     // TODO/FIXME: merge switchPrevSubterminal with switchNextSubterminal
-    QList<TermWidget *> l = findChildren<TermWidget *>();
+    QList<TerminalWidget *> l = findChildren<TerminalWidget *>();
     int ix = -1;
-    foreach (TermWidget *w, l) {
+    foreach (TerminalWidget *w, l) {
         ++ix;
-        // qDebug() << ix << w << w->impl() << w->impl()->hasFocus() << QApplication::focusWidget();
+        // qDebug() << ix << w << w << w->hasFocus() << QApplication::focusWidget();
         // qDebug() << "parent: " << w->parent();
-        if (w->impl()->hasFocus())
+        if (w->hasFocus())
             break;
     }
 
     if (ix < l.count()-1)
-        l.at(ix+1)->impl()->setFocus(Qt::OtherFocusReason);
+        l.at(ix+1)->setFocus(Qt::OtherFocusReason);
     else if (ix == l.count()-1)
-        l.at(0)->impl()->setFocus(Qt::OtherFocusReason);
+        l.at(0)->setFocus(Qt::OtherFocusReason);
 }
 
 void TermWidgetHolder::switchPrevSubterminal()
 {
     // TODO/FIXME: merge switchPrevSubterminal with switchNextSubterminal
-    QList<TermWidget *> l = findChildren<TermWidget *>();
+    QList<TerminalWidget *> l = findChildren<TerminalWidget *>();
     int ix = -1;
-    foreach (TermWidget *w, l) {
+    foreach (TerminalWidget *w, l) {
         ++ix;
-        // qDebug() << ix << w << w->impl() << w->impl()->hasFocus() << QApplication::focusWidget();
+        // qDebug() << ix << w << w << w->hasFocus() << QApplication::focusWidget();
         // qDebug() << "parent: " << w->parent();
-        if (w->impl()->hasFocus())
+        if (w->hasFocus())
             break;
     }
-    // qDebug() << ix << l.at(ix)->impl() << QApplication::focusWidget() << l;
+    // qDebug() << ix << l.at(ix) << QApplication::focusWidget() << l;
 
     if (ix > 0)
-        l.at(ix-1)->impl()->setFocus(Qt::OtherFocusReason);
+        l.at(ix-1)->setFocus(Qt::OtherFocusReason);
     else if (ix == 0)
-        l.at(l.count()-1)->impl()->setFocus(Qt::OtherFocusReason);
+        l.at(l.count()-1)->setFocus(Qt::OtherFocusReason);
 }
 
 void TermWidgetHolder::propertiesChanged()
 {
-    foreach (TermWidget *w, findChildren<TermWidget *>())
+    foreach (TerminalWidget *w, findChildren<TerminalWidget *>())
         w->propertiesChanged();
 }
 
-void TermWidgetHolder::splitHorizontal(TermWidget *term)
+void TermWidgetHolder::splitHorizontal(TerminalWidget *term)
 {
     split(term, Qt::Vertical);
 }
 
-void TermWidgetHolder::splitVertical(TermWidget *term)
+void TermWidgetHolder::splitVertical(TerminalWidget *term)
 {
     split(term, Qt::Horizontal);
 }
 
-void TermWidgetHolder::splitCollapse(TermWidget *term)
+void TermWidgetHolder::splitCollapse(TerminalWidget *term)
 {
     QSplitter *parent = qobject_cast<QSplitter *>(term->parent());
     Q_ASSERT(parent);
     term->setParent(0);
     delete term;
 
-    int cnt = parent->findChildren<TermWidget *>().count();
+    int cnt = parent->findChildren<TerminalWidget *>().count();
     if (cnt == 0) {
         parent->setParent(0);
         delete parent;
     }
 
-    QList<TermWidget *> tlist = findChildren<TermWidget *>();
+    QList<TerminalWidget *> tlist = findChildren<TerminalWidget *>();
     int localCnt = tlist.count();
     if (localCnt > 0) {
         tlist.at(0)->setFocus(Qt::OtherFocusReason);
@@ -138,7 +140,7 @@ void TermWidgetHolder::splitCollapse(TermWidget *term)
     }
 }
 
-void TermWidgetHolder::split(TermWidget *term, Qt::Orientation orientation)
+void TermWidgetHolder::split(TerminalWidget *term, Qt::Orientation orientation)
 {
     QSplitter *parent = qobject_cast<QSplitter *>(term->parent());
     Q_ASSERT(parent);
@@ -156,12 +158,12 @@ void TermWidgetHolder::split(TermWidget *term, Qt::Orientation orientation)
     // wdir settings
     QString wd(m_workingDir);
     if (Preferences::instance()->useCWD) {
-        wd = term->impl()->workingDirectory();
+        wd = term->workingDirectory();
         if (wd.isEmpty())
             wd = m_workingDir;
     }
 
-    TermWidget *w = newTerm(wd);
+    TerminalWidget *w = newTerm(wd);
     s->insertWidget(1, w);
     s->setSizes(sizes);
 
@@ -171,7 +173,7 @@ void TermWidgetHolder::split(TermWidget *term, Qt::Orientation orientation)
     w->setFocus(Qt::OtherFocusReason);
 }
 
-TermWidget *TermWidgetHolder::newTerm(const QString &wdir, const QString &shell)
+TerminalWidget *TermWidgetHolder::newTerm(const QString &wdir, const QString &shell)
 {
     QString wd(wdir);
     if (wd.isEmpty())
@@ -181,26 +183,26 @@ TermWidget *TermWidgetHolder::newTerm(const QString &wdir, const QString &shell)
     if (shell.isEmpty())
         sh = m_command;
 
-    TermWidget *w = new TermWidget(wd, sh, this);
+    TerminalWidget *w = new TerminalWidget(wd, sh, this);
     w->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(w, &TermWidget::customContextMenuRequested,
+    connect(w, &TerminalWidget::customContextMenuRequested,
             this, &TermWidgetHolder::terminalContextMenuRequested);
     // proxy signals
-    connect(w, &TermWidget::finished, this, &TermWidgetHolder::handle_finished);
+    connect(w, &TerminalWidget::finished, this, &TermWidgetHolder::handle_finished);
     // consume signals
-    connect(w, &TermWidget::termGetFocus, this, &TermWidgetHolder::setCurrentTerminal);
+    connect(w, &TerminalWidget::focused, this, &TermWidgetHolder::setCurrentTerminal);
 
     return w;
 }
 
-void TermWidgetHolder::setCurrentTerminal(TermWidget *term)
+void TermWidgetHolder::setCurrentTerminal(TerminalWidget *term)
 {
     m_currentTerm = term;
 }
 
 void TermWidgetHolder::handle_finished()
 {
-    TermWidget *w = qobject_cast<TermWidget *>(sender());
+    TerminalWidget *w = qobject_cast<TerminalWidget *>(sender());
     Q_ASSERT(w);
     splitCollapse(w);
 }

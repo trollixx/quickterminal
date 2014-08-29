@@ -134,21 +134,21 @@ void MainWindow::setupEditMenu()
     QAction *action;
     action = m_actionManager->action(ActionId::Copy);
     connect(action, &QAction::triggered, [this]() {
-        currentTerminal()->impl()->copyClipboard();
+        currentTerminal()->copyClipboard();
     });
     addAction(action);
     menu->addAction(action);
 
     action = m_actionManager->action(ActionId::Paste);
     connect(action, &QAction::triggered, [this]() {
-        currentTerminal()->impl()->pasteClipboard();
+        currentTerminal()->pasteClipboard();
     });
     addAction(action);
     menu->addAction(action);
 
     action = m_actionManager->action(ActionId::PasteSelection);
     connect(action, &QAction::triggered, [this]() {
-        currentTerminal()->impl()->pasteSelection();
+        currentTerminal()->pasteSelection();
     });
     addAction(action);
     menu->addAction(action);
@@ -157,7 +157,7 @@ void MainWindow::setupEditMenu()
 
     action = m_actionManager->action(ActionId::Clear);
     connect(action, &QAction::triggered, [this]() {
-        currentTerminal()->impl()->clear();
+        currentTerminal()->clear();
     });
     addAction(action);
     menu->addAction(action);
@@ -166,7 +166,7 @@ void MainWindow::setupEditMenu()
 
     action = m_actionManager->action(ActionId::Find);
     connect(action, &QAction::triggered, [this]() {
-        currentTerminal()->impl()->toggleShowSearchBar();
+        currentTerminal()->toggleShowSearchBar();
     });
     addAction(action);
     menu->addAction(action);
@@ -290,14 +290,14 @@ void MainWindow::setupContextMenu()
     QAction *action;
     action = m_actionManager->action(ActionId::ZoomIn);
     connect(action, &QAction::triggered, [this]() {
-        currentTerminal()->impl()->zoomIn();
+        currentTerminal()->zoomIn();
     });
     addAction(action);
     zoomMenu->addAction(action);
 
     action = m_actionManager->action(ActionId::ZoomOut);
     connect(action, &QAction::triggered, [this]() {
-        currentTerminal()->impl()->zoomOut();
+        currentTerminal()->zoomOut();
     });
     addAction(action);
     zoomMenu->addAction(action);
@@ -472,7 +472,7 @@ bool MainWindow::event(QEvent *event)
     return QMainWindow::event(event);
 }
 
-TermWidget *MainWindow::currentTerminal() const
+TerminalWidget *MainWindow::currentTerminal() const
 {
     return m_tabWidget->terminalHolder()->currentTerminal();
 }

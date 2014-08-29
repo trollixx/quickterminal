@@ -25,34 +25,23 @@
 
 class Preferences;
 
-class TermWidget : public QWidget
+class TerminalWidget : public QTermWidget
 {
     Q_OBJECT
 public:
-    explicit TermWidget(const QString &workingDir, const QString &command = QString(),
+    explicit TerminalWidget(const QString &workingDir, const QString &command = QString(),
                         QWidget *parent = nullptr);
 
     void propertiesChanged();
 
-    QTermWidget *impl() const;
     void zoomReset();
 
 signals:
     void finished();
-    void termGetFocus(TermWidget *self);
-
-protected:
-    void paintEvent(QPaintEvent *event);
-
-private slots:
-    void term_termGetFocus();
-    void term_termLostFocus();
+    void focused(TerminalWidget *self);
 
 private:
     Preferences * const m_preferences = nullptr;
-
-    QTermWidget *m_term = nullptr;
-    QColor m_borderColor;
 };
 
 #endif // TERMWIDGET_H

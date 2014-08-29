@@ -66,7 +66,7 @@ int TabWidget::addNewTab(const QString &command)
     TermWidgetHolder *ch = terminalHolder();
     QString cwd(m_workingDir);
     if (Preferences::instance()->useCWD && ch) {
-        cwd = ch->currentTerminal()->impl()->workingDirectory();
+        cwd = ch->currentTerminal()->workingDirectory();
         if (cwd.isEmpty())
             cwd = m_workingDir;
     }

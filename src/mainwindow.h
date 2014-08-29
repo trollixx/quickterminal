@@ -30,7 +30,7 @@ class QToolButton;
 class ActionManager;
 class Preferences;
 class TabWidget;
-class TermWidget;
+class TerminalWidget;
 
 class MainWindow : public QMainWindow
 {
@@ -63,7 +63,7 @@ private slots:
     void setKeepOpen(bool value);
 
 private:
-    inline TermWidget *currentTerminal() const;
+    inline TerminalWidget *currentTerminal() const;
 
     void setupFileMenu();
     void setupEditMenu();
