@@ -38,7 +38,6 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(const QString &workingDir, const QString &command,
                         QWidget *parent = nullptr, Qt::WindowFlags f = 0);
-    ~MainWindow() override;
 
     void enableDropMode();
 
@@ -54,7 +53,6 @@ private slots:
     void preferencesChanged();
     void showAboutMessageBox();
     void showPreferencesDialog();
-    void updateActionGroup(QAction *);
 
     void toggleTabBar();
     void toggleMenuBar();
@@ -80,9 +78,6 @@ private:
     QMenu *m_contextMenu = nullptr;
 
     TabWidget *m_tabWidget = nullptr;
-    QActionGroup *tabBarPosition = nullptr;
-    QActionGroup *scrollBarPosition = nullptr;
-    QMenu *tabPosMenu, *scrollPosMenu;
 
     QToolButton *m_dropDownLockButton = nullptr;
     bool m_dropDownMode = false;

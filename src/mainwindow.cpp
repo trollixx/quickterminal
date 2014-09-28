@@ -71,10 +71,6 @@ MainWindow::MainWindow(const QString &workingDir, const QString &command, QWidge
     restoreState(m_preferences->mainWindowState);
 }
 
-MainWindow::~MainWindow()
-{
-}
-
 void MainWindow::enableDropMode()
 {
     m_dropDownMode = true;
@@ -203,7 +199,7 @@ void MainWindow::setupViewMenu()
     menu->addSeparator();
 
     // TabBar position
-    tabBarPosition = new QActionGroup(this);
+    QActionGroup *tabBarPosition = new QActionGroup(this);
     tabBarPosition->addAction(tr("Top"));
     tabBarPosition->addAction(tr("Bottom"));
     tabBarPosition->addAction(tr("Left"));
@@ -218,18 +214,16 @@ void MainWindow::setupViewMenu()
     connect(tabBarPosition, &QActionGroup::triggered,
             m_tabWidget, &TabWidget::changeTabPosition);
 
-    tabPosMenu = new QMenu(tr("Tabs Layout"), menu);
-    // TODO: Remove
-    tabPosMenu->setObjectName(QStringLiteral("tabPosMenu"));
+    QMenu *tabBarPositionMenu = new QMenu(tr("Tabs Layout"), menu);
+    tabBarPositionMenu->addActions(tabBarPosition->actions());
 
-    foreach (QAction *action, tabBarPosition->actions())
-        tabPosMenu->addAction(action);
-
-    connect(menu, &QMenu::hovered, this, &MainWindow::updateActionGroup);
-    menu->addMenu(tabPosMenu);
+    QAction *tabBarPositionMenuAction = menu->addMenu(tabBarPositionMenu);
+    connect(tabBarPositionMenuAction, &QAction::hovered, [=]() {
+        tabBarPosition->actions().at(m_preferences->tabsPos)->setChecked(true);
+    });
 
     // Scrollbar position
-    scrollBarPosition = new QActionGroup(this);
+    QActionGroup *scrollBarPosition = new QActionGroup(this);
     // Order is based on QTermWidget::ScrollBarPosition enum
     scrollBarPosition->addAction(tr("None"));
     scrollBarPosition->addAction(tr("Left"));
@@ -244,13 +238,10 @@ void MainWindow::setupViewMenu()
     connect(scrollBarPosition, &QActionGroup::triggered,
             m_tabWidget, &TabWidget::changeScrollPosition);
 
-    scrollPosMenu = new QMenu(tr("Scrollbar Layout"), menu);
-    scrollPosMenu->setObjectName("scrollPosMenu");
+    QMenu *scrollBarPositionMenu = new QMenu(tr("Scrollbar Layout"), menu);
+    scrollBarPositionMenu->addActions(scrollBarPosition->actions());
 
-    foreach (QAction *action, scrollBarPosition->actions())
-        scrollPosMenu->addAction(action);
-
-    menu->addMenu(scrollPosMenu);
+    menu->addMenu(scrollBarPositionMenu);
 
     menuBar()->addMenu(menu);
 }
@@ -401,12 +392,6 @@ void MainWindow::realign()
     // do not use 0 here - we need to calculate with potential panel on top
     geometry.setTop(desktop.top());
     setGeometry(geometry);
-}
-
-void MainWindow::updateActionGroup(QAction *a)
-{
-    if (a->parent()->objectName() == tabPosMenu->objectName())
-        tabBarPosition->actions().at(m_preferences->tabsPos)->setChecked(true);
 }
 
 void MainWindow::showHide()
