@@ -47,8 +47,9 @@ public:
 
     QByteArray mainWindowGeometry;
     QByteArray mainWindowState;
-    // ShortcutMap shortcuts;
-    QString shell;
+
+    QString shellCommand;
+
     QFont font;
     QString colorScheme;
     QString guiStyle;
@@ -59,15 +60,16 @@ public:
 
     QString emulation;
 
-    int termOpacity;
+    int terminalOpacity;
 
-    int scrollBarPos;
-    int tabsPos;
-    bool alwaysShowTabs;
-    int m_motionAfterPaste;
+    int scrollBarPosition;
+    int tabBarPosition;
+    bool alwaysShowTabBar;
+    bool hideTabBar;
 
-    bool tabBarless;
     bool menuVisible;
+
+    int motionAfterPaste;
 
     bool askOnExit;
 

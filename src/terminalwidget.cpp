@@ -42,8 +42,8 @@ TerminalWidget::TerminalWidget(const QString &workingDir, const QString &command
         setWorkingDirectory(workingDir);
 
     if (command.isNull()) {
-        if (!m_preferences->shell.isNull())
-            setShellProgram(m_preferences->shell);
+        if (!m_preferences->shellCommand.isNull())
+            setShellProgram(m_preferences->shellCommand);
     } else {
         QStringList parts = command.split(QRegExp("\\s+"), QString::SkipEmptyParts);
         setShellProgram(parts.first());
@@ -52,7 +52,7 @@ TerminalWidget::TerminalWidget(const QString &workingDir, const QString &command
             setArgs(parts);
     }
 
-    setMotionAfterPasting(m_preferences->m_motionAfterPaste);
+    setMotionAfterPasting(m_preferences->motionAfterPaste);
     startShellProgram();
 
     propertiesChanged();
@@ -70,12 +70,12 @@ void TerminalWidget::propertiesChanged()
 {
     setColorScheme(m_preferences->colorScheme);
     setTerminalFont(m_preferences->font);
-    setMotionAfterPasting(m_preferences->m_motionAfterPaste);
+    setMotionAfterPasting(m_preferences->motionAfterPaste);
     setHistorySize(m_preferences->historyLimited ? m_preferences->historyLimitedTo : -1);
     setKeyBindings(m_preferences->emulation);
-    setTerminalOpacity(m_preferences->termOpacity / 100.0);
+    setTerminalOpacity(m_preferences->terminalOpacity / 100.0);
     setScrollBarPosition(
-                static_cast<QTermWidget::ScrollBarPosition>(m_preferences->scrollBarPos));
+                static_cast<QTermWidget::ScrollBarPosition>(m_preferences->scrollBarPosition));
     update();
 }
 

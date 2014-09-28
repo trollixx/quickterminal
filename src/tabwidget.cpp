@@ -206,7 +206,7 @@ void TabWidget::changeScrollPosition(QAction *triggered)
     if (!scrollPosition)
         qFatal("scrollPosition is NULL");
 
-    Preferences::instance()->scrollBarPos = scrollPosition->actions().indexOf(triggered);
+    Preferences::instance()->scrollBarPosition = scrollPosition->actions().indexOf(triggered);
 
     Preferences::instance()->save();
     preferencesChanged();
@@ -223,7 +223,7 @@ void TabWidget::changeTabPosition(QAction *triggered)
     QTabWidget::TabPosition position
             = (QTabWidget::TabPosition)tabPosition->actions().indexOf(triggered);
     setTabPosition(position);
-    prop->tabsPos = position;
+    prop->tabBarPosition = position;
     prop->save();
 }
 
@@ -238,5 +238,5 @@ void TabWidget::preferencesChanged()
 
 void TabWidget::showHideTabBar()
 {
-    tabBar()->setVisible(Preferences::instance()->alwaysShowTabs || count() > 1);
+    tabBar()->setVisible(Preferences::instance()->alwaysShowTabBar || count() > 1);
 }

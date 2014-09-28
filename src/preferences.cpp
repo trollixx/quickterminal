@@ -78,17 +78,17 @@ void Preferences::load()
     emulation
             = m_settings->value(QStringLiteral("emulation"), QStringLiteral("default")).toString();
 
-    termOpacity = m_settings->value(QStringLiteral("termOpacity"), 100).toInt();
+    terminalOpacity = m_settings->value(QStringLiteral("termOpacity"), 100).toInt();
 
     /* default to Right. see qtermwidget.h */
-    scrollBarPos = m_settings->value(QStringLiteral("ScrollbarPosition"), 2).toInt();
+    scrollBarPosition = m_settings->value(QStringLiteral("ScrollbarPosition"), 2).toInt();
     /* default to North. I'd prefer South but North is standard (they say) */
-    tabsPos = m_settings->value(QStringLiteral("TabsPosition"), 0).toInt();
-    alwaysShowTabs = m_settings->value(QStringLiteral("AlwaysShowTabs"), true).toBool();
-    m_motionAfterPaste = m_settings->value(QStringLiteral("MotionAfterPaste"), 0).toInt();
+    tabBarPosition = m_settings->value(QStringLiteral("TabsPosition"), 0).toInt();
+    alwaysShowTabBar = m_settings->value(QStringLiteral("AlwaysShowTabs"), true).toBool();
+    motionAfterPaste = m_settings->value(QStringLiteral("MotionAfterPaste"), 0).toInt();
 
     /* toggles */
-    tabBarless = m_settings->value(QStringLiteral("TabBarless"), false).toBool();
+    hideTabBar = m_settings->value(QStringLiteral("TabBarless"), false).toBool();
     menuVisible = m_settings->value(QStringLiteral("MenuVisible"), true).toBool();
     askOnExit = m_settings->value(QStringLiteral("AskOnExit"), true).toBool();
     useCWD = m_settings->value(QStringLiteral("UseCWD"), false).toBool();
@@ -121,12 +121,12 @@ void Preferences::save()
 
     m_settings->setValue(QStringLiteral("emulation"), emulation);
 
-    m_settings->setValue(QStringLiteral("termOpacity"), termOpacity);
-    m_settings->setValue(QStringLiteral("ScrollbarPosition"), scrollBarPos);
-    m_settings->setValue(QStringLiteral("TabsPosition"), tabsPos);
-    m_settings->setValue(QStringLiteral("AlwaysShowTabs"), alwaysShowTabs);
-    m_settings->setValue(QStringLiteral("MotionAfterPaste"), m_motionAfterPaste);
-    m_settings->setValue(QStringLiteral("TabBarless"), tabBarless);
+    m_settings->setValue(QStringLiteral("termOpacity"), terminalOpacity);
+    m_settings->setValue(QStringLiteral("ScrollbarPosition"), scrollBarPosition);
+    m_settings->setValue(QStringLiteral("TabsPosition"), tabBarPosition);
+    m_settings->setValue(QStringLiteral("AlwaysShowTabs"), alwaysShowTabBar);
+    m_settings->setValue(QStringLiteral("MotionAfterPaste"), motionAfterPaste);
+    m_settings->setValue(QStringLiteral("TabBarless"), hideTabBar);
     m_settings->setValue(QStringLiteral("MenuVisible"), menuVisible);
     m_settings->setValue(QStringLiteral("AskOnExit"), askOnExit);
     m_settings->setValue(QStringLiteral("UseCWD"), useCWD);

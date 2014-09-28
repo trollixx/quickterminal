@@ -49,9 +49,9 @@ MainWindow::MainWindow(const QString &workingDir, const QString &command, QWidge
     m_tabWidget = new TabWidget(this);
     connect(m_tabWidget, &TabWidget::lastTabClosed, this, &MainWindow::close);
 
-    m_tabWidget->tabBar()->setVisible(!m_preferences->tabBarless);
+    m_tabWidget->tabBar()->setVisible(!m_preferences->hideTabBar);
     m_tabWidget->setWorkDirectory(workingDir);
-    m_tabWidget->setTabPosition((QTabWidget::TabPosition)m_preferences->tabsPos);
+    m_tabWidget->setTabPosition((QTabWidget::TabPosition)m_preferences->tabBarPosition);
     m_tabWidget->addNewTab(command);
     setCentralWidget(m_tabWidget);
 
@@ -191,7 +191,7 @@ void MainWindow::setupViewMenu()
 
     action = m_actionManager->action(ActionId::ShowTabs);
     action->setCheckable(true);
-    action->setChecked(!m_preferences->tabBarless);
+    action->setChecked(!m_preferences->hideTabBar);
     connect(action, &QAction::triggered, this, &MainWindow::toggleTabBar);
     addAction(action);
     menu->addAction(action);
@@ -208,8 +208,8 @@ void MainWindow::setupViewMenu()
     foreach (QAction *action, tabBarPosition->actions())
         action->setCheckable(true);
 
-    if (tabBarPosition->actions().count() > m_preferences->tabsPos)
-        tabBarPosition->actions().at(m_preferences->tabsPos)->setChecked(true);
+    if (tabBarPosition->actions().count() > m_preferences->tabBarPosition)
+        tabBarPosition->actions().at(m_preferences->tabBarPosition)->setChecked(true);
 
     connect(tabBarPosition, &QActionGroup::triggered,
             m_tabWidget, &TabWidget::changeTabPosition);
@@ -219,7 +219,7 @@ void MainWindow::setupViewMenu()
 
     QAction *tabBarPositionMenuAction = menu->addMenu(tabBarPositionMenu);
     connect(tabBarPositionMenuAction, &QAction::hovered, [=]() {
-        tabBarPosition->actions().at(m_preferences->tabsPos)->setChecked(true);
+        tabBarPosition->actions().at(m_preferences->tabBarPosition)->setChecked(true);
     });
 
     // Scrollbar position
@@ -232,8 +232,8 @@ void MainWindow::setupViewMenu()
     foreach (QAction *action, scrollBarPosition->actions())
         action->setCheckable(true);
 
-    if (m_preferences->scrollBarPos < scrollBarPosition->actions().size())
-        scrollBarPosition->actions().at(m_preferences->scrollBarPos)->setChecked(true);
+    if (m_preferences->scrollBarPosition < scrollBarPosition->actions().size())
+        scrollBarPosition->actions().at(m_preferences->scrollBarPosition)->setChecked(true);
 
     connect(scrollBarPosition, &QActionGroup::triggered,
             m_tabWidget, &TabWidget::changeScrollPosition);
@@ -346,7 +346,7 @@ void MainWindow::toggleTabBar()
 {
     const bool newVisible = m_actionManager->action(ActionId::ShowTabs)->isChecked();
     m_tabWidget->tabBar()->setVisible(newVisible);
-    m_preferences->tabBarless = !newVisible;
+    m_preferences->hideTabBar = !newVisible;
 }
 
 void MainWindow::toggleMenuBar()
@@ -371,7 +371,7 @@ void MainWindow::showPreferencesDialog()
 void MainWindow::preferencesChanged()
 {
     QApplication::setStyle(m_preferences->guiStyle);
-    m_tabWidget->setTabPosition((QTabWidget::TabPosition)m_preferences->tabsPos);
+    m_tabWidget->setTabPosition((QTabWidget::TabPosition)m_preferences->tabBarPosition);
     m_tabWidget->preferencesChanged();
 
     menuBar()->setVisible(m_preferences->menuVisible);

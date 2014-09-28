@@ -57,20 +57,20 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
 
     /* scrollbar position */
     scrollBarPos_comboBox->addItems({ tr("No scrollbar"), tr("Left"), tr("Right") });
-    scrollBarPos_comboBox->setCurrentIndex(m_preferences->scrollBarPos);
+    scrollBarPos_comboBox->setCurrentIndex(m_preferences->scrollBarPosition);
 
     /* tabs position */
     tabsPos_comboBox->addItems({ tr("Top"), tr("Bottom"), tr("Left"), tr("Right") });
-    tabsPos_comboBox->setCurrentIndex(m_preferences->tabsPos);
+    tabsPos_comboBox->setCurrentIndex(m_preferences->tabBarPosition);
 
-    alwaysShowTabsCheckBox->setChecked(m_preferences->alwaysShowTabs);
+    alwaysShowTabsCheckBox->setChecked(m_preferences->alwaysShowTabBar);
 
     // show main menu bar
     showMenuCheckBox->setChecked(m_preferences->menuVisible);
 
     /* actions by motion after paste */
     motionAfterPasting_comboBox->addItems({ tr("No move"), tr("Move start"), tr("Move end") });
-    motionAfterPasting_comboBox->setCurrentIndex(m_preferences->m_motionAfterPaste);
+    motionAfterPasting_comboBox->setCurrentIndex(m_preferences->motionAfterPaste);
 
     // Setting windows style actions
     styleComboBox->addItem(tr("System Default"));
@@ -82,7 +82,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
 
     setFontSample(m_preferences->font);
 
-    termOpacityBox->setValue(m_preferences->termOpacity);
+    termOpacityBox->setValue(m_preferences->terminalOpacity);
 
     highlightCurrentCheckBox->setChecked(m_preferences->highlightCurrentTerminal);
 
@@ -138,18 +138,18 @@ void PreferencesDialog::apply()
 
     m_preferences->emulation = emulationComboBox->currentText();
 
-    m_preferences->termOpacity = termOpacityBox->value();
+    m_preferences->terminalOpacity = termOpacityBox->value();
     m_preferences->highlightCurrentTerminal = highlightCurrentCheckBox->isChecked();
 
     m_preferences->askOnExit = askOnExitCheckBox->isChecked();
 
     m_preferences->useCWD = useCwdCheckBox->isChecked();
 
-    m_preferences->scrollBarPos = scrollBarPos_comboBox->currentIndex();
-    m_preferences->tabsPos = tabsPos_comboBox->currentIndex();
-    m_preferences->alwaysShowTabs = alwaysShowTabsCheckBox->isChecked();
+    m_preferences->scrollBarPosition = scrollBarPos_comboBox->currentIndex();
+    m_preferences->tabBarPosition = tabsPos_comboBox->currentIndex();
+    m_preferences->alwaysShowTabBar = alwaysShowTabsCheckBox->isChecked();
     m_preferences->menuVisible = showMenuCheckBox->isChecked();
-    m_preferences->m_motionAfterPaste = motionAfterPasting_comboBox->currentIndex();
+    m_preferences->motionAfterPaste = motionAfterPasting_comboBox->currentIndex();
 
     m_preferences->historyLimited = historyLimited->isChecked();
     m_preferences->historyLimitedTo = historyLimitedTo->value();
