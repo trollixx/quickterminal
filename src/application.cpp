@@ -128,7 +128,7 @@ void Application::parseOptions()
 void Application::setupActions()
 {
     // Application
-    ActionManager::registerAction(ActionId::About, tr("&About QuickTerminal"),
+    ActionManager::registerAction(ActionId::About, tr("&About %1").arg(qApp->applicationName()),
                                   QIcon::fromTheme(QStringLiteral("help-about")));
     ActionManager::registerAction(ActionId::AboutQt, tr("About &Qt"));
     ActionManager::registerAction(ActionId::Preferences, tr("Preferences"),

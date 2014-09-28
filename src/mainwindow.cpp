@@ -367,8 +367,8 @@ void MainWindow::toggleMenuBar()
 
 void MainWindow::showAboutMessageBox()
 {
-    QMessageBox::about(this, QString("QuickTerminal %1").arg(qApp->applicationVersion()),
-                       tr("A lightweight multiplatform terminal emulator"));
+    QMessageBox::about(this, QString("About %1").arg(qApp->applicationName()),
+                       tr("A lightweight terminal emulator"));
 }
 
 void MainWindow::showPreferencesDialog()
@@ -444,7 +444,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     }
 
     QScopedPointer<QMessageBox> mb(new QMessageBox(this));
-    mb->setWindowTitle(tr("Exit QuickTerminal"));
+    mb->setWindowTitle(tr("Exit %1").arg(qApp->applicationName()));
     mb->setText(tr("Are you sure you want to exit?"));
     mb->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 
