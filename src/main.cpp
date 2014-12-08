@@ -20,8 +20,6 @@
 ****************************************************************************/
 
 #include "application.h"
-#include "mainwindow.h"
-#include "preferences.h"
 
 #include <QApplication>
 
