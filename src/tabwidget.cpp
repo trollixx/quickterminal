@@ -206,7 +206,7 @@ void TabWidget::changeTabPosition(QAction *triggered)
     Preferences *prop = Preferences::instance();
     /* order is dictated from mainwindow.cpp */
     QTabWidget::TabPosition position
-            = (QTabWidget::TabPosition)tabPosition->actions().indexOf(triggered);
+            = static_cast<QTabWidget::TabPosition>(tabPosition->actions().indexOf(triggered));
     setTabPosition(position);
     prop->tabBarPosition = position;
     prop->save();
