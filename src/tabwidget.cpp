@@ -59,7 +59,7 @@ void TabWidget::setWorkDirectory(const QString &dir)
     m_workingDir = dir;
 }
 
-int TabWidget::addNewTab(const QString &command)
+void TabWidget::addNewTab(const QString &command)
 {
     const QString label = QString(tr("Shell No. %1")).arg(++m_tabNumerator);
 
@@ -80,8 +80,6 @@ int TabWidget::addNewTab(const QString &command)
     console->setInitialFocus();
 
     showHideTabBar();
-
-    return index;
 }
 
 void TabWidget::switchNextSubterminal()
@@ -174,22 +172,17 @@ void TabWidget::removeTab(int index)
 void TabWidget::removeCurrentTab()
 {
     /// TODO: Add message box which can be disabled?
-    if (count() > 1)
-        removeTab(currentIndex());
-    else
-        emit lastTabClosed();
+    removeTab(currentIndex());
 }
 
-int TabWidget::switchToRight()
+void TabWidget::switchToRight()
 {
     setCurrentIndex((currentIndex() + 1) % count());
-    return currentIndex();
 }
 
-int TabWidget::switchToLeft()
+void TabWidget::switchToLeft()
 {
     setCurrentIndex((currentIndex() ? currentIndex() : count()) - 1);
-    return currentIndex();
 }
 
 void TabWidget::changeScrollPosition(QAction *triggered)

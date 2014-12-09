@@ -37,11 +37,11 @@ public:
     TermWidgetHolder *terminalHolder() const;
 
 public slots:
-    int addNewTab(const QString &command = QString());
+    void addNewTab(const QString &command = QString());
     void removeTab(int);
     void removeCurrentTab();
-    int switchToRight();
-    int switchToLeft();
+    void switchToRight();
+    void switchToLeft();
     void removeFinished();
     void renameTab();
     void setWorkDirectory(const QString &);
