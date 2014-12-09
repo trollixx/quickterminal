@@ -182,21 +182,13 @@ void TabWidget::removeCurrentTab()
 
 int TabWidget::switchToRight()
 {
-    int next_pos = currentIndex() + 1;
-    if (next_pos < count())
-        setCurrentIndex(next_pos);
-    else
-        setCurrentIndex(0);
+    setCurrentIndex((currentIndex() + 1) % count());
     return currentIndex();
 }
 
 int TabWidget::switchToLeft()
 {
-    int previous_pos = currentIndex() - 1;
-    if (previous_pos < 0)
-        setCurrentIndex(count() - 1);
-    else
-        setCurrentIndex(previous_pos);
+    setCurrentIndex((currentIndex() ? currentIndex() : count()) - 1);
     return currentIndex();
 }
 
