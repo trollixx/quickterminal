@@ -138,6 +138,8 @@ bool TabWidget::eventFilter(QObject *obj, QEvent *event)
 void TabWidget::removeFinished()
 {
     QObject *term = sender();
+    if (!term)
+        return;
     QVariant prop = term->property(TAB_INDEX_PROPERTY);
     if (prop.isValid() && prop.canConvert(QVariant::Int)) {
         int index = prop.toInt();
