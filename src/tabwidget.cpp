@@ -30,7 +30,9 @@
 #include <QMouseEvent>
 #include <QTabBar>
 
-#define TAB_INDEX_PROPERTY "tab_index"
+namespace {
+const char TabIndexProperty[] = "tab_index";
+}
 
 TabWidget::TabWidget(QWidget *parent) :
     QTabWidget(parent)
@@ -110,7 +112,7 @@ void TabWidget::splitCollapse()
 void TabWidget::recountIndexes()
 {
     for (int i = 0; i < count(); i++)
-        widget(i)->setProperty(TAB_INDEX_PROPERTY, i);
+        widget(i)->setProperty(TabIndexProperty, i);
 }
 
 void TabWidget::renameTab()
@@ -140,7 +142,7 @@ void TabWidget::removeFinished()
     QObject *term = sender();
     if (!term)
         return;
-    QVariant prop = term->property(TAB_INDEX_PROPERTY);
+    QVariant prop = term->property(TabIndexProperty);
     if (prop.isValid() && prop.canConvert(QVariant::Int)) {
         int index = prop.toInt();
         removeTab(index);
