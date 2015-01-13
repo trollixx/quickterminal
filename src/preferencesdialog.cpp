@@ -104,8 +104,13 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     actionTreeWidget->sortByColumn(0, Qt::AscendingOrder);
     shortcutLineEdit->installEventFilter(this);
 
+    connect(shortcutLineEdit, &QLineEdit::textChanged, this, [this](const QString &text){
+        if (!text.isEmpty())
+            return;
+        m_keyNum = m_key[0] = m_key[1] = m_key[2] = m_key[3] = 0;
+        updateCurrentShortcut(QKeySequence());
+    });
     connect(actionTreeWidget, &QTreeWidget::currentItemChanged, this, &PreferencesDialog::selectAction);
-    connect(clearShortcutButton, &QPushButton::clicked, this, &PreferencesDialog::clearShortcut);
     connect(resetShortcutButton, &QPushButton::clicked, this, &PreferencesDialog::resetShortcut);
 
     QFont userEditedShortcutFont;
@@ -198,12 +203,6 @@ void PreferencesDialog::selectAction(QTreeWidgetItem *item)
     for (int i = 0; i < m_keyNum; ++i)
         m_key[i] = ks[i];
     updateCurrentShortcut(ks);
-}
-
-void PreferencesDialog::clearShortcut()
-{
-    m_keyNum = m_key[0] = m_key[1] = m_key[2] = m_key[3] = 0;
-    updateCurrentShortcut(QKeySequence());
 }
 
 void PreferencesDialog::resetShortcut()

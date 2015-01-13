@@ -43,7 +43,6 @@ private slots:
     void changeFontButton_clicked();
 
     void selectAction(QTreeWidgetItem *item);
-    void clearShortcut();
     void resetShortcut();
 
 private:
