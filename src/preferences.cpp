@@ -59,10 +59,9 @@ void Preferences::load()
     highlightCurrentTerminal
             = m_settings->value(QStringLiteral("highlightCurrentTerminal"), true).toBool();
 
-    if (m_settings->contains(QStringLiteral("font")))
-        font = qvariant_cast<QFont>(m_settings->value(QStringLiteral("font")));
-    else
-        font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
+    useSystemFont = m_settings->value(QStringLiteral("useSystemFont"), true).toBool();
+    font = qvariant_cast<QFont>(m_settings->value(QStringLiteral("font"),
+                                                  QFontDatabase::systemFont(QFontDatabase::FixedFont)));
 
     m_settings->beginGroup(QStringLiteral("Shortcuts"));
     foreach (const QString &key, m_settings->childKeys())
@@ -106,7 +105,9 @@ void Preferences::save()
     m_settings->setValue(QStringLiteral("guiStyle"), guiStyle);
     m_settings->setValue(QStringLiteral("colorScheme"), colorScheme);
     m_settings->setValue(QStringLiteral("highlightCurrentTerminal"), highlightCurrentTerminal);
-    m_settings->setValue(QStringLiteral("font"), font);
+    m_settings->setValue(QStringLiteral("useSystemFont"), useSystemFont);
+    if (!useSystemFont)
+        m_settings->setValue(QStringLiteral("font"), font);
 
     m_settings->beginGroup(QStringLiteral("Shortcuts"));
     for (auto it = m_shortcuts.cbegin(); it != m_shortcuts.cend(); ++it)
@@ -164,6 +165,14 @@ void Preferences::removeShortcut(const QString &actionId)
 QStringList Preferences::shortcutActions() const
 {
     return m_shortcuts.keys();
+}
+
+QFont Preferences::terminalFont()
+{
+    if (useSystemFont)
+        return QFontDatabase::systemFont(QFontDatabase::FixedFont);
+    else
+        return font;
 }
 
 void Preferences::emitChanged()

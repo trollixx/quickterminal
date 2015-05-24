@@ -50,7 +50,10 @@ public:
 
     QString shellCommand;
 
+    bool useSystemFont;
     QFont font;
+    QFont terminalFont();
+
     QString colorScheme;
     QString guiStyle;
     bool highlightCurrentTerminal;

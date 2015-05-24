@@ -38,8 +38,18 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
 
     connect(buttonBox->button(QDialogButtonBox::Apply), &QPushButton::clicked,
             this, &PreferencesDialog::apply);
+
+    useSystemFontCheckBox->setChecked(m_preferences->useSystemFont);
+    changeFontButton->setEnabled(!m_preferences->useSystemFont);
+    fontSampleLabel->setEnabled(!m_preferences->useSystemFont);
+    connect(useSystemFontCheckBox, &QCheckBox::toggled, [this](bool checked) {
+        fontSampleLabel->setEnabled(!checked);
+        changeFontButton->setEnabled(!checked);
+    });
     connect(changeFontButton, &QPushButton::clicked,
             this, &PreferencesDialog::changeFontButton_clicked);
+
+    setFontSample(m_preferences->font);
 
     QStringList emulations = QTermWidget::availableKeyBindings();
     QStringList colorSchemes = QTermWidget::availableColorSchemes();
@@ -79,8 +89,6 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     int ix = styleComboBox->findText(m_preferences->guiStyle);
     if (ix != -1)
         styleComboBox->setCurrentIndex(ix);
-
-    setFontSample(m_preferences->font);
 
     termOpacityBox->setValue(m_preferences->terminalOpacity);
 
@@ -137,7 +145,8 @@ void PreferencesDialog::accept()
 void PreferencesDialog::apply()
 {
     m_preferences->colorScheme = colorSchemaCombo->currentText();
-    m_preferences->font = fontSampleLabel->font(); // fontComboBox->currentFont();
+    m_preferences->useSystemFont = useSystemFontCheckBox->isChecked();
+    m_preferences->font = fontSampleLabel->font();
     m_preferences->guiStyle = (styleComboBox->currentText() == tr("System Default"))
             ? QString() : styleComboBox->currentText();
 

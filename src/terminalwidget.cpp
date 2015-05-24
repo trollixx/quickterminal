@@ -69,7 +69,7 @@ TerminalWidget::TerminalWidget(const QString &workingDir, const QString &command
 void TerminalWidget::propertiesChanged()
 {
     setColorScheme(m_preferences->colorScheme);
-    setTerminalFont(m_preferences->font);
+    setTerminalFont(m_preferences->terminalFont());
     setMotionAfterPasting(m_preferences->motionAfterPaste);
     setHistorySize(m_preferences->historyLimited ? m_preferences->historyLimitedTo : -1);
     setKeyBindings(m_preferences->emulation);
@@ -81,5 +81,5 @@ void TerminalWidget::propertiesChanged()
 
 void TerminalWidget::zoomReset()
 {
-    setTerminalFont(m_preferences->font);
+    setTerminalFont(m_preferences->terminalFont());
 }
