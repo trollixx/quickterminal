@@ -126,6 +126,9 @@ void TabWidget::renameTab()
 
 bool TabWidget::eventFilter(QObject *obj, QEvent *event)
 {
+    if (obj != tabBar())
+        return QTabWidget::eventFilter(obj, event);
+
     if (event->type() == QEvent::MouseButtonDblClick) {
         QMouseEvent *e = reinterpret_cast<QMouseEvent *>(event);
         if (tabBar()->tabAt(e->pos()) == -1)
@@ -133,6 +136,15 @@ bool TabWidget::eventFilter(QObject *obj, QEvent *event)
         else
             renameTab();
         return true;
+    } else if (event->type() == QEvent::MouseButtonRelease) {
+        QMouseEvent *e = reinterpret_cast<QMouseEvent *>(event);
+        if (e->button() == Qt::MiddleButton) {
+            const int index = tabBar()->tabAt(e->pos());
+            if (index > -1) {
+                removeTab(index);
+                return true;
+            }
+        }
     }
     return QTabWidget::eventFilter(obj, event);
 }
