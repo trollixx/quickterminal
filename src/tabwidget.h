@@ -25,6 +25,7 @@
 #include <QTabWidget>
 
 class QAction;
+class QMenu;
 
 class TermWidgetHolder;
 
@@ -33,6 +34,9 @@ class TabWidget : public QTabWidget
     Q_OBJECT
 public:
     explicit TabWidget(QWidget *parent = nullptr);
+
+    QMenu *contextMenu() const;
+    void setContextMenu(QMenu *menu);
 
     TermWidgetHolder *terminalHolder() const;
 
@@ -66,6 +70,7 @@ protected:
 private:
     void showHideTabBar();
 
+    QMenu *m_contextMenu = nullptr;
     int m_tabNumerator = 0;
     QString m_workingDir;
 };

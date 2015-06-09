@@ -323,11 +323,7 @@ void MainWindow::setupContextMenu()
     addAction(action);
     m_contextMenu->addAction(action);
 
-    connect(m_tabWidget->terminalHolder(),
-            &TermWidgetHolder::terminalContextMenuRequested,
-            [this] (const QPoint &pos) {
-        m_contextMenu->exec(currentTerminal()->mapToGlobal(pos));
-    });
+    m_tabWidget->setContextMenu(m_contextMenu);
 }
 
 void MainWindow::setupWindowActions()

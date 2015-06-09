@@ -27,6 +27,7 @@
 #include <QActionGroup>
 #include <QEvent>
 #include <QInputDialog>
+#include <QMenu>
 #include <QMouseEvent>
 #include <QTabBar>
 
@@ -49,6 +50,16 @@ TabWidget::TabWidget(QWidget *parent) :
     tabBar()->installEventFilter(this);
 
     connect(this, &TabWidget::tabCloseRequested, this, &TabWidget::removeTab);
+}
+
+QMenu *TabWidget::contextMenu() const
+{
+    return m_contextMenu;
+}
+
+void TabWidget::setContextMenu(QMenu *menu)
+{
+    m_contextMenu = menu;
 }
 
 TermWidgetHolder *TabWidget::terminalHolder() const
@@ -75,6 +86,11 @@ void TabWidget::addNewTab(const QString &command)
 
     TermWidgetHolder *console = new TermWidgetHolder(cwd, command, this);
     connect(console, &TermWidgetHolder::finished, this, &TabWidget::removeFinished);
+    connect(console, &TermWidgetHolder::terminalContextMenuRequested,
+            [this, console] (const QPoint &pos) {
+        if (m_contextMenu)
+            m_contextMenu->exec(console->currentTerminal()->mapToGlobal(pos));
+    });
 
     int index = addTab(console, label);
     recountIndexes();
