@@ -147,11 +147,13 @@ bool TabWidget::eventFilter(QObject *obj, QEvent *event)
 
     if (event->type() == QEvent::MouseButtonDblClick) {
         QMouseEvent *e = reinterpret_cast<QMouseEvent *>(event);
-        if (tabBar()->tabAt(e->pos()) == -1)
-            addNewTab();
-        else
-            renameTab();
-        return true;
+        if (e->button() == Qt::LeftButton) {
+            if (tabBar()->tabAt(e->pos()) == -1)
+                addNewTab();
+            else
+                renameTab();
+            return true;
+        }
     } else if (event->type() == QEvent::MouseButtonRelease) {
         QMouseEvent *e = reinterpret_cast<QMouseEvent *>(event);
         if (e->button() == Qt::MiddleButton) {
